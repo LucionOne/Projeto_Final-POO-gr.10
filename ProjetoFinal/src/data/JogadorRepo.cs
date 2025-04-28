@@ -13,7 +13,6 @@ public class JogadorRepo
     private string FilePath = Path.Combine(FolderPath, "jogadores.json");
     
     // Private
-
     private Dictionary<int, Jogador> _jogadoresDict = new Dictionary<int, Jogador>();
     
     private int _NextId;
@@ -23,7 +22,7 @@ public class JogadorRepo
 
     public int NextId {get{return _NextId;}}
 
-    // Construct
+    // Constructor
     public JogadorRepo()
     {
         VerifyFileExists();
@@ -42,7 +41,7 @@ public class JogadorRepo
         }
     }
 
-    //methods
+    // methods
     public void Append(Jogador jogador)
     {
         jogador.Id = _NextId;

@@ -8,19 +8,22 @@ public class Jogador
 {
     // private attributes
     private string? _nome;
+    
     private int _idade;
+    
     private int _posicao;
+    
     private int _id;
     
-
     // public attributes
     public string Nome 
     {
         get{return _nome ?? string.Empty;}
         set{_nome = value ?? string.Empty;}
     }
-    public int Idade { get{return _idade;} set{_idade = value;}}
     
+    public int Idade { get{return _idade;} set{_idade = value;}}
+
     public int Id { get{return _id;} set{_id = value;}}
 
     public int Posicao 
@@ -39,6 +42,7 @@ public class Jogador
             }
         }
     }
+    
     [JsonIgnore]
     public string PosicaoString
     {
@@ -55,9 +59,6 @@ public class Jogador
         }
     }
 
-
-
-
     // constructor
     public Jogador(string nome, int idade, int posicao)
     {
@@ -65,6 +66,7 @@ public class Jogador
         Idade = idade;
         Posicao = posicao;
     }
+
     // methods
     public string GetDatasString()
     {
