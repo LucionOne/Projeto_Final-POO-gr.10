@@ -11,6 +11,7 @@ public class Jogador
     private int _idade;
     private int _posicao;
     private int _id;
+    
 
     // public attributes
     public string Nome 
@@ -19,6 +20,9 @@ public class Jogador
         set{_nome = value ?? string.Empty;}
     }
     public int Idade { get{return _idade;} set{_idade = value;}}
+    
+    public int Id { get{return _id;} set{_id = value;}}
+
     public int Posicao 
     {   
         get{return _posicao;}
@@ -52,7 +56,6 @@ public class Jogador
     }
 
 
-    // public int Id { get{return _id;} set{_id = value;}}
 
 
     // constructor
@@ -66,9 +69,5 @@ public class Jogador
     public string GetDatasString()
     {
         return $"Nome: {Nome}\tIdade: {Idade}\tPosição: {PosicaoString}";
-    }
-    public string Serialize()
-    {
-        return JsonSerializer.Serialize(this);
     }
 }
