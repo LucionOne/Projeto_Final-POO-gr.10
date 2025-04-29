@@ -21,8 +21,8 @@ public class JogadorRepo
     private int _nextId;
 
     // Public
-    public Dictionary<int, Jogador> JogadoresDict {get{return _jogadoresDict;} set {_jogadoresDict = value;}} // "private set" not working, gotta look into that
-    public int NextId {get{return _nextId;} set {_nextId = value;}}                                           //                .·´¯`(>▂<)´¯`·. 
+    public Dictionary<int, Jogador> JogadoresDict {get{return _jogadoresDict;} set {_jogadoresDict = value;}} // ⚠️ "private set" not working, gotta look into that 
+    public int NextId {get{return _nextId;} set {_nextId = value;}}                                           // ⚠️              .·´¯`(>▂<)´¯`·. 
     
     // Constructor
     public static JogadorRepo LoadFromDataBase()
