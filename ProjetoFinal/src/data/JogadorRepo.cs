@@ -1,10 +1,7 @@
+using jogador;
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.Json;
-using jogador;
-
 
 namespace MyRepository;
 
@@ -31,15 +28,12 @@ public class JogadorRepo
         VerifyFileExists();
         
         string JsonString = File.ReadAllText(FilePath);
-
-        Console.WriteLine(JsonString);//debug
         
         JogadorRepo? temp = JsonSerializer.Deserialize<JogadorRepo>(JsonString);
 
         if (temp == null)
             throw new Exception($"Failed to deserialize json {FilePath}");
 
-        Console.WriteLine(temp.Serialize());//debug
         return temp;
     }
     
