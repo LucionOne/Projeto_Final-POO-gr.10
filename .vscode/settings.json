@@ -1,9 +1,0 @@
-{
-    "dotnet.defaultSolution": "ProjetoFinal.sln",
-    "github.copilot.enable": {
-        "*": false,
-        "plaintext": false,
-        "markdown": false,
-        "scminput": false
-    },    
-}
