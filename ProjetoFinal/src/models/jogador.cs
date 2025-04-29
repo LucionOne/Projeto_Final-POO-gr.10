@@ -4,6 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace jogador;
 
+// Gestão de Jogadores
+// CRUD[1] dos jogadores;
+// Os atributos principais são nome, idade e posição;
+// As posições podem ser: goleiros, defesa e ataque;
+// Este cadastro deve contar todas as pessoas que fazem parte da “associação” ou “grupo” de pessoas que normalmente jogam.  - ????????
+// Cada jogador de ter um código único usado como identificador, a exemplo o RA que é usado na Universidade.
+
 public class Jogador
 {
     // private attributes

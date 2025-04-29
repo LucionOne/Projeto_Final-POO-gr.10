@@ -1,0 +1,336 @@
+Objetivo
+
+Desenvolver um sistema de para a organização de jogos de futebol, utilizando os conceitos da Programação Orientada a Objetos de acordo com o requisitos abaixo.
+
+ 
+
+Requisitos do Projeto
+
+Requisitos Não-Funcionais
+Esta atividade deve ser feita em grupos com até 03 pessoas;
+Vale 10,0 pontos;
+O grupo deve criar um repositório no GitHub para submeter as documentações e código-fonte da API;
+Todos os membros do grupo devem estar vinculados ao repositório do GitHub;
+Adicionar o usuário eduardo.mendes@unasp.edu.br ao repositório do GitHub;
+O versionamento deve ser feito através do Git;
+A linguagem utilizada é o C# (C Sharp)
+Deve ser um Projeto do tipo Console Application do .net.
+Utilizar arquivos json como banco de dados
+Criar o UML das Classes
+A nota individual será baseada em dois critérios:
+Participação registrada no repositório
+Pergunta técnica feita pelo professor ou pela da banca no dia da apresentação
+A apresentação será em 15 minutos para cada equipe, sendo 08 minutos de apresentação e 07 minutos para perguntas e dúvidas da banca.
+A banca será composta por pelo professor e até dois convidados externos.
+
+Requisitos Funcionais
+
+Gestão de Jogadores // Done 
+
+CRUD[1] dos jogadores;
+Os atributos principais são nome, idade e posição;
+As posições podem ser: goleiros, defesa e ataque;
+Este cadastro deve contar todas as pessoas que fazem parte da “associação” ou “grupo” de pessoas que normalmente jogam.  //??????
+Cada jogador de ter um código único usado como identificador, a exemplo o RA que é usado na Universidade.
+
+Gestão de Jogos
+
+CRUD dos Jogos;
+Os atributos principais são: a data do jogo, o local, o tipo de campo e quantos jogadores por time incluindo o goleiro;
+Adicionar um atributo opcional que limita a quantidade de times e/ou de jogadores;
+A quantidade mínima para confirmar a partida são pelo menos dois times completos.
+Lista de Interessados para registrar quem pretende ir ao próximo jogo
+
+Gestão dos times
+
+Criar pelo menos 03 formas de gerar os times
+Por ordem de chegada no local do jogo,
+Por exemplo: se for um jogo de futsal, os 04 primeiros ficam no primeiro time e os 04 seguintes ficam no segundo time.
+Exceto os goleiros: 01 para cada time
+Se não houver goleiros suficiente, fica o próximo da lista
+Por ordem de posição, tentando deixar os times mais equilibrados:
+Um goleiro para cada time
+Quantidade de jogadores de defesa e ataques equilibrados entre os times, quando possível
+Algum outro critério desenvolvido pelo grupo
+Usem a criatividade
+Podem adicionar outros atributos para atender este requisito
+Validar com o Professor antes de implementar
+Os times devem ser criados à medida que as partidas vão acontecendo, ou seja, cria-se os dois primeiros times, e o terceiro será gerado após o término do primeiro jogo.
+Se não houver jogadores suficientes “fora”, pode usar os jogadores do time derrotado para completar.
+
+Gestão das Partidas
+
+Registrar cada partida com o respectivo resultado
+Não é obrigatório registrar quem fez os gols.
+Deverá haver dois modos das partidas prosseguirem:
+Quem ganha fica, independentemente da quantidade de partidas;
+Cada time joga duas vezes, exceto a primeira partida que quem ganha continua jogando
+Adicionar mais uma funcionalidade, a critério do grupo.
+Validar com o Professor antes de implementar.
+Bônus
+
+Criar uma classificação que mostre quem são os jogadores com mais pontos, sendo que:
+03 pontos para a vitória
+01 ponto para empate
+00 pontos para derrota
+Usar o banco de dados MariaDB
+É um banco de dados simples e leve. Ele salva os dados em arquivos, podemos usar o recursos da linguagem SQL, própria para banco de dados.
+Cronograma
+
+Nas datas abaixo, as atividades já devem estar concluídas.
+
+DATA
+
+ATIVIDADE
+
+17/04
+
+Escolher os membros do Grupos e adicioná-los ao AVA
+
+Ter o repositório no GitHub configurado e com todos os usuários vinculados, incluindo o professor.
+
+30/04
+
+Gestão de Jogadores e Gestão dos Jogos
+
+14/05
+
+Gestão das Partidas
+
+28/05
+
+Gestão dos Times
+
+10/06
+
+Entrega Final
+
+11, 12, 18
+
+Apresentação do Projeto.
+
+Gabarito
+
+O prazo para todos os itens avaliados na tabela abaixo será baseado no cronograma acima e no uso correto de cada conceito ou implementação.
+ 
+
+ITEM
+
+PESO
+
+NOTA
+
+ 
+
+EM DIA
+
+EM ATRASO/
+
+OU IMCOMPLETO
+
+NÃO FEZ
+
+ 
+
+Criou o repositório no GitHub
+
+1,0
+
+0,5
+
+0,0
+
+10,0
+
+Adicionou todos os membros do grupo e o usuário do professor ao repositório do GitHub
+
+1,0
+
+0,5
+
+0,0
+
+10,0
+
+Estruturou o Projeto em pastas e namespaces
+
+2,0
+
+1,0
+
+0,0
+
+10,0
+
+Usou de Classes Abstratas
+
+1,0
+
+0,5
+
+0,0
+
+10,0
+
+Usou Interfaces
+
+2,0
+
+1,0
+
+0,0
+
+10,0
+
+Usou Exceções
+
+4,0
+
+2,0
+
+0,0
+
+10,0
+
+Salvou em arquivos
+
+5,0
+
+2,5
+
+0,0
+
+10,0
+
+Gestão de Jogadores
+
+10,0*
+
+NA
+
+0,0
+
+10,0
+
+Gestão dos Jogos
+
+10,0*
+
+NA
+
+0,0
+
+10,0
+
+Gestão das Partidas
+
+10,0*
+
+NA
+
+0,0
+
+10,0
+
+Gestão dos Times
+
+10,0*
+
+NA
+
+0,0
+
+10,0
+
+Nova Funcionalidade
+
+10,0*
+
+NA
+
+0,0
+
+10,0
+
+Apresentou com clareza e dentro de tempo
+
+10,0
+
+NA
+
+0,0
+
+10,0
+
+Participou proporcionalmente nas contribuições do gitHub
+
+10,0**
+
+NA
+
+0,0
+
+10,0
+
+Respondeu a questão na apresentaçao
+
+10,0**
+
+NA
+
+0,0
+
+10,0
+
+Fez a classificação dos jogagores
+
+1,0
+
+NA
+
+0,0
+
+10,0
+
+Usou o banco de dados MariaDB
+
+1,0
+
+NA
+
+0,0
+
+10,0
+
+ 
+
+Observações:
+
+* Notas proporcionais ao que foi implementado.
+
+** Notas utilizadas para o cálculo da nota individual
+
+Apresentação do sistema – Cada equipe terá 08 minutos para apresentar o sistema e demonstrar as funcionalidades
+Arguição sobre o sistema – A equipe terá até 07 minutos para responder as questões levantas pela
+Participação equilibrada dos membros da equipe – Será utilizada como referência o relatório de contribuição do GitHub, assim como na soma do número de linhas adicionadas e o número de linha removidas, e quanto essa somatória equivale proporcionalmente ao total de todos os membros do grupo.
+ 
+
+Cálculo da nota
+
+Será usada a média ponderada
+
+
+ 
+
+sendo,
+
+ 
+
+NP = Nota final e individual do projeto
+
+p = peso do gabarito
+
+n = nota do gabarito
+
+
+[1] CRUD é uma sigla muito comum que significa CREATE, READ, UPDATE e DELETE. São as operações básicas na manipulação de informações em um banco de dados.

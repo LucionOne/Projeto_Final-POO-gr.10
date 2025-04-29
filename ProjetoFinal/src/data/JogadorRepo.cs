@@ -45,7 +45,7 @@ public class JogadorRepo
         _nextId += 1;
     }
 
-    public void Remove(int id)
+    public void Delete(int id)
     {
         _jogadoresDict.Remove(id);
     }
@@ -54,7 +54,12 @@ public class JogadorRepo
     {
         _jogadoresDict[id] = jogador;
     }
-    
+
+    public Jogador get(int id)
+    {
+        return _jogadoresDict[id];
+    }
+
     private static void VerifyFileExists()
     {
         if (!Directory.Exists(FolderPath))
