@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using jogador;
+
 
 namespace MyRepository;
 
@@ -10,43 +12,43 @@ public class JogadorRepo
 {
     // Const
     private const string FolderPath = "DataBase";
-    private string FilePath = Path.Combine(FolderPath, "jogadores.json");
-    
+    private const string FileName = "jogadores.json";
+    private const string FilePath = "DataBase\\jogadores.json";
+    // private string FilePath = Path.Combine(FolderPath, FileName);
+
     // Private
     private Dictionary<int, Jogador> _jogadoresDict = new Dictionary<int, Jogador>();
-    
-    private int _NextId;
+    private int _nextId;
 
     // Public
-    public Dictionary<int, Jogador> JogadoresDict {get{return _jogadoresDict;}}
-
-    public int NextId {get{return _NextId;}}
-
+    public Dictionary<int, Jogador> JogadoresDict {get{return _jogadoresDict;} set {_jogadoresDict = value;}} // "private set" not working, gotta look into that
+    public int NextId {get{return _nextId;} set {_nextId = value;}}                                           //                .·´¯`(>▂<)´¯`·. 
+    
     // Constructor
-    public JogadorRepo()
+    public static JogadorRepo LoadFromDataBase()
     {
-        VerifyFileExists();
-        string jsonString = File.ReadAllText(FilePath);
-        JogadorRepo? data = JsonSerializer.Deserialize<JogadorRepo>(jsonString);
         
-        if (data != null)
-        {
-            _jogadoresDict = data._jogadoresDict ?? new Dictionary<int, Jogador>();
-            _NextId = data._NextId;
-        }
-        else
-        {
-            _jogadoresDict = new Dictionary<int, Jogador>();
-            _NextId = 0;
-        }
-    }
+        VerifyFileExists();
+        
+        string JsonString = File.ReadAllText(FilePath);
 
-    // methods
+        Console.WriteLine(JsonString);//debug
+        
+        JogadorRepo? temp = JsonSerializer.Deserialize<JogadorRepo>(JsonString);
+
+        if (temp == null)
+            throw new Exception($"Failed to deserialize json {FilePath}");
+
+        Console.WriteLine(temp.Serialize());//debug
+        return temp;
+    }
+    
+    // Methods
     public void Append(Jogador jogador)
     {
-        jogador.Id = _NextId;
-        _jogadoresDict[_NextId] = jogador;
-        _NextId += 1;
+        jogador.Id = _nextId;
+        _jogadoresDict.Add(_nextId, jogador);
+        _nextId += 1;
     }
 
     public void Remove(int id)
@@ -59,7 +61,7 @@ public class JogadorRepo
         _jogadoresDict[id] = jogador;
     }
     
-    private void VerifyFileExists()
+    private static void VerifyFileExists()
     {
         if (!Directory.Exists(FolderPath))
         {
@@ -67,13 +69,18 @@ public class JogadorRepo
         }
         if (!File.Exists(FilePath))
         {
-            File.WriteAllText(FilePath, "");
+            File.WriteAllText(FilePath,"{}");
+         // File.WriteAllText(FilePath,"{\"_jogadoresDict\": {}, \"_nextId\": 0}");
         }
     }
     
     public string Serialize()
     {
-        return JsonSerializer.Serialize(this);
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        return JsonSerializer.Serialize(this, options);
     }
 
     public void WriteToDataBase()
