@@ -29,45 +29,58 @@ namespace jogo;
 
 public class Jogo
 {
-    // Update
 
-    // Const
-    public const int TeamsMínimos = 2;
+    #region Constant Attributes
 
-    // private 
-    private DateOnly _date;
-    private TimeOnly _horaInicio;
-    private string _local = string.Empty;
-    private string _tipoDeCampo = string.Empty;
-    private int _quantidadeJogadoresPorTeam;
-    private int _limiteJogadores;
-    private int _limiteTeams;
-    private int _id;
-    private List<Jogador>? _filaJogadoresSemTeam = new List<Jogador>();
+        public const int TeamsMínimos = 2;
+
+    #endregion
+    
+    #region Private Attributes
+
+        private DateOnly _date;
+        private TimeOnly _horaInicio;
+        private string _local = string.Empty;
+        private string _tipoDeCampo = string.Empty;
+        private int _quantidadeJogadoresPorTeam;
+    // private int _limiteJogadores;
+        private int _limiteTeams;
+        private int _id;
+        private List<Jogador>? _filaJogadoresSemTeam = new List<Jogador>();
     // private List<Jogador>? FilaGoleiros = new List<Jogador>();
-    private List<Team>? _Teams = new List<Team>();
+        private List<Team>? _Teams = new List<Team>();
 
-    // public 
-    public DateOnly Date 
-        {get {return _date;} set {_date = value;}}
-    public TimeOnly HoraInicio 
-        {get {return _horaInicio;} set {_horaInicio = value;}}
-    public string Local 
-        {get {return _local;} set {_local = value ?? string.Empty;}}
-    public string TipoDeCampo 
-        {get {return _tipoDeCampo;} set {_tipoDeCampo = value ?? string.Empty;}}
-    public int QuantidadeJogadoresPorTeam 
-        {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
-    public int LimiteJogadores 
-        {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
-    public int LimiteTeams 
-        {get {return _limiteTeams;} set {_limiteTeams = value;}}
-    public int Id 
-        {get {return _id;} set {_id = value;}}
-    public List<Jogador>? FilaJogadoresSemTeam 
-        {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
-    public List<Team>? Teams 
-        {get {return _Teams;} set {_Teams = value;}}
+        private int QuantidadeGoleiro;
+        private int QuantidadeDefesa;
+        private int QuantidadeAtacante;
+    
+    #endregion
+
+    #region Public Attributes
+
+        public DateOnly Date 
+            {get {return _date;} set {_date = value;}}
+        public TimeOnly HoraInicio 
+            {get {return _horaInicio;} set {_horaInicio = value;}}
+        public string Local 
+            {get {return _local;} set {_local = value ?? string.Empty;}}
+        public string TipoDeCampo 
+            {get {return _tipoDeCampo;} set {_tipoDeCampo = value ?? string.Empty;}}
+        public int QuantidadeJogadoresPorTeam 
+            {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
+    // public int LimiteJogadores 
+        // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
+        public int LimiteTeams 
+            {get {return _limiteTeams;} set {_limiteTeams = value;}}
+        public int Id 
+            {get {return _id;} set {_id = value;}}
+        public List<Jogador>? FilaJogadoresSemTeam 
+            {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
+        public List<Team>? Teams 
+            {get {return _Teams;} set {_Teams = value;}}
+
+    #endregion
+
 
     // Constructor
 
@@ -78,21 +91,12 @@ public class Jogo
         _local = local ?? string.Empty;
         _tipoDeCampo = tipoDeCampo ?? string.Empty;
         _quantidadeJogadoresPorTeam = quantidadeJogadoresPorTeam;
-        _limiteJogadores = limiteJogadores;
+     // _limiteJogadores = limiteJogadores;
         _limiteTeams = limiteTeams;
     }
 
+
     // Methods
-
-    public void VerificarJogadoresSemTeam()
-    {
-        if (_filaJogadoresSemTeam?.Count() == _quantidadeJogadoresPorTeam)
-        {
-            Team Team = new Team(string.Empty, _filaJogadoresSemTeam);
-            _Teams?.Add(Team);
-
-        }
-    }
 
     public void AddJogadorSemTeam(Jogador jogador)
     {
@@ -106,28 +110,25 @@ public class Jogo
         if (team.Jogadores == null)
             return false;
 
-        if (team.Jogadores.Count() != _quantidadeJogadoresPorTeam)
+        if (team.Jogadores.Count != _quantidadeJogadoresPorTeam)
             return false;
-
-
-
-
+        
+        if (team.Goleiros.Count != QuantidadeGoleiro)
+            return false;
+        
+        if (team.Defesas.Count != QuantidadeDefesa)
+            return false;
+        
+        if (team.Atacantes.Count != QuantidadeAtacante)
+            return false;
+        
+        // if (team.Unknown.Count > 0)
+        //     return false;
 
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
 }
