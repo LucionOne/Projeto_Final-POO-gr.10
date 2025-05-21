@@ -105,7 +105,7 @@ public class Jogo
         _filaJogadoresSemTeam.Add(jogador);
     }
 
-    public bool validateTeam(Team team)
+    public bool ValidateTeam(Team team)
     {
         if (team.Jogadores == null)
             return false;

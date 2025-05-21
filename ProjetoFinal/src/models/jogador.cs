@@ -75,7 +75,7 @@ public class Jogador
     }
 
     // methods
-    public string GetDatasString()
+    public override string ToString()
     {
         return $"Nome: {Nome}\tIdade: {Idade}\tPosição: {PosicaoString}";
     }
