@@ -1,12 +1,19 @@
-﻿using jogador;
-using MyRepository;
+﻿using Controller;
+using View;
 
-// DEMO/Debugging
+Console.Clear();
 
-Jogador jogador = new Jogador("Gp",19,1);
-Console.WriteLine(jogador.ToString());
+bool isRunning = true;
+while (isRunning)
+{
+    GameView gameView = new GameView();
+    gameView.AcquireGameInfo();
+    // HomeController home = new HomeController();
+    // home.BeginInteraction();
 
-JogadorRepo jogadorRepo = JogadorRepo.LoadFromDataBase();
-jogadorRepo.Append(jogador);
-Console.WriteLine(jogadorRepo.Serialize());
-jogadorRepo.WriteToDataBase();
+
+
+
+    Console.ReadLine();
+    isRunning = false;
+}

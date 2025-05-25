@@ -1,0 +1,38 @@
+<mxfile host="65bd71144e">
+    <diagram id="5FY5dKGWZQoq20cVErwO" name="Page-1">
+        <mxGraphModel dx="1203" dy="766" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="7" value="Jogo" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="30" width="240" height="340" as="geometry">
+                        <mxRectangle x="30" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="+ field: type&lt;div&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;+ Date :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;DateOnly&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ HoraInicio : T&lt;font color=&quot;#484848&quot;&gt;imeOnly&lt;/font&gt;&lt;/div&gt;&lt;div&gt;+ Local : string&lt;/div&gt;&lt;div&gt;+ TipoDeCampo :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ QuantidadeJogadoresPorTeam :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ LimiteTeams :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Id :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;- QuantidadeGoleiro :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;- QuantidadeDefesa :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;- QuantidadeAtacante :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ FilaJogadoresSemTeam :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;List&amp;lt;Jogador&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Teams :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;List&amp;lt;Team&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="7" vertex="1">
+                    <mxGeometry y="26" width="240" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="7" vertex="1">
+                    <mxGeometry y="240" width="240" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="+ method(type): type&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Jogo() : Constructor&lt;/div&gt;&lt;div&gt;+ AddJogadorSemTeam(Jogador) : void&lt;/div&gt;&lt;div&gt;+ ValidadeTeam(Team) : bool&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="7" vertex="1">
+                    <mxGeometry y="248" width="240" height="92" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Jogador" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="400" width="310" height="220" as="geometry">
+                        <mxRectangle x="30" y="440" width="80" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="+ field : type&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Nome : string?&lt;/div&gt;&lt;div&gt;+ Idade : int&lt;/div&gt;&lt;div&gt;+ Posicao : int&lt;/div&gt;&lt;div&gt;+ Id : int&lt;/div&gt;&lt;div&gt;+ PosicaoString : string&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="18" vertex="1">
+                    <mxGeometry y="26" width="310" height="114" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="18" vertex="1">
+                    <mxGeometry y="140" width="310" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="+ method(type) : type&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Jogador(nome:str, idade:int, posicao:int) : constructor&lt;/div&gt;&lt;div&gt;+ ToString() : void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="18" vertex="1">
+                    <mxGeometry y="148" width="310" height="72" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

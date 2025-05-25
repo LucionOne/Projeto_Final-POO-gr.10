@@ -1,0 +1,122 @@
+<mxfile host="65bd71144e">
+    <diagram id="e0pM36I6DdKXfKBxEXv1" name="Page-1">
+        <mxGraphModel dx="698" dy="766" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="9" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="2" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" y="60" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="150" y="85"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="Start" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_2;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="10" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="&amp;nbsp; 2&amp;nbsp;&amp;nbsp;" style="edgeStyle=none;html=1;exitX=0.997;exitY=0.117;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="4" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="85" as="sourcePoint"/>
+                        <mxPoint x="530" y="113.75" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="540" y="43"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="&amp;nbsp; 1&amp;nbsp;&amp;nbsp;" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1.001;exitY=0.271;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="4" target="19" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="60"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="&amp;nbsp; 4&amp;nbsp;&amp;nbsp;" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="4" target="21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="&amp;nbsp; 3&amp;nbsp;&amp;nbsp;" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4" target="36" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Actions&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;1) &lt;font color=&quot;#484848&quot;&gt;Start Game&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;2) Load&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;Game&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;3) Players&lt;br&gt;4) View&lt;/div&gt;" style="whiteSpace=wrap;html=1;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="30" width="140" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="10" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" value="2) Load a Game&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;will load a game that may be unfinished&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="50" width="100" height="92.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="11" target="23" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="Jogo" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1" collapsed="1">
+                    <mxGeometry x="590" y="200" width="100" height="30" as="geometry">
+                        <mxRectangle x="590" y="200" width="240" height="340" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="+ field: type&lt;div&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;+ Date :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;DateOnly&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ HoraInicio : T&lt;font color=&quot;#484848&quot;&gt;imeOnly&lt;/font&gt;&lt;/div&gt;&lt;div&gt;+ Local : string&lt;/div&gt;&lt;div&gt;+ TipoDeCampo :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;string&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ QuantidadeJogadoresPorTeam :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ LimiteTeams :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Id :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;- QuantidadeGoleiro :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;- QuantidadeDefesa :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;- QuantidadeAtacante :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;int&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;+ FilaJogadoresSemTeam :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;List&amp;lt;Jogador&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Teams :&amp;nbsp;&lt;span style=&quot;color: rgb(192, 192, 192); background-color: transparent;&quot;&gt;List&amp;lt;Team&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="11" vertex="1">
+                    <mxGeometry y="26" width="240" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="11" vertex="1">
+                    <mxGeometry y="240" width="240" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="+ method(type): type&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Jogo() : Constructor&lt;/div&gt;&lt;div&gt;+ AddJogadorSemTeam(Jogador) : void&lt;/div&gt;&lt;div&gt;+ ValidadeTeam(Team) : bool&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="11" vertex="1">
+                    <mxGeometry y="248" width="240" height="92" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0.987;exitY=0.713;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="19" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="615" y="176"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="1) Start Game&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Will create a new game&amp;nbsp;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="90" width="100" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="4) View&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;it will show every thing that is in the dbs&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="230" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="23" target="42" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="Manage the Game" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="567.5" y="290" width="145" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="Jogador" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1" collapsed="1">
+                    <mxGeometry x="40" y="570" width="80" height="30" as="geometry">
+                        <mxRectangle x="30" y="400" width="310" height="220" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="+ field : type&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Nome : string?&lt;/div&gt;&lt;div&gt;+ Idade : int&lt;/div&gt;&lt;div&gt;+ Posicao : int&lt;/div&gt;&lt;div&gt;+ Id : int&lt;/div&gt;&lt;div&gt;+ PosicaoString : string&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="29" vertex="1">
+                    <mxGeometry y="26" width="310" height="114" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="29" vertex="1">
+                    <mxGeometry y="140" width="310" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="+ method(type) : type&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Jogador(nome:str, idade:int, posicao:int) : constructor&lt;/div&gt;&lt;div&gt;+ ToString() : void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="29" vertex="1">
+                    <mxGeometry y="148" width="310" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="3) Players&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Open its management window&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="230" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=none;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="42" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="550" y="425"/>
+                            <mxPoint x="550" y="230"/>
+                            <mxPoint x="430" y="230"/>
+                            <mxPoint x="430" y="85"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="End game and stores it" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="400" width="100" height="100" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
