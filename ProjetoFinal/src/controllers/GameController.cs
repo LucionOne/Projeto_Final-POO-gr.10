@@ -1,30 +1,52 @@
 using jogo;
+using DTOs;
+using Templates;
 
 namespace Controller;
 
 public class GameController
 {
+    private readonly IGameView _view;
 
-
-    public GameController() { }
-
-    public void CreateGame()
+    public enum Context
     {
-        //data e hora
-        //local
-        //tipo de campo
-        //Quantos jogadores por time
-
-        
-
-
-
-
-
+        CreateGame,
+        LoadGame
     }
 
-    public void RetrieveGameFromDb() { }
+    public GameController(IGameView view)
+    {
+        _view = view;
+    }
 
-    public void RunGame() { }
+    public void BeginInteraction(Context actionContext)
+    {
+        HandleContext(actionContext);   
+    }
 
+    private Game HandleContext(Context actionContext)
+    {
+        Game game;
+        switch (actionContext)
+        {
+            case Context.CreateGame:
+                game = CreateGame();
+                break;
+            case Context.LoadGame:
+                game = RetrieveGameFromDb();
+                break;
+            default:
+                throw new Exception("Invalid actionContext"); 
+        }
+        return game;
+    }
+
+    public Game CreateGame()
+    {
+        GameDto gamePackage = _view.AcquireGameInfo();
+        Game game = new Game(gamePackage);
+        return game;
+    }
+
+    public Game RetrieveGameFromDb() {}
 }

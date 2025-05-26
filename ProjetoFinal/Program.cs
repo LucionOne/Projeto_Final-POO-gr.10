@@ -1,19 +1,44 @@
 ﻿using Controller;
-using View;
 
-Console.Clear();
-
-bool isRunning = true;
-while (isRunning)
+public class Program
 {
-    GameView gameView = new GameView();
-    gameView.AcquireGameInfo();
-    // HomeController home = new HomeController();
-    // home.BeginInteraction();
+    public static void Main()
+    {
+        Console.Clear();
+
+        bool isRunning = true;
+        while (isRunning)
+        {
+            var homeController = new HomeController();
+            homeController.BeginInteraction();
 
 
 
 
-    Console.ReadLine();
-    isRunning = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            Console.ReadLine();
+            isRunning = false;
+        }
+    }
 }

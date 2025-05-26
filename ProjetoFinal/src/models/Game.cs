@@ -1,5 +1,6 @@
 using team;
 using jogador;
+using DTOs;
 
 namespace jogo;
 
@@ -27,7 +28,7 @@ namespace jogo;
 // Se não houver jogadores suficientes “fora”, pode usar os jogadores do Team derrotado para completar.
 
 
-public class Jogo
+public class Game
 {
 
     #region Constant Attributes
@@ -44,7 +45,7 @@ public class Jogo
         private string _tipoDeCampo = string.Empty;
         private int _quantidadeJogadoresPorTeam;
     // private int _limiteJogadores;
-        private int _limiteTeams;
+        // private int _limiteTeams;
         private int _id;
         private List<Jogador>? _filaJogadoresSemTeam = new List<Jogador>();
     // private List<Jogador>? FilaGoleiros = new List<Jogador>();
@@ -70,8 +71,8 @@ public class Jogo
             {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
     // public int LimiteJogadores 
         // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
-        public int LimiteTeams 
-            {get {return _limiteTeams;} set {_limiteTeams = value;}}
+        // public int LimiteTeams 
+        //     {get {return _limiteTeams;} set {_limiteTeams = value;}}
         public int Id 
             {get {return _id;} set {_id = value;}}
         public List<Jogador>? FilaJogadoresSemTeam 
@@ -81,19 +82,29 @@ public class Jogo
 
     #endregion
 
-
     // Constructor
 
-    public Jogo(DateOnly date, TimeOnly horaInicio, string local, string tipoDeCampo, int quantidadeJogadoresPorTeam, int limiteJogadores, int limiteTeams)
+    public Game(GameDto Package)
     {
-        _date = date;
-        _horaInicio = horaInicio;
-        _local = local ?? string.Empty;
-        _tipoDeCampo = tipoDeCampo ?? string.Empty;
-        _quantidadeJogadoresPorTeam = quantidadeJogadoresPorTeam;
-     // _limiteJogadores = limiteJogadores;
-        _limiteTeams = limiteTeams;
+        _date = Package.Date;
+        _horaInicio = Package.HoraInicio;
+        _local = Package.Local;
+        _tipoDeCampo = Package.TipoDeCampo;
+        _quantidadeJogadoresPorTeam = Package.QuantidadeJogadoresPorTeam;
     }
+    
+    public Game() { }
+
+    // public Game(DateOnly date, TimeOnly horaInicio, string local, string tipoDeCampo, int quantidadeJogadoresPorTeam, int limiteJogadores, int limiteTeams)
+    // {
+    //     _date = date;
+    //     _horaInicio = horaInicio;
+    //     _local = local ?? string.Empty;
+    //     _tipoDeCampo = tipoDeCampo ?? string.Empty;
+    //     _quantidadeJogadoresPorTeam = quantidadeJogadoresPorTeam;
+    //     // _limiteJogadores = limiteJogadores;
+    //     _limiteTeams = limiteTeams;
+    // }
 
 
     // Methods

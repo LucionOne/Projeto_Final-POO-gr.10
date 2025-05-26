@@ -4,65 +4,66 @@ namespace Controller;
 
 public class HomeController
 {
-
-    private HomeView console;
-
-    private Dictionary<int, Action> UserActions;
-
+    private HomeView _console;
+    private Dictionary<int, Action> _userActions;
 
     public HomeController()
     {
-        console = new HomeView();
-        UserActions = new Dictionary<int, Action>
+        _console = new HomeView();
+        _userActions = new Dictionary<int, Action>
         {
-            { 1, Option1 },
+            { 1, CreateGame },
             { 2, Option2 },
             { 3, Option3 },
             { 4, Option4 }
         };
     }
 
-
     public void BeginInteraction()
     {
         bool isRunning = true;
         while (isRunning)
         {
-            console.Menu();
-            int choice = console.Input();
+            _console.Menu();
+            int choice = _console.Input();
             isRunning = HandleUserChoice(choice);
         }
     }
 
-
     private bool HandleUserChoice(int input)
     {
-
         if (input == 0)
         {
-            console.Bye();
+            _console.Bye();
             return false;
         }
 
-        if (UserActions.TryGetValue(input, out var action))
-            { action(); }
+        if (_userActions.TryGetValue(input, out var action))
+        {
+            action();
+        }
         else
-            { console.InvalidChoice(input); }
+        {
+            _console.InvalidChoice(input);
+        }
 
         return true;
     }
 
-
-    public void Option1()
+    public void CreateGame()
     {
         Console.WriteLine("Option 1");
-        Console.ReadLine();
+        IGameView gameView = new GameView();
+        var gameController = new GameController(gameView);
+        gameController.BeginInteraction(GameController.Context.CreateGame);
     }
 
     public void Option2()
     {
         Console.WriteLine("Option 2");
-        Console.ReadLine();
+        IGameView gameView = new GameView();
+        var gameController = new GameController(gameView);
+        gameController.BeginInteraction(GameController.Context.LoadGame);
     }
 
     public void Option3()

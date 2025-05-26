@@ -1,11 +1,13 @@
 using jogador;
+using Microsoft.VisualBasic;
 using System;
 using System.IO;
 using System.Text.Json;
+using Templates;
 
 namespace MyRepository;
 
-public class JogadorRepo
+public class JogadorRepo : IRepo<Jogador>
 {
     // Const
     private const string FolderPath = "DataBase";
@@ -15,17 +17,16 @@ public class JogadorRepo
 
     // Private
     private Dictionary<int, Jogador> _jogadoresDict = new Dictionary<int, Jogador>();
+    private List<Jogador> _jogadoresList = new();
     private int _nextId;
-
+    
     // Public
-    public Dictionary<int, Jogador> JogadoresDict {get{return _jogadoresDict;} set {_jogadoresDict = value;}} // ⚠️ "private set" not working, gotta look into that 
+    public Dictionary<int, Jogador> JogadoresDict { get { return _jogadoresDict; } set { _jogadoresDict = value; } } // ⚠️ "private set" not working, gotta look into that 
     public int NextId {get{return _nextId;} set {_nextId = value;}}                                           // ⚠️              .·´¯`(>▂<)´¯`·. 
     
     // Constructor
     public static JogadorRepo LoadFromDataBase()
     {
-        
-        VerifyFileExists();
         
         string JsonString = File.ReadAllText(FilePath);
         
@@ -38,29 +39,37 @@ public class JogadorRepo
     }
     
     // Methods
-    public void Append(Jogador jogador)
+    public void Add(Jogador jogador)
     {
         jogador.Id = _nextId;
-        _jogadoresDict.Add(_nextId, jogador);
+        _jogadoresList.Add(jogador);
         _nextId += 1;
     }
 
-    public void Delete(int id)
+    public void RemoveAt(int id)
     {
-        _jogadoresDict.Remove(id);
+        int index = _jogadoresList.FindIndex(x => x.Id == id);
+        _jogadoresList.RemoveAt(index);
     }
     
-    public void Edit(int id, Jogador jogador)
+    public void UpdateById(int id, Jogador jogador)
     {
-        _jogadoresDict[id] = jogador;
+        int index = _jogadoresList.FindIndex(x => x.Id == id);
+        _jogadoresList[index] = jogador;
     }
 
-    public Jogador get(int id)
+    public Jogador GetById(int id)
     {
-        return _jogadoresDict[id];
+        return _jogadoresList[id];
     }
 
-    private static void VerifyFileExists()
+    public Dictionary<int, Jogador> GetAll()
+    {
+        return _jogadoresList.ToDictionary(Player => Player.Id, Player => Player);
+    }
+
+
+    public void VerifyFileExists()
     {
         if (!Directory.Exists(FolderPath))
         {
@@ -68,8 +77,8 @@ public class JogadorRepo
         }
         if (!File.Exists(FilePath))
         {
-            File.WriteAllText(FilePath,"{}");
-         // File.WriteAllText(FilePath,"{\"_jogadoresDict\": {}, \"_nextId\": 0}");
+            File.WriteAllText(FilePath, "{}");
+            // File.WriteAllText(FilePath,"{\"_jogadoresDict\": {}, \"_nextId\": 0}");
         }
     }
     

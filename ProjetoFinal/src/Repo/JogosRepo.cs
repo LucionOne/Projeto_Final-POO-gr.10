@@ -2,10 +2,11 @@ using jogo;
 using System;
 using System.IO;
 using System.Text.Json;
+using Templates;
 
 namespace MyRepository;
 
-public class JogosRepo
+public class GamesRepo : IRepo<Game>
 {
     // Const
     private const string FolderPath = "DataBase";
@@ -14,23 +15,21 @@ public class JogosRepo
     // private string FilePath = Path.Combine(FolderPath, FileName);
 
     // Private
-    private List<Jogo> _jogosList = new List<Jogo>();
+    private List<Game> _jogosList = new List<Game>();
     private int _nextId;
 
     // Public
-    public List<Jogo> JogosList {get {return _jogosList;} set {_jogosList = value;}}
+    public List<Game> JogosList {get {return _jogosList;} set {_jogosList = value;}}
     //public Dictionary<int, Jogo> JogosDict {get{return _jogosDict;} set {_jogosDict = value;}} // ⚠️ "private set" not working, gotta look into that 
     public int NextId {get{return _nextId;} set {_nextId = value;}}                              // ⚠️              .·´¯`(>▂<)´¯`·. 
     
     // Constructor
-    public static JogosRepo LoadFromDataBase() // ⚠️
+    public static GamesRepo LoadFromDataBase() // ⚠️
     {
-        
-        VerifyFileExists();
         
         string JsonString = File.ReadAllText(FilePath);
         
-        JogosRepo? temp = JsonSerializer.Deserialize<JogosRepo>(JsonString);
+        GamesRepo? temp = JsonSerializer.Deserialize<GamesRepo>(JsonString);
 
         if (temp == null)
             throw new Exception($"Failed to deserialize json {FilePath}");
@@ -39,29 +38,35 @@ public class JogosRepo
     }
     
     // Methods
-    public void Append(Jogo jogo)
+    public void Add(Game jogo)
     {
         jogo.Id = _nextId;
         JogosList.Add(jogo);
         _nextId += 1;
     }
 
-    public void Delete(Jogo jogo)
+    public void Remove(Game jogo)
     {
         _jogosList.Remove(jogo);
     }
     
-    public void Edit(int id, Jogo jogador)
+    public void Update(int id, Game jogador)
     {
         _jogosList[id] = jogador;
     }
 
-    public Jogo Get(int id)
+    public Game GetById(int id)
     {
         return _jogosList[id];
     }
 
-    private static void VerifyFileExists()
+    public Dictionary<int, Game> GetAll()
+    {
+        return _jogosList.ToDictionary(game => game.Id, game => game);
+    }
+
+
+    public void VerifyFileExists()
     {
         if (!Directory.Exists(FolderPath))
         {
@@ -69,8 +74,8 @@ public class JogosRepo
         }
         if (!File.Exists(FilePath))
         {
-            File.WriteAllText(FilePath,"{}");
-         // File.WriteAllText(FilePath,"{\"_jogadoresDict\": {}, \"_nextId\": 0}");
+            File.WriteAllText(FilePath, "{}");
+            // File.WriteAllText(FilePath,"{\"_jogadoresDict\": {}, \"_nextId\": 0}");
         }
     }
     
