@@ -21,7 +21,7 @@ public class GameController
 
     public void BeginInteraction(Context actionContext)
     {
-        HandleContext(actionContext);   
+        Game game = HandleContext(actionContext);   
     }
 
     private Game HandleContext(Context actionContext)
@@ -33,7 +33,7 @@ public class GameController
                 game = CreateGame();
                 break;
             case Context.LoadGame:
-                game = RetrieveGameFromDb();
+                game = GetGameFromDb();
                 break;
             default:
                 throw new Exception("Invalid actionContext"); 
@@ -48,5 +48,9 @@ public class GameController
         return game;
     }
 
-    public Game RetrieveGameFromDb() {}
+    public Game GetGameFromDb()
+    {
+        if ()
+        _view.ShowDb();
+    }
 }

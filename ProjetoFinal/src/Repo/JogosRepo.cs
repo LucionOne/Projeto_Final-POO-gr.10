@@ -45,19 +45,22 @@ public class GamesRepo : IRepo<Game>
         _nextId += 1;
     }
 
-    public void Remove(Game jogo)
+    public void RemoveAt(int id)
     {
-        _jogosList.Remove(jogo);
+        int index = _jogosList.FindIndex(x => x.Id == id);
+        _jogosList.RemoveAt(index);
     }
     
-    public void Update(int id, Game jogador)
+    public void UpdateById(int id, Game jogo)
     {
-        _jogosList[id] = jogador;
+        int index = _jogosList.FindIndex(x => x.Id == id);
+        _jogosList[index] = jogo;
     }
 
     public Game GetById(int id)
     {
-        return _jogosList[id];
+        int index = _jogosList.FindIndex(x => x.Id == id);
+        return _jogosList[index];
     }
 
     public Dictionary<int, Game> GetAll()

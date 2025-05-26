@@ -28,7 +28,7 @@ namespace jogo;
 // Se não houver jogadores suficientes “fora”, pode usar os jogadores do Team derrotado para completar.
 
 
-public class Game
+public class Game : modelAbs
 {
 
     #region Constant Attributes
@@ -46,7 +46,6 @@ public class Game
         private int _quantidadeJogadoresPorTeam;
     // private int _limiteJogadores;
         // private int _limiteTeams;
-        private int _id;
         private List<Jogador>? _filaJogadoresSemTeam = new List<Jogador>();
     // private List<Jogador>? FilaGoleiros = new List<Jogador>();
         private List<Team>? _Teams = new List<Team>();
@@ -73,8 +72,6 @@ public class Game
         // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
         // public int LimiteTeams 
         //     {get {return _limiteTeams;} set {_limiteTeams = value;}}
-        public int Id 
-            {get {return _id;} set {_id = value;}}
         public List<Jogador>? FilaJogadoresSemTeam 
             {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
         public List<Team>? Teams 

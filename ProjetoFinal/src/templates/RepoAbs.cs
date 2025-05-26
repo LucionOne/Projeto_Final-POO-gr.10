@@ -7,17 +7,17 @@ using Templates;
 
 namespace MyRepository;
 
-public class JogadorRepo : IRepo<Jogador>
+public abstract class RepoAbs<T> : IRepo<baseModel>
 {
     // Const
     private const string FolderPath = "DataBase";
-    private const string FileName = "jogadores.json";
-    private const string FilePath = "DataBase\\jogadores.json";
+    private string FileName;
+    private string FilePath = "";
     // private string FilePath = Path.Combine(FolderPath, FileName);
 
     // Private
     // private Dictionary<int, Jogador> _jogadoresDict = new Dictionary<int, Jogador>();
-    private List<Jogador> _jogadoresList = new();
+    private List<baseModel> MainRepo = new();
     private int _nextId;
     
     // Public
@@ -25,12 +25,11 @@ public class JogadorRepo : IRepo<Jogador>
     public int NextId {get{return _nextId;} set {_nextId = value;}}                                           // ⚠️              .·´¯`(>▂<)´¯`·. 
     
     // Constructor
-    public static JogadorRepo LoadFromDataBase()
+    public static RepoAbs<baseModel> LoadFromDataBase()
     {
-        
         string JsonString = File.ReadAllText(FilePath);
         
-        JogadorRepo? temp = JsonSerializer.Deserialize<JogadorRepo>(JsonString);
+        RepoAbs<baseModel>? temp = JsonSerializer.Deserialize<RepoAbs<baseModel>>(JsonString);
 
         if (temp == null)
             throw new Exception($"Failed to deserialize json {FilePath}");
@@ -39,34 +38,34 @@ public class JogadorRepo : IRepo<Jogador>
     }
     
     // Methods
-    public void Add(Jogador jogador)
+    public void Add(baseModel baseModel)
     {
-        jogador.Id = _nextId;
-        _jogadoresList.Add(jogador);
+        baseModel.Id = _nextId;
+        MainRepo.Add(baseModel);
         _nextId += 1;
     }
 
     public void RemoveAt(int id)
     {
-        int index = _jogadoresList.FindIndex(x => x.Id == id);
-        _jogadoresList.RemoveAt(index);
+        int index = MainRepo.FindIndex(x => x.Id == id);
+        MainRepo.RemoveAt(index);
     }
     
-    public void UpdateById(int id, Jogador jogador)
+    public void UpdateById(int id, baseModel baseModel)
     {
-        int index = _jogadoresList.FindIndex(x => x.Id == id);
-        _jogadoresList[index] = jogador;
+        int index = MainRepo.FindIndex(x => x.Id == id);
+        MainRepo[index] = baseModel;
     }
 
-    public Jogador GetById(int id)
+    public baseModel GetById(int id)
     {
-        int index = _jogadoresList.FindIndex(x => x.Id == id);
-        return _jogadoresList[index];
+        int index = MainRepo.FindIndex(x => x.Id == id);
+        return MainRepo[index];
     }
 
-    public Dictionary<int, Jogador> GetAll()
+    public Dictionary<int, baseModel> GetAll()
     {
-        return _jogadoresList.ToDictionary(Player => Player.Id, Player => Player);
+        return MainRepo.ToDictionary(Player => Player.Id, Player => Player);
     }
 
 

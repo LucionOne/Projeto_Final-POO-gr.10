@@ -16,27 +16,6 @@ public class Program
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             Console.ReadLine();
             isRunning = false;
         }
