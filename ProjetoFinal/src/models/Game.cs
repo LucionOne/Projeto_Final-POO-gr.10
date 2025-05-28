@@ -1,6 +1,7 @@
 using team;
 using jogador;
 using DTOs;
+using Templates;
 
 namespace jogo;
 
@@ -28,7 +29,7 @@ namespace jogo;
 // Se não houver jogadores suficientes “fora”, pode usar os jogadores do Team derrotado para completar.
 
 
-public class Game : modelAbs
+public class Game : ModelAbstract
 {
 
     #region Constant Attributes

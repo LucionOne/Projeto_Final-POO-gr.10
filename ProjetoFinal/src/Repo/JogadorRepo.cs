@@ -7,7 +7,7 @@ using Templates;
 
 namespace MyRepository;
 
-public class JogadorRepo : IRepo<Jogador>
+public class JogadorRepo : RepoAbstract<Jogador>
 {
     // Const
     private const string FolderPath = "DataBase";

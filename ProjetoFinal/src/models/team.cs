@@ -1,4 +1,5 @@
 using jogador;
+using Templates;
 
 namespace team;
 
@@ -18,7 +19,7 @@ namespace team;
 // Se não houver jogadores suficientes “fora”, pode usar os jogadores do Team derrotado para completar.
 
 
-public class Team
+public class Team : ModelAbstract
 {
 
     #region Private Attributes

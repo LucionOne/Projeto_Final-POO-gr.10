@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Templates;
 
 namespace jogador;
 
@@ -11,7 +12,7 @@ namespace jogador;
 // Este cadastro deve contar todas as pessoas que fazem parte da “associação” ou “grupo” de pessoas que normalmente jogam.  - ????????
 // Cada jogador de ter um código único usado como identificador, a exemplo o RA que é usado na Universidade.
 
-public class Jogador
+public class Jogador : ModelAbstract
 {
     // private attributes
     private string? _nome;
