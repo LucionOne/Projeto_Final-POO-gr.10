@@ -14,16 +14,17 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected const string FolderPath = "DataBase";
     protected readonly string _fileName;
     protected readonly string _filePath;
+    
     protected readonly List<T> _mainRepo = new();
     private int _nextId;
 
+    public List<T> MainRepo => _mainRepo;
     public int NextId
     {
         get => _nextId;
         set => _nextId = value;
     }
 
-    
 
     /// <summary>
     /// Constructor for the repository
@@ -89,7 +90,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         return _mainRepo.FirstOrDefault(x => x.Id == id);
     }
-    
+
     /// <summary>
     /// Gets all items in the database list
     /// </summary>
@@ -111,7 +112,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     /// <summary>
     /// Verifies if the file exists, if it doesn't it creates the directory and file
     /// </summary>
-    public virtual void VerifyFileExists()
+    public virtual void ConfirmFileAndFolderExistence()
     {
         if (!Directory.Exists(FolderPath))
             Directory.CreateDirectory(FolderPath);
@@ -127,7 +128,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected virtual string Serialize()
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        return JsonSerializer.Serialize(_mainRepo, options);
+        return JsonSerializer.Serialize(this, options);
     }
 
     /// <summary>
@@ -138,5 +139,12 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         File.WriteAllText(_filePath, Serialize());
     }
 
-    // Optionally, implement a LoadFromDataBase method as needed.
+    public abstract RepoAbstract<T> DataBaseStarter();
+
+    public virtual RepoAbstract<T> LoadFromDataBase()
+    {
+        string file = File.ReadAllText(_filePath);
+        RepoAbstract<T> temp = JsonSerializer.Deserialize<RepoAbstract<T>>(file) ?? throw new NullReferenceException("Deserializer returned null");
+        return temp;        
+    }
 }

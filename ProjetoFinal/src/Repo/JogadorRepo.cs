@@ -3,23 +3,26 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Templates;
+using Container.Wrapper;
 
 namespace MyRepository;
 
-public class JogadorRepo : RepoAbstract<Jogador>
+public class PlayersRepo : RepoAbstract<Jogador>
 {
-    public JogadorRepo(string fileName) : base(fileName) {}
+    public PlayersRepo(string fileName = "Players.json") : base(fileName) { }
 
-    // public static JogadorRepo LoadFromDataBase(string fileName)
-    // {
-    //     string filePath = Path.Combine("DataBase", fileName);
-    //     if (!File.Exists(filePath))
-    //         throw new FileNotFoundException($"File not found: {filePath}");
+    public override PlayersRepo DataBaseStarter()
+    {
+        ConfirmFileAndFolderExistence();
+        PlayersRepo Repository = LoadFromDataBase();
+        return Repository;
+    }
 
-    //     string jsonString = File.ReadAllText(filePath);
-    //     JogadorRepo? temp = JsonSerializer.Deserialize<JogadorRepo>(jsonString);
-    //     if (temp == null)
-    //         throw new Exception($"Failed to deserialize json {filePath}");
-    //     return temp;
-    // }
+    public override PlayersRepo LoadFromDataBase()
+    {
+        string file = File.ReadAllText(_filePath);
+        PlayersRepo temp = JsonSerializer.Deserialize<PlayersRepo>(file)
+            ?? throw new NullReferenceException("Deserializer returned null");
+        return temp;
+    }
 }

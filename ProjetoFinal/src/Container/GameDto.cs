@@ -1,5 +1,5 @@
 using jogo;
-namespace DTOs;
+namespace Container.DTOs;
 
 public class GameDto
 {

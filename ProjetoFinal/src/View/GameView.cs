@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO.Pipelines;
-using DTOs;
+using Container.DTOs;
 using jogo;
 using Templates;
 

@@ -2,6 +2,7 @@ using View;
 using Templates;
 using MyRepository;
 using jogo;
+using Context;
 
 namespace Controller;
 
@@ -9,14 +10,22 @@ public class HomeController
 {
     private HomeView _console;
     private Dictionary<int, Action> _userActions;
+    private DataContext Data;
+    private PlayersRepo _playersRepo;
+    private GamesRepo _gamesRepo;
 
-    public HomeController()
+    public HomeController(DataContext data, HomeView _view)
     {
-        _console = new HomeView();
+
+        Data = data;
+        _playersRepo = data.JogadorRepo;
+        _gamesRepo = data.GamesRepo;
+        _console = _view;
+
         _userActions = new Dictionary<int, Action>
         {
             { 1, CreateGame },
-            { 2, Option2 },
+            { 2, LoadGame },
             { 3, Option3 },
             { 4, Option4 }
         };
@@ -55,19 +64,17 @@ public class HomeController
 
     public void CreateGame()
     {
-        Console.WriteLine("Option 1");
+        // Console.WriteLine("Option 1");
         var gameView = new GameView();
-        var gamesRepo = new GamesRepo("Games.json");
-        var gameController = new GameController(gameView, gamesRepo);
+        var gameController = new GameController(gameView, _gamesRepo);
         gameController.BeginInteraction(GameController.Context.CreateGame);
     }
 
-    public void Option2()
+    public void LoadGame()
     {
-        Console.WriteLine("Option 2");
+        // Console.WriteLine("Option 2");
         var gameView = new GameView();
-        var gamesRepo = new GamesRepo("Games.json");
-        var gameController = new GameController(gameView, gamesRepo);
+        var gameController = new GameController(gameView, _gamesRepo);
         gameController.BeginInteraction(GameController.Context.LoadGame);
     }
 

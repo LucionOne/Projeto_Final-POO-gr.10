@@ -1,6 +1,6 @@
 using team;
 using jogador;
-using DTOs;
+using Container.DTOs;
 using Templates;
 
 namespace jogo;

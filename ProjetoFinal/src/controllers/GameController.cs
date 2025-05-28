@@ -1,7 +1,6 @@
 using jogo;
-using DTOs;
+using Container.DTOs;
 using Templates;
-using MyRepository;
 
 namespace Controller;
 
@@ -55,6 +54,7 @@ public class GameController
     {
         List<Game> games = _repo.GetAll();
         List<GameDto> dtoList = BuildDtoListFromRepo(games);
+
         int id = _view.GetIdForGame(dtoList);
         Game game = _repo.GetById(id) ?? throw new ArgumentNullException("The id returned a null game");
         return game;
