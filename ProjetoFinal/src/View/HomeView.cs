@@ -2,9 +2,11 @@
 
 // using System.ComponentModel.DataAnnotations;
 
+using Templates;
+
 namespace View;
 
-public class HomeView
+public class HomeView : ViewAbstract
 {
 
     //Environment.NewLine
@@ -27,24 +29,6 @@ public class HomeView
     }
 
 
-    public int Input()
-    {
-        int number;
-        while (true)
-        {
-            string rawInput = Console.ReadLine() ?? "0";
-
-            if (rawInput == "")
-            { rawInput = "0"; }
-            
-            bool valid = int.TryParse(rawInput, out number);
-
-            if (valid)
-            { return number; }
-            else
-            { Console.WriteLine("Invalid input. Enter a valid number:"); }
-        }
-    }
     public void InvalidChoice(int input)
     {
         Console.WriteLine("Invalid choice, please try again.");

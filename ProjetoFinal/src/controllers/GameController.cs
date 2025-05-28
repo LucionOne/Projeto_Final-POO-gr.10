@@ -1,12 +1,14 @@
 using jogo;
 using DTOs;
 using Templates;
+using MyRepository;
 
 namespace Controller;
 
 public class GameController
 {
     private readonly IGameView _view;
+    private readonly IRepo<Game> _repo;
 
     public enum Context
     {
@@ -14,14 +16,15 @@ public class GameController
         LoadGame
     }
 
-    public GameController(IGameView view)
+    public GameController(IGameView view, IRepo<Game> repo)
     {
         _view = view;
+        _repo = repo;
     }
 
     public void BeginInteraction(Context actionContext)
     {
-        Game game = HandleContext(actionContext);   
+        Game game = HandleContext(actionContext);
     }
 
     private Game HandleContext(Context actionContext)
@@ -36,7 +39,7 @@ public class GameController
                 game = GetGameFromDb();
                 break;
             default:
-                throw new Exception("Invalid actionContext"); 
+                throw new Exception("Invalid actionContext");
         }
         return game;
     }
@@ -50,7 +53,15 @@ public class GameController
 
     public Game GetGameFromDb()
     {
-        if ()
-        _view.ShowDb();
+        List<Game> games = _repo.GetAll();
+        List<GameDto> dtoList = BuildDtoListFromRepo(games);
+        int id = _view.GetIdForGame(dtoList);
+        Game game = _repo.GetById(id) ?? throw new ArgumentNullException("The id returned a null game");
+        return game;
+    }
+
+    private List<GameDto> BuildDtoListFromRepo(List<Game> games)
+    {
+        return games.Select(game => new GameDto(game)).ToList();
     }
 }

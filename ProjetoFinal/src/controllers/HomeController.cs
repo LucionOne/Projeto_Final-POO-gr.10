@@ -1,5 +1,7 @@
 using View;
 using Templates;
+using MyRepository;
+using jogo;
 
 namespace Controller;
 
@@ -26,7 +28,7 @@ public class HomeController
         while (isRunning)
         {
             _console.Menu();
-            int choice = _console.Input();
+            int choice = _console.GetChoice(">> ");
             isRunning = HandleUserChoice(choice);
         }
     }
@@ -54,16 +56,18 @@ public class HomeController
     public void CreateGame()
     {
         Console.WriteLine("Option 1");
-        IGameView gameView = new GameView();
-        var gameController = new GameController(gameView);
+        var gameView = new GameView();
+        var gamesRepo = new GamesRepo("Games.json");
+        var gameController = new GameController(gameView, gamesRepo);
         gameController.BeginInteraction(GameController.Context.CreateGame);
     }
 
     public void Option2()
     {
         Console.WriteLine("Option 2");
-        IGameView gameView = new GameView();
-        var gameController = new GameController(gameView);
+        var gameView = new GameView();
+        var gamesRepo = new GamesRepo("Games.json");
+        var gameController = new GameController(gameView, gamesRepo);
         gameController.BeginInteraction(GameController.Context.LoadGame);
     }
 

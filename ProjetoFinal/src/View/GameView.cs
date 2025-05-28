@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.IO.Pipelines;
 using DTOs;
+using jogo;
 using Templates;
 
 namespace View;
 
-public class GameView : ViewConsole, IGameView 
+public class GameView : ViewAbstract, IGameView 
 {
 
     public GameDto AcquireGameInfo()
@@ -58,6 +61,38 @@ public class GameView : ViewConsole, IGameView
         return gameDto;
     }
 
+    public int GetIdForGame(List<GameDto> games)
+    {
+        ShowData(games);
+
+        int id = 0;
+        bool validId = false;
+        while (!validId)
+        {
+            id = GetValidInput<int>("id: ");
+            validId = IdExists(games, id);
+            
+            if (!validId)
+            {
+                Console.WriteLine("Id doesn't Exist");
+            }
+        }
+        return id;
+    }
+
+    private void ShowData(List<GameDto> games)
+    {
+        Console.WriteLine("|ID\tName\tDate - Time\tLocal");
+        foreach (GameDto game in games)
+        {
+            Console.WriteLine($"|{game.Id}\t{game.Name}\t{game.Date} - {game.HoraInicio}\t{game.Local}");
+        }
+    }
+
+    private bool IdExists(List<GameDto> games, int id)
+    {
+        return games.Any(x => x.Id == id);
+    }
 
     private DateOnly GetCurrentDate()
     {

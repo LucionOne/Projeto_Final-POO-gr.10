@@ -7,7 +7,7 @@ public interface IRepo<T>
     void RemoveAt(int id);
     void UpdateById(int id, T item);
     T? GetById(int id);
-    IEnumerable<T> GetAll();
-    Dictionary<int, T> GetAllAsDictionary(int id);
+    List<T> GetAll();
+    Dictionary<int, T> GetAllAsDictionary();
     void WriteToDataBase();
 }

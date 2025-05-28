@@ -2,7 +2,7 @@
 
 namespace Templates;
 
-public abstract class ViewConsole
+public abstract class ViewAbstract
 {
     public virtual T GetValidInput<T>(string prompt = "")
     {
@@ -56,6 +56,27 @@ public abstract class ViewConsole
             {
                 throw new NotSupportedException("Type not supported.");
             }
+        }
+    }
+
+
+    public virtual int GetChoice(string prompt = "")
+    {
+        int number;
+        while (true)
+        {
+            Console.Write(prompt);
+            string rawInput = Console.ReadLine() ?? "0";
+
+            if (rawInput == "")
+            { rawInput = "0"; }
+
+            bool validNumber = int.TryParse(rawInput, out number);
+
+            if (validNumber)
+            { return number; }
+            else
+            { Console.WriteLine("Invalid Choice. Enter a valid number:"); }
         }
     }
 }

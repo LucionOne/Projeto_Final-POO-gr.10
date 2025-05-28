@@ -1,8 +1,10 @@
+using jogo;
 namespace DTOs;
 
 public class GameDto
 {
     public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
     public DateOnly Date { get; set; }
     public TimeOnly HoraInicio { get; set; }
     public string Local { get; set; } = string.Empty;
@@ -11,6 +13,18 @@ public class GameDto
     // public int LimiteTeams { get; set; }
     // public List<int>? JogadorIdsSemTeam { get; set; } = new();
     // public List<int>? TeamIds { get; set; } = new();
+
+    public GameDto() {}
+
+    public GameDto(Game game)
+    {   
+        Id = game.Id;
+        Date = game.Date;
+        HoraInicio = game.HoraInicio;
+        Local = game.Local;
+        TipoDeCampo = game.TipoDeCampo;
+        QuantidadeJogadoresPorTeam = game.QuantidadeJogadoresPorTeam;
+    }
 
     public override string ToString()
     {
@@ -26,6 +40,6 @@ public class GameDto
             // $"TeamIds: [{string.Join(", ", TeamIds ?? new List<int>())}]",
         };
 
-        return string.Join("\n",str);
+        return string.Join("\n", str);
     }
 }
