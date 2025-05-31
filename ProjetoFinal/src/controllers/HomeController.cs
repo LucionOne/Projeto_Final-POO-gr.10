@@ -11,15 +11,13 @@ public class HomeController
     private HomeView _console;
     private Dictionary<int, Action> _userActions;
     private DataContext Data;
-    private PlayersRepo _playersRepo;
-    private GamesRepo _gamesRepo;
+
 
     public HomeController(DataContext data, HomeView _view)
     {
 
         Data = data;
-        _playersRepo = data.JogadorRepo;
-        _gamesRepo = data.GamesRepo;
+
         _console = _view;
 
         _userActions = new Dictionary<int, Action>
@@ -42,6 +40,7 @@ public class HomeController
         }
     }
 
+
     private bool HandleUserChoice(int input)
     {
         if (input == 0)
@@ -62,19 +61,21 @@ public class HomeController
         return true;
     }
 
+
     public void CreateGame()
     {
         // Console.WriteLine("Option 1");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, _gamesRepo);
+        var gameController = new GameController(gameView, Data.GamesRepo);
         gameController.BeginInteraction(GameController.Context.CreateGame);
     }
+
 
     public void LoadGame()
     {
         // Console.WriteLine("Option 2");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, _gamesRepo);
+        var gameController = new GameController(gameView, Data.GamesRepo);
         gameController.BeginInteraction(GameController.Context.LoadGame);
     }
 

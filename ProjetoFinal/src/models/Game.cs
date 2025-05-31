@@ -37,9 +37,12 @@ public class Game : ModelAbstract
         public const int TeamsMínimos = 2;
 
     #endregion
-    
+
     #region Private Attributes
 
+
+        private int _homeGoals;
+        private int _adversaryGoals;
         private DateOnly _date;
         private TimeOnly _horaInicio;
         private string _local = string.Empty;
@@ -59,8 +62,12 @@ public class Game : ModelAbstract
 
     #region Public Attributes
 
-        public DateOnly Date 
-            {get {return _date;} set {_date = value;}}
+        public int HomeGoals 
+            {get {return _homeGoals;} set {_homeGoals = value;}}
+        public int AdversaryGoals
+            {get {return _adversaryGoals;} set {_adversaryGoals = value;}}
+        public DateOnly Date
+    { get { return _date; } set { _date = value; } }
         public TimeOnly HoraInicio 
             {get {return _horaInicio;} set {_horaInicio = value;}}
         public string Local 

@@ -29,7 +29,7 @@ public class HomeView : ViewAbstract
     }
 
 
-    public void InvalidChoice(int input)
+    public void InvalidChoice<T>(T error)
     {
         Console.WriteLine("Invalid choice, please try again.");
         Console.ReadLine();

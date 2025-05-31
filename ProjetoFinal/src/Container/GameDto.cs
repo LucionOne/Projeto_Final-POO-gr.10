@@ -3,6 +3,8 @@ namespace Container.DTOs;
 
 public class GameDto
 {
+    public int HomeGoals { get; set; }
+    public int AdversaryGoals { get; set; }
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public DateOnly Date { get; set; }
@@ -17,13 +19,15 @@ public class GameDto
     public GameDto() {}
 
     public GameDto(Game game)
-    {   
+    {
         Id = game.Id;
         Date = game.Date;
         HoraInicio = game.HoraInicio;
         Local = game.Local;
         TipoDeCampo = game.TipoDeCampo;
         QuantidadeJogadoresPorTeam = game.QuantidadeJogadoresPorTeam;
+        HomeGoals = game.HomeGoals;
+        AdversaryGoals = game.AdversaryGoals;
     }
 
     public override string ToString()

@@ -2,7 +2,7 @@
 
 namespace Templates;
 
-public abstract class ViewAbstract
+public abstract class ViewAbstract : IView
 {
     public virtual T GetValidInput<T>(string prompt = "")
     {

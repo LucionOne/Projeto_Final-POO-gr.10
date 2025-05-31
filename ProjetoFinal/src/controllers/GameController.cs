@@ -24,7 +24,27 @@ public class GameController
     public void BeginInteraction(Context actionContext)
     {
         Game game = HandleContext(actionContext);
+        RunGame(game);
     }
+
+    private void RunGame(Game game)
+    {
+        bool isRunning = true;
+        while (isRunning)
+        {
+            GameDto gameDto = new(game);
+            _view.ShowGameAndOptions(gameDto);
+            int choice = _view.GetChoice(">> ");
+            isRunning = HandleChoice(choice, game);
+        }
+    }
+
+    private bool HandleChoice(int choice, Game game)
+    {
+        return false;
+    }
+
+
 
     private Game HandleContext(Context actionContext)
     {
@@ -64,4 +84,5 @@ public class GameController
     {
         return games.Select(game => new GameDto(game)).ToList();
     }
+
 }

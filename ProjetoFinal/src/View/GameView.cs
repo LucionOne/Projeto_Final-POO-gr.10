@@ -6,7 +6,7 @@ using Templates;
 
 namespace View;
 
-public class GameView : ViewAbstract, IGameView 
+public class GameView : ViewAbstract, IGameView
 {
 
     public GameDto AcquireGameInfo()
@@ -71,7 +71,7 @@ public class GameView : ViewAbstract, IGameView
         {
             id = GetValidInput<int>("id: ");
             validId = IdExists(games, id);
-            
+
             if (!validId)
             {
                 Console.WriteLine("Id doesn't Exist");
@@ -79,6 +79,30 @@ public class GameView : ViewAbstract, IGameView
         }
         return id;
     }
+
+    public void ShowGameAndOptions(GameDto game)
+    {
+        var str = new List<string>
+        {
+           $"|Home: {game.HomeGoals} Vs Adversary: { game.AdversaryGoals }",
+            "=======================================",
+            "|               G A M E               |",
+            "+-------------------------------------+",
+            "|                                     |",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        };
+        Console.WriteLine("Options Incomplete");
+    }
+
+
+    #region Support Methods
 
     private void ShowData(List<GameDto> games)
     {
@@ -99,10 +123,10 @@ public class GameView : ViewAbstract, IGameView
         return DateOnly.FromDateTime(DateTime.Now);
     }
 
-
     private TimeOnly GetCurrentTime()
     {
         return TimeOnly.FromDateTime(DateTime.Now);
     }
 
+    #endregion
 }
