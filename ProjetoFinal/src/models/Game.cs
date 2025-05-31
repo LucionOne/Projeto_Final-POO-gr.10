@@ -47,7 +47,7 @@ public class Game : ModelAbstract
         private int _quantidadeJogadoresPorTeam;
     // private int _limiteJogadores;
         // private int _limiteTeams;
-        private List<Jogador>? _filaJogadoresSemTeam = new List<Jogador>();
+        private List<Player>? _filaJogadoresSemTeam = new List<Player>();
     // private List<Jogador>? FilaGoleiros = new List<Jogador>();
         private List<Team>? _Teams = new List<Team>();
 
@@ -73,7 +73,7 @@ public class Game : ModelAbstract
         // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
         // public int LimiteTeams 
         //     {get {return _limiteTeams;} set {_limiteTeams = value;}}
-        public List<Jogador>? FilaJogadoresSemTeam 
+        public List<Player>? FilaJogadoresSemTeam 
             {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
         public List<Team>? Teams 
             {get {return _Teams;} set {_Teams = value;}}
@@ -107,10 +107,10 @@ public class Game : ModelAbstract
 
     // Methods
 
-    public void AddJogadorSemTeam(Jogador jogador)
+    public void AddJogadorSemTeam(Player jogador)
     {
         if (_filaJogadoresSemTeam == null)
-            {_filaJogadoresSemTeam = new List<Jogador>();}
+            {_filaJogadoresSemTeam = new List<Player>();}
         _filaJogadoresSemTeam.Add(jogador);
     }
 

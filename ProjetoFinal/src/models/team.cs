@@ -25,11 +25,11 @@ public class Team : ModelAbstract
     #region Private Attributes
 
         private string? _nome;
-        private List<Jogador>? _jogadores = new List<Jogador>();
-        private List<Jogador>? _goleiros = new List<Jogador>();
-        private List<Jogador>? _defesas = new List<Jogador>();
-        private List<Jogador>? _atacantes = new List<Jogador>();
-        private List<Jogador>? _unknown = new List<Jogador>();
+        private List<Player>? _jogadores = new List<Player>();
+        private List<Player>? _goleiros = new List<Player>();
+        private List<Player>? _defesas = new List<Player>();
+        private List<Player>? _atacantes = new List<Player>();
+        private List<Player>? _unknown = new List<Player>();
     
     #endregion
 
@@ -38,28 +38,28 @@ public class Team : ModelAbstract
         public string? Nome
             {get {return _nome;} set {_nome = value;}}
 
-        public List<Jogador> Jogadores
-            {get {return _jogadores ?? new List<Jogador>();}}
+        public List<Player> Jogadores
+            {get {return _jogadores ?? new List<Player>();}}
         // public int CountJogadores
         //     {get {return _jogadores?.Count ?? 0;}}
 
-        public List<Jogador> Goleiros
-            {get {return _goleiros ?? new List<Jogador>();}}
+        public List<Player> Goleiros
+            {get {return _goleiros ?? new List<Player>();}}
         // public int CountGoleiros
         //     {get {return _goleiros?.Count ?? 0;}}
 
-        public List<Jogador> Defesas
-            {get {return _defesas ?? new List<Jogador>();}}
+        public List<Player> Defesas
+            {get {return _defesas ?? new List<Player>();}}
         // public int CountDefesas
         //     {get {return _defesas?.Count ?? 0;}}
         
-        public List<Jogador> Atacantes
-            {get {return _atacantes ?? new List<Jogador>();}}
+        public List<Player> Atacantes
+            {get {return _atacantes ?? new List<Player>();}}
         // public int CountAtacantes
         //     {get {return _atacantes?.Count ?? 0;}}
 
-        public List<Jogador> Unknown
-            {get {return _unknown ?? new List<Jogador>();}}
+        public List<Player> Unknown
+            {get {return _unknown ?? new List<Player>();}}
         // public int CountUnknown
         //     {get {return _unknown?.Count ?? 0;}}
 
@@ -68,12 +68,12 @@ public class Team : ModelAbstract
 
     // Constructor
 
-    public Team(string nome, List<Jogador>? jogadores)
+    public Team(string nome, List<Player>? jogadores)
     {
         _nome = nome;
 
         if (jogadores == null)
-            {jogadores = new List<Jogador>();}
+            {jogadores = new List<Player>();}
         _jogadores = jogadores;
 
         SortJogadores(jogadores);
@@ -82,17 +82,17 @@ public class Team : ModelAbstract
 
     // Methods
 
-    public void AddJogador(Jogador jogador)
+    public void AddJogador(Player jogador)
     {
         if (_jogadores == null)
-            {_jogadores = new List<Jogador>();}
+            {_jogadores = new List<Player>();}
         _jogadores?.Add(jogador);
 
         SortJogador(jogador);
     }
 
 
-    public void RemoveJogador(Jogador jogador)
+    public void RemoveJogador(Player jogador)
     {
         if (_jogadores == null)
             {return;}
@@ -119,35 +119,35 @@ public class Team : ModelAbstract
     }
 
 
-    private void SortJogadores(List<Jogador> jogadores)
+    private void SortJogadores(List<Player> jogadores)
     {
         foreach (var jogador in jogadores)
             {SortJogador(jogador);}
     }
 
 
-    private void SortJogador(Jogador jogador)
+    private void SortJogador(Player jogador)
     {
         switch (jogador.Posicao)
         {
             case 0:
                 if (_unknown == null)
-                    {_unknown = new List<Jogador>();}
+                    {_unknown = new List<Player>();}
                 _unknown.Add(jogador);
                 break;
             case 1:
                 if (_goleiros == null)
-                    {_goleiros = new List<Jogador>();}
+                    {_goleiros = new List<Player>();}
                 _goleiros.Add(jogador);
                 break;
             case 2:
                 if (_defesas == null)
-                    {_defesas = new List<Jogador>();}
+                    {_defesas = new List<Player>();}
                 _defesas.Add(jogador);
                 break;
             case 3:
                 if (_atacantes == null)
-                    {_atacantes = new List<Jogador>();}
+                    {_atacantes = new List<Player>();}
                 _atacantes.Add(jogador);
                 break;
             default:

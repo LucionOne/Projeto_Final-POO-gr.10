@@ -12,7 +12,7 @@ namespace jogador;
 // Este cadastro deve contar todas as pessoas que fazem parte da “associação” ou “grupo” de pessoas que normalmente jogam.  - ????????
 // Cada jogador de ter um código único usado como identificador, a exemplo o RA que é usado na Universidade.
 
-public class Jogador : ModelAbstract
+public class Player : IModel
 {
     // private attributes
     private string? _nome;
@@ -68,7 +68,7 @@ public class Jogador : ModelAbstract
     }
 
     // constructor
-    public Jogador(string nome, int idade, int posicao)
+    public Player(string nome, int idade, int posicao)
     {
         Nome = nome;
         Idade = idade;

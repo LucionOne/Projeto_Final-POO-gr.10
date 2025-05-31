@@ -1,6 +1,7 @@
 # Ignore build outputs
 bin/
 obj/
+DataBase/
 
 # Ignore VS Code settings
 .vscode/

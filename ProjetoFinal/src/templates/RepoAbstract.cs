@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Container.Wrapper;
 using Templates;
 
 namespace Templates;
@@ -12,18 +14,34 @@ namespace Templates;
 public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
 {
     protected const string FolderPath = "DataBase";
-    protected readonly string _fileName;
-    protected readonly string _filePath;
-    
-    protected readonly List<T> _mainRepo = new();
-    private int _nextId;
+    protected  string _fileName;
+    protected  string _filePath;
 
-    public List<T> MainRepo => _mainRepo;
+    protected  List<T> _mainRepo = new();
+    protected int _nextId;
+
+    public List<T> MainRepo { get { return _mainRepo; } }
+
     public int NextId
     {
         get => _nextId;
         set => _nextId = value;
     }
+    // public RepoAbstract(List<T> mainRepo, int nextId)
+    // {
+    // _mainRepo = mainRepo ?? new List<T>();
+    // _nextId = nextId;
+
+    // _fileName = "default.json";
+    // _filePath = Path.Combine(FolderPath, _fileName);
+    // }
+
+    [JsonConstructor]
+    public RepoAbstract()
+    {
+        _fileName = "default.json";
+        _filePath = Path.Combine(FolderPath, _fileName);
+     }
 
 
     /// <summary>
@@ -36,6 +54,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         _filePath = Path.Combine(FolderPath, _fileName);
         // VerifyFileExists();
     }
+
 
     /// <summary>
     /// Adds an item in the database list
@@ -118,7 +137,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
             Directory.CreateDirectory(FolderPath);
 
         if (!File.Exists(_filePath))
-            File.WriteAllText(_filePath, "{}");
+            File.WriteAllText(_filePath, "{  \"MainRepo\": [],  \"NextId\": 0}");
     }
 
     /// <summary>
@@ -139,12 +158,20 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         File.WriteAllText(_filePath, Serialize());
     }
 
-    public abstract RepoAbstract<T> DataBaseStarter();
+    public virtual RepoAbstract<T> DataBaseStarter()
+    {
+        ConfirmFileAndFolderExistence();
+        RepoAbstract<T> Repository = LoadFromDataBase();
+        return Repository;
+    }
 
     public virtual RepoAbstract<T> LoadFromDataBase()
     {
         string file = File.ReadAllText(_filePath);
-        RepoAbstract<T> temp = JsonSerializer.Deserialize<RepoAbstract<T>>(file) ?? throw new NullReferenceException("Deserializer returned null");
-        return temp;        
+        RepoAbstract<T> temp = JsonSerializer.Deserialize<RepoAbstract<T>>(file)
+            ?? throw new NullReferenceException("Deserializer returned null");
+        return temp;
     }
+    
+
 }

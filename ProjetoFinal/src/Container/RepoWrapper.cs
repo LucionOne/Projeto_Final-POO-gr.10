@@ -4,12 +4,14 @@ using System.Text.Json;
 
 namespace Container.Wrapper;
 
-public class RepoWrapper<T> where T : RepoAbstract<IModel>
+public class RepoWrapper<Repo, Model> 
+    where Repo : RepoAbstract<Model>
+    where Model : IModel
 {
-    public List<IModel> MainRepo;
+    public List<Model> MainRepo;
     public int NextId;
 
-    public RepoWrapper(T Package)
+    public RepoWrapper(Repo Package)
     {
         MainRepo = Package.MainRepo;
         NextId = Package.NextId;

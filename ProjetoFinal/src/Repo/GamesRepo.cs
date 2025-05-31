@@ -3,12 +3,28 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Templates;
+using Container.Wrapper;
 
 namespace MyRepository;
 
 public class GamesRepo : RepoAbstract<Game>
 {
     public GamesRepo(string fileName = "Games.json") : base(fileName) { }
+
+    public GamesRepo() : base() 
+    {
+        _fileName = "Games.json";
+        _filePath = Path.Combine(FolderPath, _fileName);
+    }
+
+    // public GamesRepo(List<Game> mainRepo, int nextId)
+    // {
+    // _mainRepo = mainRepo ?? new List<Game>();
+    // _nextId = nextId;
+
+    // _fileName = "default.json";
+    // _filePath = Path.Combine(FolderPath, _fileName);
+    // }
 
     public override GamesRepo DataBaseStarter()
     {
@@ -17,6 +33,7 @@ public class GamesRepo : RepoAbstract<Game>
         return Repository;
     }
 
+
     public override GamesRepo LoadFromDataBase()
     {
         string file = File.ReadAllText(_filePath);
@@ -24,6 +41,33 @@ public class GamesRepo : RepoAbstract<Game>
             ?? throw new NullReferenceException("Deserializer returned null");
         return temp;
     }
+    
+
+
+
+
+    // public override GamesRepo LoadFromDataBase()
+    // {
+    //     string file = File.ReadAllText(_filePath);
+    //     var wrapper = JsonSerializer.Deserialize<RepoWrapper<GamesRepo, Game>>(file)
+    //         ?? throw new Exception("Deserialization returned null");
+
+    //     GamesRepo repo = new GamesRepo(_fileName);
+    //     // repo._mainRepo = wrapper.MainRepo;
+
+    //     repo._mainRepo.AddRange(wrapper.MainRepo);
+    //     repo.NextId = wrapper.NextId;
+
+    //     return repo;
+    // }
+
+    // public override GamesRepo LoadFromDataBase()
+    // {
+    //     string file = File.ReadAllText(_filePath);
+    //     GamesRepo temp = JsonSerializer.Deserialize<GamesRepo>(file)
+    //         ?? throw new NullReferenceException("Deserializer returned null");
+    //     return temp;
+    // }
 
 }
 
