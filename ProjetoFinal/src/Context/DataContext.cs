@@ -11,4 +11,17 @@ public class DataContext
         this.JogadorRepo = jogadorRepo;
         this.GamesRepo = gamesRepo;
     }
+
+    public void SaveDataBase()
+    {
+        try
+        {
+            JogadorRepo.WriteToDataBase();
+            GamesRepo.WriteToDataBase();
+        }
+        catch
+        {
+            throw new Exception("Couldn't write to data base");
+        }
+    }
 }

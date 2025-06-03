@@ -6,7 +6,7 @@ using Templates;
 
 namespace View;
 
-public class HomeView : ViewAbstract
+public class HomeView : ViewBasicFunctions
 {
 
     //Environment.NewLine

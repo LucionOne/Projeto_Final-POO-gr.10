@@ -43,47 +43,63 @@ public class Game : ModelAbstract
 
         private int _homeGoals;
         private int _adversaryGoals;
+        private Team _homeTeam;
+        private Team _adversaryTeam;
+
         private DateOnly _date;
         private TimeOnly _horaInicio;
+
         private string _local = string.Empty;
         private string _tipoDeCampo = string.Empty;
+
         private int _quantidadeJogadoresPorTeam;
-    // private int _limiteJogadores;
-        // private int _limiteTeams;
         private List<Player>? _filaJogadoresSemTeam = new List<Player>();
-    // private List<Jogador>? FilaGoleiros = new List<Jogador>();
-        private List<Team>? _Teams = new List<Team>();
+        private List<Team>? _teamsToPlay = new List<Team>();
+    
+        // private int _limiteJogadores;
+        // private int _limiteTeams;
+        // private List<Jogador>? FilaGoleiros = new List<Jogador>();
 
         private int QuantidadeGoleiro;
         private int QuantidadeDefesa;
         private int QuantidadeAtacante;
-    
+
     #endregion
 
     #region Public Attributes
 
-        public int HomeGoals 
-            {get {return _homeGoals;} set {_homeGoals = value;}}
+        public string Title = string.Empty;
+
+        public int HomeGoals
+            { get { return _homeGoals; } set { _homeGoals = value; } }
         public int AdversaryGoals
             {get {return _adversaryGoals;} set {_adversaryGoals = value;}}
+        public Team HomeTeam 
+            {get {return _homeTeam;} set {_homeTeam = value ?? new Team();}}
+        public Team AdversaryTeam
+            {get {return _adversaryTeam;} set {_adversaryTeam = value ?? new Team();}}
+
         public DateOnly Date
-    { get { return _date; } set { _date = value; } }
+            { get { return _date; } set { _date = value; } }
         public TimeOnly HoraInicio 
             {get {return _horaInicio;} set {_horaInicio = value;}}
+            
         public string Local 
             {get {return _local;} set {_local = value ?? string.Empty;}}
         public string TipoDeCampo 
             {get {return _tipoDeCampo;} set {_tipoDeCampo = value ?? string.Empty;}}
-        public int QuantidadeJogadoresPorTeam 
-            {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
-    // public int LimiteJogadores 
+
+        // public int LimiteJogadores 
         // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
         // public int LimiteTeams 
         //     {get {return _limiteTeams;} set {_limiteTeams = value;}}
+
+        public int QuantidadeJogadoresPorTeam 
+            {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
         public List<Player>? FilaJogadoresSemTeam 
             {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
         public List<Team>? Teams 
-            {get {return _Teams;} set {_Teams = value;}}
+            {get {return _teamsToPlay;} set {_teamsToPlay = value;}}
 
     #endregion
 
@@ -91,6 +107,11 @@ public class Game : ModelAbstract
 
     public Game(GameDto Package)
     {
+        // _homeTeam = Package.HomeTeam;
+        // _adversaryTeam = Package.AdversaryTeam;
+        
+        _homeTeam = new Team(); //debug temp
+        _adversaryTeam = new Team(); //debug temp
         _date = Package.Date;
         _horaInicio = Package.HoraInicio;
         _local = Package.Local;

@@ -5,6 +5,29 @@ using View;
 
 public class Program
 {
+
+    public static void Main()
+    {
+        Console.Clear();
+
+        DataContext data = LoadFiles();
+        HomeView _view = new();
+
+        bool isRunning = true;
+        while (isRunning)
+        {
+            var homeController = new HomeController(data, _view);
+            homeController.BeginInteraction();
+
+            data.SaveDataBase();            
+            // SaveDataBase(data);
+
+            Console.ReadLine();
+            isRunning = false;
+        }
+    }
+
+
     private static DataContext LoadFiles()
     {
         PlayersRepo playersRepoFabric = new PlayersRepo();
@@ -35,22 +58,4 @@ public class Program
         }
     }
 
-    public static void Main()
-    {
-        Console.Clear();
-
-        DataContext data = LoadFiles();
-        HomeView _view = new();
-
-        bool isRunning = true;
-        while (isRunning)
-        {
-            var homeController = new HomeController(data, _view);
-            homeController.BeginInteraction();
-            SaveDataBase(data);
-
-            Console.ReadLine();
-            isRunning = false;
-        }
-    }
 }

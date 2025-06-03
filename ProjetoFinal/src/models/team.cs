@@ -24,7 +24,7 @@ public class Team : ModelAbstract
 
     #region Private Attributes
 
-        private string? _nome;
+        private string _nome = string.Empty;
         private List<Player>? _jogadores = new List<Player>();
         private List<Player>? _goleiros = new List<Player>();
         private List<Player>? _defesas = new List<Player>();
@@ -60,20 +60,22 @@ public class Team : ModelAbstract
 
         public List<Player> Unknown
             {get {return _unknown ?? new List<Player>();}}
-        // public int CountUnknown
-        //     {get {return _unknown?.Count ?? 0;}}
+    // public int CountUnknown
+    //     {get {return _unknown?.Count ?? 0;}}
 
     #endregion
 
 
     // Constructor
 
+    public Team () {}
+
     public Team(string nome, List<Player>? jogadores)
     {
         _nome = nome;
 
         if (jogadores == null)
-            {jogadores = new List<Player>();}
+        { jogadores = new List<Player>(); }
         _jogadores = jogadores;
 
         SortJogadores(jogadores);
@@ -86,7 +88,7 @@ public class Team : ModelAbstract
     {
         if (_jogadores == null)
             {_jogadores = new List<Player>();}
-        _jogadores?.Add(jogador);
+        _jogadores.Add(jogador);
 
         SortJogador(jogador);
     }

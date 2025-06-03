@@ -1,6 +1,7 @@
 using jogo;
 using Container.DTOs;
 using Templates;
+using System.ComponentModel;
 
 namespace Controller;
 
@@ -41,9 +42,51 @@ public class GameController
 
     private bool HandleChoice(int choice, Game game)
     {
-        return false;
-    }
 
+        switch (choice)
+        {
+            case 0://exit W
+                return false;
+            case 1://goal WI
+                (var team, var score) = _view.AcquireGoalInfo();
+                if (team)
+                    game.HomeGoals += score;
+                else if (!team)
+                    game.AdversaryGoals += score;
+                break;
+            case 3://Add Player to line
+
+                break;
+            case 4:// create team
+
+                break;
+            case 7://Next Match
+
+                break;
+            case 9://edit Game
+
+                break;
+            default:
+                Console.WriteLine("invalid choice");
+                break;
+        }
+        return true;
+    }
+            // "=======================================",
+            // "|            O P T I O N S            |",
+            // "+-------------------------------------+",
+            // "|01| Add Goal                         |",
+            // "|02|                                  |",
+            // "|03| Add player to line               |",
+            // "|04| Create Team                      |",
+            // "|05|                                  |",
+            // "|06|                                  |",
+            // "|07| Next Match                       |",
+            // "|08|                                  |",
+            // "|09| Edit Game Info                   |",
+            // "+-------------------------------------+",
+            // "|00| Exit Game                        |",
+            // "=======================================",
 
 
     private Game HandleContext(Context actionContext)
@@ -67,8 +110,14 @@ public class GameController
     {
         GameDto gamePackage = _view.AcquireGameInfo();
         Game game = new Game(gamePackage);
-        return game;
-    }
+        _repo.Add(game);
+        _repo.WriteToDataBase();
+        var allGames = _repo.GetAll();
+        if (allGames.Count == 0)
+            throw new InvalidOperationException("No games found in the repository.");
+
+        return allGames[allGames.Count - 1];
+}
 
     public Game GetGameFromDb()
     {
