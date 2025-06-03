@@ -13,14 +13,14 @@ public class Program
         DataContext data = LoadFiles();
         HomeView _view = new();
 
+        var homeController = new HomeController(data, _view);
+
         bool isRunning = true;
         while (isRunning)
         {
-            var homeController = new HomeController(data, _view);
             homeController.BeginInteraction();
 
             data.SaveDataBase();            
-            // SaveDataBase(data);
 
             Console.ReadLine();
             isRunning = false;
@@ -44,18 +44,18 @@ public class Program
         return dataContext;
     }
 
-    private static bool SaveDataBase(DataContext data)
-    {
-        try
-        {
-            data.GamesRepo.WriteToDataBase();
-            data.JogadorRepo.WriteToDataBase();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    // private static bool SaveDataBase(DataContext data)
+    // {
+    //     try
+    //     {
+    //         data.GamesRepo.WriteToDataBase();
+    //         data.JogadorRepo.WriteToDataBase();
+    //         return true;
+    //     }
+    //     catch
+    //     {
+    //         return false;
+    //     }
+    // }
 
 }

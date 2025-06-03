@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Container.Wrapper;
 
-public class RepoWrapper<Repo, Model> 
+public class RepoWrapper<Repo, Model>
     where Repo : RepoAbstract<Model>
     where Model : IModel
 {
@@ -23,5 +23,13 @@ public class RepoWrapper<Repo, Model>
         return JsonSerializer.Serialize(this, options);
     }
 
-    
+
+
+
+
+
+
+
+
+
 }

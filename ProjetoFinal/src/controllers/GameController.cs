@@ -111,7 +111,6 @@ public class GameController
         GameDto gamePackage = _view.AcquireGameInfo();
         Game game = new Game(gamePackage);
         _repo.Add(game);
-        _repo.WriteToDataBase();
         var allGames = _repo.GetAll();
         if (allGames.Count == 0)
             throw new InvalidOperationException("No games found in the repository.");

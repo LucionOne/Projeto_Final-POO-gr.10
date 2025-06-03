@@ -43,8 +43,8 @@ public class Game : ModelAbstract
 
         private int _homeGoals;
         private int _adversaryGoals;
-        private Team _homeTeam;
-        private Team _adversaryTeam;
+        private Team _homeTeam = new Team();
+        private Team _adversaryTeam = new Team();
 
         private DateOnly _date;
         private TimeOnly _horaInicio;
@@ -110,8 +110,8 @@ public class Game : ModelAbstract
         // _homeTeam = Package.HomeTeam;
         // _adversaryTeam = Package.AdversaryTeam;
         
-        _homeTeam = new Team(); //debug temp
-        _adversaryTeam = new Team(); //debug temp
+        // _homeTeam = new Team(); //debug temp
+        // _adversaryTeam = new Team(); //debug temp
         _date = Package.Date;
         _horaInicio = Package.HoraInicio;
         _local = Package.Local;

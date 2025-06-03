@@ -20,7 +20,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected  List<T> _mainRepo = new();
     protected int _nextId;
 
-    public List<T> MainRepo { get { return _mainRepo; } }
+    public List<T> MainRepo { get { return _mainRepo; } set { _mainRepo = value; }}
 
     public int NextId
     {
