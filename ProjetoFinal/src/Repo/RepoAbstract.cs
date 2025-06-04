@@ -158,14 +158,14 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         File.WriteAllText(_filePath, Serialize());
     }
 
-    public virtual RepoAbstract<T> DataBaseStarter()
+    public virtual RepoAbstract<T> DataBaseStarter() ////Needs to be in the inheriting class
     {
         ConfirmFileAndFolderExistence();
         RepoAbstract<T> Repository = LoadFromDataBase();
         return Repository;
     }
 
-    public virtual RepoAbstract<T> LoadFromDataBase()
+    public virtual RepoAbstract<T> LoadFromDataBase() //Needs to be in the inheriting class
     {
         string file = File.ReadAllText(_filePath);
         RepoAbstract<T> temp = JsonSerializer.Deserialize<RepoAbstract<T>>(file)

@@ -70,35 +70,45 @@ public abstract class ViewBasicFunctions : IView
     }
 
 
-    public virtual int GetChoice(string prompt = ">> ", string? question = null, int minimum = 0, int maximum = 99, bool clear = false, string _default = "0")
+    public virtual int GetChoice(string prompt = ">> ", string? menu = null, int minimum = 0, int maximum = 99, bool clear = false, int _default = 0)
     {
         string? warning = null;
         int number;
         while (true)
         {
+            
             if (clear) { Console.Clear(); }
 
-            if (!(question == null)) { Console.WriteLine(question); }
+            if (!(menu == null)) { Console.WriteLine(menu); }
 
             if (!(warning == null)) { Console.WriteLine(warning); }
 
+
             Console.Write(prompt);
-            string rawInput = Console.ReadLine() ?? _default;
+            string rawInput = Console.ReadLine() ?? $"{_default}";
 
-            if (rawInput == "")
-            { rawInput = _default; }
 
-            bool validNumber = int.TryParse(rawInput, out number);
+            bool validNumber;
+            if (!(rawInput == ""))
+            {
+                validNumber = int.TryParse(rawInput, out number);
+            }
+            else
+            {
+                number = _default;
+                validNumber = true;
+            }
             bool validChoice = (number <= maximum) && (number >= minimum);
+
 
             if (validNumber && validChoice)
             { return number; }
+
 
             else if (!validNumber)
             { warning = "Invalid Input, Needs to be a full number, Try Again"; }
             else if (!validChoice)
             { warning = $"Invalid Choice, Needs to be between {minimum} & {maximum}, Try Again"; }
-
 
         }
     }

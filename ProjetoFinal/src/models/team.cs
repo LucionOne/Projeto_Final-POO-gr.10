@@ -101,7 +101,7 @@ public class Team : ModelAbstract
 
         _jogadores?.Remove(jogador);
 
-        switch (jogador.Posicao)
+        switch (jogador.Position)
         {
             case 0:
                 _unknown?.Remove(jogador);
@@ -130,7 +130,7 @@ public class Team : ModelAbstract
 
     private void SortJogador(Player jogador)
     {
-        switch (jogador.Posicao)
+        switch (jogador.Position)
         {
             case 0:
                 if (_unknown == null)

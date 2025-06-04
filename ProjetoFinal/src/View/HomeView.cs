@@ -17,7 +17,7 @@ public class HomeView : ViewBasicFunctions
             "|01| Start Game             |",
             "|02| Load Game              |",
             "|03| Player Management      |",
-            "|04| View db                |",
+            "|04| Team Management        |",
             "+---------------------------+",
             "|00| Exit                   |",
             "============================="});

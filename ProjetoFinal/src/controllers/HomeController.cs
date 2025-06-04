@@ -8,34 +8,34 @@ namespace Controller;
 
 public class HomeController
 {
-    private HomeView _console;
+    private HomeView _view;
     private Dictionary<int, Action> _userActions;
-    private DataContext Data;
+    private DataContext _data;
 
 
-    public HomeController(DataContext data, HomeView _view)
+    public HomeController(DataContext data, HomeView view)
     {
 
-        Data = data;
+        _data = data;
 
-        _console = _view;
+        _view = view;
 
         _userActions = new Dictionary<int, Action>
         {
             { 1, CreateGame },
             { 2, LoadGame },
-            { 3, Option3 },
+            { 3, ManagePlayers },
             { 4, Option4 }
         };
     }
 
-    public void BeginInteraction()
+    public void BeginInteraction() //needs to be MVC like ⚠️
     {
         bool isRunning = true;
         while (isRunning)
         {
-            _console.Menu();
-            int choice = _console.GetChoice(">> ");
+            _view.Menu();
+            int choice = _view.GetChoice(">> ");
             isRunning = HandleUserChoice(choice);
         }
     }
@@ -45,7 +45,7 @@ public class HomeController
     {
         if (input == 0)
         {
-            _console.Bye();
+            _view.Bye();
             return false;
         }
 
@@ -55,7 +55,7 @@ public class HomeController
         }
         else
         {
-            _console.InvalidChoice(input);
+            _view.InvalidChoice(input);
         }
 
         return true;
@@ -66,7 +66,7 @@ public class HomeController
     {
         // Console.WriteLine("Option 1");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, Data.GamesRepo);
+        var gameController = new GameController(gameView, _data.GamesRepo);
         gameController.BeginInteraction(GameController.Context.CreateGame);
     }
 
@@ -75,14 +75,16 @@ public class HomeController
     {
         // Console.WriteLine("Option 2");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, Data.GamesRepo);
+        var gameController = new GameController(gameView, _data.GamesRepo);
         gameController.BeginInteraction(GameController.Context.LoadGame);
     }
 
-    public void Option3()
+    public void ManagePlayers()
     {
-        Console.WriteLine("Option 3");
-        Console.ReadLine();
+        // Console.WriteLine("Option 3");
+        var playerView = new PlayerView();
+        var playerController = new PlayerController(_data, playerView);
+        playerController.BeginInteraction();
     }
 
     public void Option4()

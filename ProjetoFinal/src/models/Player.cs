@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Templates;
+using Container.DTOs;
 
 namespace jogador;
 
@@ -15,48 +16,48 @@ namespace jogador;
 public class Player : IModel
 {
     // private attributes
-    private string? _nome;
-    
-    private int _idade;
-    
-    private int _posicao;
-    
+    private string? _name;
+
+    private int _age;
+
+    private int _position;
+
     private int _id;
-    
+
     // public attributes
-    public string Nome 
+    public string Name
     {
-        get{return _nome ?? string.Empty;}
-        set{_nome = value ?? string.Empty;}
+        get { return _name ?? string.Empty; }
+        set { _name = value ?? string.Empty; }
     }
-    
-    public int Idade { get{return _idade;} set{_idade = value;}}
 
-    public int Id { get{return _id;} set{_id = value;}}
+    public int Age { get { return _age; } set { _age = value; } }
 
-    public int Posicao 
-    {   
-        get{return _posicao;}
-        
+    public int Id { get { return _id; } set { _id = value; } }
+
+    public int Position
+    {
+        get { return _position; }
+
         set
         {
-            if (_posicao >= 0 || _posicao <= 3)
+            if (_position >= 0 || _position <= 3)
             {
-                _posicao = value;
+                _position = value;
             }
             else
             {
-                throw new ArgumentOutOfRangeException("Posição deve ser entre 0 e 3.");
+                throw new ArgumentOutOfRangeException("Posição deve ser de 0 a 3.");
             }
         }
     }
-    
+
     [JsonIgnore]
-    public string PosicaoString
+    public string PositionString
     {
         get
         {
-            return _posicao switch
+            return _position switch
             {
                 0 => "Unknown",
                 1 => "Goleiro",
@@ -67,17 +68,33 @@ public class Player : IModel
         }
     }
 
+    public Player() { }
+
     // constructor
     public Player(string nome, int idade, int posicao)
     {
-        Nome = nome;
-        Idade = idade;
-        Posicao = posicao;
+        Name = nome;
+        Age = idade;
+        Position = posicao;
     }
+
+    public Player(PlayerDto dto)
+    {
+        Id = dto.Id;
+        Name = dto.Name;
+        Age = dto.Age;
+        Position = dto.Position;
+    }
+
 
     // methods
     public override string ToString()
     {
-        return $"Nome: {Nome}\tIdade: {Idade}\tPosição: {PosicaoString}";
+        return $"ID: {Id}\tNome: {Name}\tIdade: {Age}\tPosição: {PositionString}";
+    }
+
+    public string ToStringAlt()
+    {
+        return $"ID: {Id}\nNome: {Name}\nIdade: {Age}\nPosição: {PositionString}";
     }
 }
