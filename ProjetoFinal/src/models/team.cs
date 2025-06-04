@@ -1,4 +1,7 @@
+using System.Drawing;
+using System.Dynamic;
 using jogador;
+using Model;
 using Templates;
 
 namespace team;
@@ -24,43 +27,56 @@ public class Team : ModelAbstract
 
     #region Private Attributes
 
-        private string _nome = string.Empty;
-        private List<Player>? _jogadores = new List<Player>();
-        private List<Player>? _goleiros = new List<Player>();
-        private List<Player>? _defesas = new List<Player>();
-        private List<Player>? _atacantes = new List<Player>();
-        private List<Player>? _unknown = new List<Player>();
-    
+    private string _name = string.Empty;
+    private List<Player> _jogadores = new();
+    private List<Event> _eventsHistory = new();
+    private int _xp;
+
+    // private List<Player>? _goleiros = new List<Player>();
+    // private List<Player>? _defesas = new List<Player>();
+    // private List<Player>? _atacantes = new List<Player>();
+    // private List<Player>? _unknown = new List<Player>();
+
+
     #endregion
 
     #region Public Attributes
 
-        public string? Nome
-            {get {return _nome;} set {_nome = value;}}
+    public string Name
+    { get { return _name; } set { _name = value; } }
 
-        public List<Player> Jogadores
-            {get {return _jogadores ?? new List<Player>();}}
-        // public int CountJogadores
-        //     {get {return _jogadores?.Count ?? 0;}}
+    public List<Player> Jogadores
+    { get { return _jogadores ?? new List<Player>(); } }
 
-        public List<Player> Goleiros
-            {get {return _goleiros ?? new List<Player>();}}
-        // public int CountGoleiros
-        //     {get {return _goleiros?.Count ?? 0;}}
+    public List<Event> EventsHistory
+    { get { return _eventsHistory; } set { _eventsHistory = value; } }
 
-        public List<Player> Defesas
-            {get {return _defesas ?? new List<Player>();}}
-        // public int CountDefesas
-        //     {get {return _defesas?.Count ?? 0;}}
-        
-        public List<Player> Atacantes
-            {get {return _atacantes ?? new List<Player>();}}
-        // public int CountAtacantes
-        //     {get {return _atacantes?.Count ?? 0;}}
+    public int XP
+    { get { return _xp; } set { _xp = value; } }
 
-        public List<Player> Unknown
-            {get {return _unknown ?? new List<Player>();}}
-    // public int CountUnknown
+
+
+    // public int CountJogadores
+    //     {get {return _jogadores?.Count ?? 0;}}
+
+    //     public List<Player> Goleiros
+    //         {get {return _goleiros ?? new List<Player>();}}
+    //     // public int CountGoleiros
+    //     //     {get {return _goleiros?.Count ?? 0;}}
+
+    //     public List<Player> Defesas
+    //         {get {return _defesas ?? new List<Player>();}}
+    //     // public int CountDefesas
+    //     //     {get {return _defesas?.Count ?? 0;}}
+
+    //     public List<Player> Atacantes
+    //         {get {return _atacantes ?? new List<Player>();}}
+    //     // public int CountAtacantes
+    //     //     {get {return _atacantes?.Count ?? 0;}}
+
+    //     public List<Player> Unknown
+    //         {get {return _unknown ?? new List<Player>();}}
+    // // public int CountUnknown
     //     {get {return _unknown?.Count ?? 0;}}
 
     #endregion
@@ -68,17 +84,16 @@ public class Team : ModelAbstract
 
     // Constructor
 
-    public Team () {}
+    public Team() { }
 
-    public Team(string nome, List<Player>? jogadores)
+    public Team(string nome, List<Player> jogadores)
     {
-        _nome = nome;
 
-        if (jogadores == null)
-        { jogadores = new List<Player>(); }
-        _jogadores = jogadores;
+        _name = nome;
 
-        SortJogadores(jogadores);
+        _jogadores = jogadores ?? new();
+
+        // SortJogadores(jogadores);
     }
 
 
@@ -86,76 +101,84 @@ public class Team : ModelAbstract
 
     public void AddJogador(Player jogador)
     {
-        if (_jogadores == null)
-            {_jogadores = new List<Player>();}
+        if (_jogadores == null) _jogadores = new();
+
         _jogadores.Add(jogador);
 
-        SortJogador(jogador);
+        // SortJogador(jogador);
     }
 
-
-    public void RemoveJogador(Player jogador)
+    public bool RemoveJogadorById(int Id)
     {
-        if (_jogadores == null)
-            {return;}
+        var index = _jogadores.FindIndex(j => j.Id == Id);
+        if (index < 0) return false;
+        _jogadores.RemoveAt(index);
+        return true;
 
-        _jogadores?.Remove(jogador);
-
-        switch (jogador.Position)
-        {
-            case 0:
-                _unknown?.Remove(jogador);
-                break;
-            case 1:
-                _goleiros?.Remove(jogador);
-                break;
-            case 2:
-                _defesas?.Remove(jogador);
-                break;
-            case 3:
-                _atacantes?.Remove(jogador);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException("Posição inválida.");
-        }
     }
 
+    // public void RemoveJogador(Player jogador)
+    // {
+    //     if (_jogadores == null)
+    //         {return;}
 
-    private void SortJogadores(List<Player> jogadores)
-    {
-        foreach (var jogador in jogadores)
-            {SortJogador(jogador);}
-    }
+    //     _jogadores?.Remove(jogador);
+
+    //     switch (jogador.Position)
+    //     {
+    //         case 0:
+    //             _unknown?.Remove(jogador);
+    //             break;
+    //         case 1:
+    //             _goleiros?.Remove(jogador);
+    //             break;
+    //         case 2:
+    //             _defesas?.Remove(jogador);
+    //             break;
+    //         case 3:
+    //             _atacantes?.Remove(jogador);
+    //             break;
+    //         default:
+    //             throw new ArgumentOutOfRangeException("Posição inválida.");
+    //     }
+    // }
 
 
-    private void SortJogador(Player jogador)
-    {
-        switch (jogador.Position)
-        {
-            case 0:
-                if (_unknown == null)
-                    {_unknown = new List<Player>();}
-                _unknown.Add(jogador);
-                break;
-            case 1:
-                if (_goleiros == null)
-                    {_goleiros = new List<Player>();}
-                _goleiros.Add(jogador);
-                break;
-            case 2:
-                if (_defesas == null)
-                    {_defesas = new List<Player>();}
-                _defesas.Add(jogador);
-                break;
-            case 3:
-                if (_atacantes == null)
-                    {_atacantes = new List<Player>();}
-                _atacantes.Add(jogador);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException("Posição inválida.");
-        }
-    }
+    // private void SortJogadores(List<Player> jogadores)
+    // {
+    //     foreach (var jogador in jogadores)
+    //         {SortJogador(jogador);}
+    // }
+
+
+    // private void SortJogador(Player jogador)
+    // {
+    //     switch (jogador.Position)
+    //     {
+    //         case 0:
+    //             if (_unknown == null)
+    //                 {_unknown = new List<Player>();}
+    //             _unknown.Add(jogador);
+    //             break;
+    //         case 1:
+    //             if (_goleiros == null)
+    //                 {_goleiros = new List<Player>();}
+    //             _goleiros.Add(jogador);
+    //             break;
+    //         case 2:
+    //             if (_defesas == null)
+    //                 {_defesas = new List<Player>();}
+    //             _defesas.Add(jogador);
+    //             break;
+    //         case 3:
+    //             if (_atacantes == null)
+    //                 {_atacantes = new List<Player>();}
+    //             _atacantes.Add(jogador);
+    //             break;
+    //         default:
+    //             throw new ArgumentOutOfRangeException("Posição inválida.");
+    //     }
+    // }
 
 
     #region unused
@@ -180,7 +203,7 @@ public class Team : ModelAbstract
     //         {_atacantes = new List<Jogador>();}
     //     _atacantes?.Add(atacante);
     // }
-    
+
     #endregion
 
 

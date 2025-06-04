@@ -1,15 +1,20 @@
 using jogo;
+using Lib.TeamFormation;
+using Model;
+
 namespace Container.DTOs;
 
 public class GameDto
 {
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;   
+    public string Title { get; set; } = string.Empty;
 
-    public int HomeGoals { get; set; }
-    public int AdversaryGoals { get; set; }
-    public int HomeTeamId { get; set; }
-    public int AdversaryTeamId { get; set; }
+    public int Id { get; set; }
+
+    public int HomeScore { get; set; }
+    public int AdversaryScore { get; set; }
+
+    public TeamDto HomeTeam { get; set; }
+    public TeamDto AdversaryTeam { get; set; }
 
     public DateOnly Date { get; set; }
     public TimeOnly HoraInicio { get; set; }
@@ -17,17 +22,31 @@ public class GameDto
     public string Local { get; set; } = string.Empty;
     public string TipoDeCampo { get; set; } = string.Empty;
 
-    public int QuantidadeJogadoresPorTeam { get; set; }
-    // public int LimiteTeams { get; set; }
-    // public List<int>? JogadorIdsSemTeam { get; set; } = new();
-    // public List<int>? TeamIds { get; set; } = new();
+    public List<PlayerDto> FilaJogadoresSemTeam { get; set; } = new();
+    public List<TeamDto> TeamsToPlay { get; set; } = new();
 
-    public GameDto() { }
+    public List<Event> Events { get; set; } = new();
+    public TeamFormation TeamFormation { get; set; }
+
+
+    public GameDto()
+    {
+        HomeTeam = new TeamDto();
+        AdversaryTeam = new TeamDto();
+        TeamFormation = new TeamFormation();
+    }
 
     public GameDto(Game game)
     {
         Id = game.Id;
+
         Title = game.Title;
+
+        HomeScore = game.HomeScore;
+        AdversaryScore = game.AdversaryScore;
+
+        HomeTeam = new(game.HomeTeam);
+        AdversaryTeam = new(game.AdversaryTeam);
 
         Date = game.Date;
         HoraInicio = game.HoraInicio;
@@ -35,28 +54,20 @@ public class GameDto
         Local = game.Local;
         TipoDeCampo = game.TipoDeCampo;
 
-        QuantidadeJogadoresPorTeam = game.QuantidadeJogadoresPorTeam;
+        FilaJogadoresSemTeam = game.FilaJogadoresSemTeam?.Select(p => new PlayerDto(p)).ToList()
+            ?? throw new ArgumentNullException(nameof(game.FilaJogadoresSemTeam), "FilaJogadoresSemTeam cannot be null");
+        TeamsToPlay = game.TeamsToPlay?.Select(t => new TeamDto(t)).ToList()
+            ?? throw new ArgumentNullException(nameof(game.TeamsToPlay), "TeamsToPlay cannot be null");
 
-        HomeGoals = game.HomeGoals;
-        AdversaryGoals = game.AdversaryGoals;
-        HomeTeamId = game.HomeTeam.Id;
-        AdversaryTeamId = game.AdversaryTeam.Id;
+        Events = game.Events?.Select(e => e).ToList()
+            ?? throw new ArgumentNullException(nameof(game.Events), "Events cannot be null");
+        TeamFormation = game.TeamFormation
+            ?? throw new ArgumentNullException(nameof(game.TeamFormation), "TeamFormation cannot be null");
     }
 
     public override string ToString()
     {
-        List<string> str = new List<string>
-        {
-            $"Id: {Id}",
-            $"Date: {Date}",
-            $"HoraInicio: {HoraInicio}",
-            $"Local: {Local}",
-            $"TipoDeCampo: {TipoDeCampo}",
-            $"QuantidadeJogadoresPorTeam: {QuantidadeJogadoresPorTeam}",
-            // $"JogadorIdsSemTeam: [{string.Join(", ", JogadorIdsSemTeam ?? new List<int>())}]",
-            // $"TeamIds: [{string.Join(", ", TeamIds ?? new List<int>())}]",
-        };
-
-        return string.Join("\n", str);
+        return $"Id: {Id}, Title: {Title}, Date: {Date}, Start: {HoraInicio}, Local: {Local}, TipoDeCampo: {TipoDeCampo}, HomeScore: {HomeScore}, AdversaryScore: {AdversaryScore})";
     }
+
 }

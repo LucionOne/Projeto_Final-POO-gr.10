@@ -2,6 +2,8 @@ using team;
 using jogador;
 using Container.DTOs;
 using Templates;
+using Model;
+using Lib.TeamFormation;
 
 namespace jogo;
 
@@ -40,66 +42,61 @@ public class Game : ModelAbstract
 
     #region Private Attributes
 
+    private string _title = string.Empty;
 
-        private int _homeGoals;
-        private int _adversaryGoals;
-        private Team _homeTeam = new Team();
-        private Team _adversaryTeam = new Team();
+    private int _homeScore;
+    private int _adversaryScore;
+    private Team _homeTeam = new Team();
+    private Team _adversaryTeam = new Team();
 
-        private DateOnly _date;
-        private TimeOnly _horaInicio;
+    private DateOnly _date;
+    private TimeOnly _horaInicio;
 
-        private string _local = string.Empty;
-        private string _tipoDeCampo = string.Empty;
+    private string _local = string.Empty;
+    private string _tipoDeCampo = string.Empty;
 
-        private int _quantidadeJogadoresPorTeam;
-        private List<Player>? _filaJogadoresSemTeam = new List<Player>();
-        private List<Team>? _teamsToPlay = new List<Team>();
-    
-        // private int _limiteJogadores;
-        // private int _limiteTeams;
-        // private List<Jogador>? FilaGoleiros = new List<Jogador>();
+    private List<Player> _filaJogadoresSemTeam = new List<Player>();
+    private List<Team> _teamsToPlay = new List<Team>();
 
-        private int QuantidadeGoleiro;
-        private int QuantidadeDefesa;
-        private int QuantidadeAtacante;
+    private List<Event> events = new();
+    private TeamFormation _teamFormation = new();
 
     #endregion
 
     #region Public Attributes
 
-        public string Title = string.Empty;
+    public string Title
+        { get { return _title; } set { _title = value ?? string.Empty; } }
 
-        public int HomeGoals
-            { get { return _homeGoals; } set { _homeGoals = value; } }
-        public int AdversaryGoals
-            {get {return _adversaryGoals;} set {_adversaryGoals = value;}}
-        public Team HomeTeam 
-            {get {return _homeTeam;} set {_homeTeam = value ?? new Team();}}
-        public Team AdversaryTeam
-            {get {return _adversaryTeam;} set {_adversaryTeam = value ?? new Team();}}
+    public int HomeScore
+    { get { return _homeScore; } set { _homeScore = value; } }
+    public int AdversaryScore
+        { get { return _adversaryScore; } set { _adversaryScore = value; } }
 
-        public DateOnly Date
-            { get { return _date; } set { _date = value; } }
-        public TimeOnly HoraInicio 
-            {get {return _horaInicio;} set {_horaInicio = value;}}
-            
-        public string Local 
-            {get {return _local;} set {_local = value ?? string.Empty;}}
-        public string TipoDeCampo 
-            {get {return _tipoDeCampo;} set {_tipoDeCampo = value ?? string.Empty;}}
+    public Team HomeTeam 
+        { get { return _homeTeam; } set { _homeTeam = value ?? new Team(); } }
+    public Team AdversaryTeam
+        { get { return _adversaryTeam; } set { _adversaryTeam = value ?? new Team(); } }
 
-        // public int LimiteJogadores 
-        // {get {return _limiteJogadores;} set {_limiteJogadores = value;}}
-        // public int LimiteTeams 
-        //     {get {return _limiteTeams;} set {_limiteTeams = value;}}
+    public DateOnly Date
+        { get { return _date; } set { _date = value; } }
+    public TimeOnly HoraInicio 
+        { get { return _horaInicio; } set { _horaInicio = value; } }
+        
+    public string Local 
+        { get { return _local; } set { _local = value ?? string.Empty; } }
+    public string TipoDeCampo 
+        { get { return _tipoDeCampo; } set { _tipoDeCampo = value ?? string.Empty; } }
 
-        public int QuantidadeJogadoresPorTeam 
-            {get {return _quantidadeJogadoresPorTeam;} set {_quantidadeJogadoresPorTeam = value;}} 
-        public List<Player>? FilaJogadoresSemTeam 
-            {get {return _filaJogadoresSemTeam;} set {_filaJogadoresSemTeam = value;}}
-        public List<Team>? Teams 
-            {get {return _teamsToPlay;} set {_teamsToPlay = value;}}
+    public List<Player> FilaJogadoresSemTeam 
+        { get { return _filaJogadoresSemTeam; } set { _filaJogadoresSemTeam = value; } }
+    public List<Team> TeamsToPlay 
+        { get { return _teamsToPlay; } set { _teamsToPlay = value; } }
+
+    public List<Event> Events
+        { get { return events; } set { events = value; } }
+    public TeamFormation TeamFormation
+        { get { return _teamFormation; } set { _teamFormation = value; } }
 
     #endregion
 
@@ -116,7 +113,6 @@ public class Game : ModelAbstract
         _horaInicio = Package.HoraInicio;
         _local = Package.Local;
         _tipoDeCampo = Package.TipoDeCampo;
-        _quantidadeJogadoresPorTeam = Package.QuantidadeJogadoresPorTeam;
     }
     
     public Game() { }
@@ -142,28 +138,28 @@ public class Game : ModelAbstract
         _filaJogadoresSemTeam.Add(jogador);
     }
 
-    public bool ValidateTeam(Team team)
-    {
-        if (team.Jogadores == null)
-            return false;
+    // public bool ValidateTeam(Team team)
+    // {
+    //     if (team.Jogadores == null)
+    //         return false;
 
-        if (team.Jogadores.Count != _quantidadeJogadoresPorTeam)
-            return false;
+    //     if (team.Jogadores.Count != _quantidadeJogadoresPorTeam)
+    //         return false;
         
-        if (team.Goleiros.Count != QuantidadeGoleiro)
-            return false;
+    //     if (team.Goleiros.Count != QuantidadeGoleiro)
+    //         return false;
         
-        if (team.Defesas.Count != QuantidadeDefesa)
-            return false;
+    //     if (team.Defesas.Count != QuantidadeDefesa)
+    //         return false;
         
-        if (team.Atacantes.Count != QuantidadeAtacante)
-            return false;
+    //     if (team.Atacantes.Count != QuantidadeAtacante)
+    //         return false;
         
-        // if (team.Unknown.Count > 0)
-        //     return false;
+    //     // if (team.Unknown.Count > 0)
+    //     //     return false;
 
-        return true;
-    }
+    //     return true;
+    // }
 
     
 
