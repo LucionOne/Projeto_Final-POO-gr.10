@@ -59,7 +59,6 @@ public class GameView : ViewBasicFunctions, IGameView
 
         gameDto.Local = Local;
         gameDto.TipoDeCampo = TipoDeCampo;
-        gameDto.QuantidadeJogadoresPorTeam = QuantidadeJogadoresPorTeam;
 
         Console.WriteLine(gameDto.ToString());
         Console.ReadLine();

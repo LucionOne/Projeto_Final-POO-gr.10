@@ -6,16 +6,16 @@ public class TeamFormation
     public readonly int NumberGoalkeepers = 1;
     public readonly int NumberDefenders;
     public readonly int NumberAttackers;
-    public readonly int NumberAny;
+    public readonly int NumberAny = 0;
 
     public bool IsValid => MaxPlayers == (NumberGoalkeepers + NumberDefenders + NumberAttackers + NumberAny);
 
     public TeamFormation()
     {
         MaxPlayers = 11; // Default value
-        NumberDefenders = 3; // Default value
+        NumberDefenders = 7; // Default value
         NumberAttackers = 3; // Default value
-        NumberAny = 4; // Default value
+        NumberGoalkeepers = 1; // Default value
     }
 
 
@@ -27,4 +27,12 @@ public class TeamFormation
         NumberAttackers = numberAttackers;
         NumberAny = numberAny;
     }
+
+    public static bool validFormation(TeamFormation formation)
+    {
+        return formation != null &&
+        (formation.MaxPlayers == (formation.NumberAttackers+formation.NumberDefenders+formation.NumberGoalkeepers));
+               
+    }
+
 }

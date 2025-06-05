@@ -50,9 +50,9 @@ public class GameController
             case 1://goal WI
                 (var team, var score) = _view.AcquireGoalInfo();
                 if (team)
-                    game.HomeGoals += score;
+                    game.HomeScore += score;
                 else if (!team)
-                    game.AdversaryGoals += score;
+                    game.AdversaryScore += score;
                 break;
             case 3://Add Player to line
 

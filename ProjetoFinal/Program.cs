@@ -27,6 +27,14 @@ public class Program
         }
     }
 
+    public static void Main_()//for debugs only
+    {
+        for (var i = 0; i <= 10-1; i++)
+        {
+            Console.WriteLine(i);
+        }
+    }
+
 
     private static DataContext LoadFiles()
     {
