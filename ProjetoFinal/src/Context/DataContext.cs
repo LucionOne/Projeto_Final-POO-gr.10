@@ -4,14 +4,14 @@ namespace Context;
 
 public class DataContext
 {
-    public PlayersRepo JogadorRepo { get; set; }
+    public PlayersRepo PlayerRepo { get; set; }
     public GamesRepo GamesRepo { get; set; }
     public TeamRepo TeamRepo { get; set; }
 
-    public DataContext(PlayersRepo jogadorRepo, GamesRepo gamesRepo, TeamRepo teamRepo)
+    public DataContext(PlayersRepo PlayerRepo, GamesRepo gamesRepo, TeamRepo teamRepo)
     {
         this.TeamRepo = teamRepo;
-        this.JogadorRepo = jogadorRepo;
+        this.PlayerRepo = PlayerRepo;
         this.GamesRepo = gamesRepo;
     }
 
@@ -27,7 +27,7 @@ public class DataContext
         }
         try
         {
-            JogadorRepo.WriteToDataBase();
+            PlayerRepo.WriteToDataBase();
         }
         catch
         {

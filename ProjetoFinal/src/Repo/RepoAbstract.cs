@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Templates;
 
 namespace Templates;
 
@@ -16,31 +15,16 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected string _fileName;
     protected string _filePath;
 
-    protected T? _lastAdded;
+    private bool _saved = true;
+    public bool Saved { get{ return _saved; } } 
 
     protected List<T> _mainRepo = new();
     protected int _nextId;
 
     public List<T> MainRepo { get { return _mainRepo; } set { _mainRepo = value; } }
-    
-    [JsonIgnore]
-    public T? LastAdded { get { return _lastAdded; } }
-
     public int Count {get { return _mainRepo.Count; }}
 
-    public int NextId
-    {
-        get => _nextId;
-        set => _nextId = value;
-    }
-    // public RepoAbstract(List<T> mainRepo, int nextId)
-    // {
-    // _mainRepo = mainRepo ?? new List<T>();
-    // _nextId = nextId;
-
-    // _fileName = "default.json";
-    // _filePath = Path.Combine(FolderPath, _fileName);
-    // }
+    public int NextId { get { return _nextId; } set { _nextId = value; } }
 
     [JsonConstructor]
     public RepoAbstract()
@@ -48,7 +32,6 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         _fileName = "default.json";
         _filePath = Path.Combine(FolderPath, _fileName);
     }
-
 
     /// <summary>
     /// Constructor for the repository
@@ -60,6 +43,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         _filePath = Path.Combine(FolderPath, _fileName);
     }
 
+    //Methods
 
     /// <summary>
     /// Adds an item in the database list
@@ -69,8 +53,9 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         item.Id = _nextId;
         _mainRepo.Add(item);
-        _lastAdded = item;
+        // _lastAdded = item;
         _nextId += 1;
+        _saved = false;
     }
 
     /// <summary>
@@ -80,6 +65,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     public virtual void Remove(T item)
     {
         _mainRepo.RemoveAll(x => x.Id == item.Id);
+        _saved = false;
     }
 
     /// <summary>
@@ -89,8 +75,8 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     public virtual void RemoveAt(int id)
     {
         int index = _mainRepo.FindIndex(x => x.Id == id);
-        if (index >= 0)
-            _mainRepo.RemoveAt(index);
+        _mainRepo.RemoveAt(index);
+        _saved = false;
     }
 
     /// <summary>
@@ -101,8 +87,8 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     public virtual void UpdateById(int id, T item)
     {
         int index = _mainRepo.FindIndex(x => x.Id == id);
-        if (index >= 0)
-            _mainRepo[index] = item;
+        _mainRepo[index] = item;
+        _saved = false;
     }
 
     /// <summary>
@@ -133,6 +119,11 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         return _mainRepo.ToDictionary(item => item.Id, item => item);
     }
+    
+    public virtual T? Last()
+    {
+        return _mainRepo.LastOrDefault();
+    }
 
     /// <summary>
     /// Verifies if the file exists, if it doesn't it creates the directory and file
@@ -162,6 +153,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     public virtual void WriteToDataBase()
     {
         File.WriteAllText(_filePath, Serialize());
+        _saved = true;
     }
 
     public virtual RepoAbstract<T> DataBaseStarter() ////Needs to be in the inheriting class
@@ -179,9 +171,5 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
         return temp;
     }
 
-    public virtual T? Last()
-    {
-        return _mainRepo.LastOrDefault();
-    }
 
 }

@@ -10,7 +10,7 @@ public class TeamController
 {
     private DataContext _data;
     private TeamView _view;
-    private bool _saved = true;
+    private bool _saved {get { return _data.TeamRepo.Saved; }}
     private bool isRunning = true;
 
 
@@ -51,20 +51,20 @@ public class TeamController
                 break;
             case 5:
                 _data.SaveDataBase();
-                _saved = true;
+                // _saved = true;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("Invalid choice. Please select a valid option.");
         }
     }
-    
+
     //needs to be polished but its functional
     private void CreateTeam()
     {
         var teamDto = _view.GetTeamInput();
         var team = new Team(teamDto);
         _data.TeamRepo.Add(team);
-        _saved = false;
+        // _saved = false;
     }
 
     private void EditTeam()
@@ -104,7 +104,7 @@ public class TeamController
         if (confirmation)
         {
             _data.TeamRepo.Remove(team);
-            _saved = false;
+            // _saved = false;
         }
 
     }

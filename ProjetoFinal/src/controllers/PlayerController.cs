@@ -62,13 +62,13 @@ public class PlayerController
     {
         var playerDto = _view.GetPlayerInput() ?? throw new ArgumentNullException("Player input cannot be null.");
         var player = new Player(playerDto);
-        _data.JogadorRepo.Add(player);
+        _data.PlayerRepo.Add(player);
     }
 
     // Edits an existing player
     private void EditPlayer()
     {
-        var players = _data.JogadorRepo.GetAll();
+        var players = _data.PlayerRepo.GetAll();
 
         if (players == null || !players.Any())
         {
@@ -86,7 +86,7 @@ public class PlayerController
 
         var playerId = _view.GetPlayerId(playersDto);
 
-        Player playerInfo = _data.JogadorRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
+        Player playerInfo = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
 
         var confirmation = _view.GetValidInput<bool>(
             "\nEdit? y/n: ",
@@ -108,14 +108,14 @@ public class PlayerController
                 true
             );
 
-            _data.JogadorRepo.UpdateById(playerId, player);
+            _data.PlayerRepo.UpdateById(playerId, player);
         }
     }
 
     // Deletes a player from the repository
     private void DeletePlayer()
     {
-        var players = _data.JogadorRepo.GetAll();
+        var players = _data.PlayerRepo.GetAll();
 
         if (players == null || !players.Any())
         {
@@ -133,20 +133,20 @@ public class PlayerController
 
         var playerId = _view.GetPlayerId(playersDto);
 
-        Player playerInfo = _data.JogadorRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
+        Player playerInfo = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
 
         var confirmation = _view.GetValidInput<bool>(
             "\nDelete? y/n: ",
             playerInfo.ToStringAlt(),
             true);
 
-        if (confirmation) _data.JogadorRepo.RemoveAt(playerId);
+        if (confirmation) _data.PlayerRepo.RemoveAt(playerId);
     }
 
     // Lists all players using the view
     private void ListPlayers()
     {
-        var players = _data.JogadorRepo.GetAll();
+        var players = _data.PlayerRepo.GetAll();
         var playersDto = players.Select(p => new PlayerDto
         {
             Id = p.Id,
@@ -163,7 +163,7 @@ public class PlayerController
     // Saves changes to the database
     private void SaveChanges()
     {
-        _data.JogadorRepo.WriteToDataBase();
+        _data.PlayerRepo.WriteToDataBase();
     }
 
 }
