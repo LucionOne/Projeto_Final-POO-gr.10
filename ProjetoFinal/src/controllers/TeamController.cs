@@ -57,7 +57,8 @@ public class TeamController
                 throw new ArgumentOutOfRangeException("Invalid choice. Please select a valid option.");
         }
     }
-
+    
+    //needs to be polished but its functional
     private void CreateTeam()
     {
         var teamDto = _view.GetTeamInput();
@@ -68,10 +69,15 @@ public class TeamController
 
     private void EditTeam()
     {
-        Console.Clear();
-        Console.WriteLine("Not Implemented");
-        Console.ReadKey();
-        // _saved = false;
+        if (_data.TeamRepo.Count == 0) { return; }
+
+        var id = _view.ShowAndGetTeamId(_data.TeamRepo.GetAll().Select(t => new TeamDto(t)).ToList());
+
+        if (id < 0) { return; }
+
+        var teamDto = _view.GetTeamInput();
+
+        _data.TeamRepo.UpdateById(id, new Team(teamDto));
     }
 
     private void ListTeams()
@@ -79,10 +85,15 @@ public class TeamController
         var teams = _data.TeamRepo.GetAll();
         _view.ShowTeams(teams.Select(t => new TeamDto(t)).ToList());
     }
-    
+
     private void DeleteTeam()//can be better ⚠️
     {
+
+        if (_data.TeamRepo.Count == 0) { return; }
+
         var id = _view.ShowAndGetTeamId(_data.TeamRepo.GetAll().Select(t => new TeamDto(t)).ToList());
+
+        if (id < 0) { return; }
 
         var team = _data.TeamRepo.GetById(id) ?? throw new NullReferenceException("team can't be null");
 

@@ -72,18 +72,21 @@ public class TeamView : ViewBasicFunctions
 
         int input = -1;
 
-        var valid = false;
-        while (!valid)
+        var idExists = false;
+        while (!idExists)
         {
             input = GetValidInput<int>(
                 "\nID: ",
                 menu,
-                true
+                true,
+                -1
             );
 
-            valid = teams.Any(x => x.Id == input);
+            if (input == -1) { return input; }
 
-            if (!valid)
+            idExists = teams.Any(x => x.Id == input);
+
+            if (!idExists)
             {
                 Console.WriteLine("ID doesn't exist, try again");
                 Console.ReadLine();
@@ -174,10 +177,10 @@ public class TeamView : ViewBasicFunctions
             "========================================================",
             "|                  T E A M   D E T A I L S             |",
             "+------------------------------------------------------+",
-            $"|ID   : {team.Id.ToString().PadRight(5)}|",
-            $"|Name : {team.Name.PadRight(20)}|",
-            $"|XP   : {team.XP.ToString().PadRight(14)}|",
-            $"|Date : {team.date.ToString("dd/MM/yy").PadRight(8)} |",
+            $"|ID   : {team.Id.ToString().PadRight(47)}|",
+            $"|Name : {team.Name.PadRight(47)}|",
+            $"|XP   : {team.XP.ToString().PadRight(47)}|",
+            $"|Date : {team.date.ToString("dd/MM/yy").PadRight(47)}|",
             "+------------------------------------------------------+"
         };
 

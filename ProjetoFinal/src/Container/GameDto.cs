@@ -1,6 +1,5 @@
 using Models;
 using Lib.TeamFormation;
-using Models;
 
 namespace Container.DTOs;
 

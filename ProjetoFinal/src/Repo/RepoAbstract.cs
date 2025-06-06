@@ -26,6 +26,8 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     [JsonIgnore]
     public T? LastAdded { get { return _lastAdded; } }
 
+    public int Count {get { return _mainRepo.Count; }}
+
     public int NextId
     {
         get => _nextId;

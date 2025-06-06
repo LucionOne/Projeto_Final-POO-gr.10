@@ -15,6 +15,17 @@ namespace Models;
 
 public class Player : IModel
 {
+
+
+    public enum PlayerPosition
+    {
+        Any,
+        Goalkeepers,
+        Defender,
+        Attackers,
+        Corrupted
+    }
+
     // private attributes
     private string? _name;
 
