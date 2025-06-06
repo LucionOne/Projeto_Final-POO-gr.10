@@ -1,5 +1,4 @@
-using team;
-using Model;
+using Models;
 
 namespace Container.DTOs;
 
@@ -9,6 +8,8 @@ public class TeamDto
     public string Name { get; set; } = string.Empty;
     public List<PlayerDto> Players { get; set; } = new();
     public List<Event> EventsHistory { get; set; } = new();
+    public int XP { get; set; }
+    public DateOnly date = new();
 
     public TeamDto() { }
 
@@ -17,6 +18,8 @@ public class TeamDto
         Id = team.Id;
         Name = team.Name;
         Players = team.Jogadores.Select(p => new PlayerDto(p)).ToList();
-        EventsHistory = team.EventsHistory.Select(e => e).ToList(); // Assuming Event is serializable
+        EventsHistory = team.EventsHistory;
+        XP = team.XP;
+        date = team.CreationDate;
     }
 }

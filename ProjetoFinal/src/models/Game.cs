@@ -1,11 +1,8 @@
-using team;
-using jogador;
 using Container.DTOs;
 using Templates;
-using Model;
 using Lib.TeamFormation;
 
-namespace jogo;
+namespace Models;
 
 // CRUD dos Jogos;
 // Os atributos principais são: a data do jogo, o local, o tipo de campo e quantos jogadores por Team incluindo o goleiro;

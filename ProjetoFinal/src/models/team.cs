@@ -1,10 +1,9 @@
 using System.Drawing;
 using System.Dynamic;
-using jogador;
-using Model;
+using Container.DTOs;
 using Templates;
 
-namespace team;
+namespace Models;
 
 // Criar pelo menos 03 formas de gerar os Teams
 // Por ordem de chegada no local do jogo,
@@ -31,11 +30,7 @@ public class Team : ModelAbstract
     private List<Player> _jogadores = new();
     private List<Event> _eventsHistory = new();
     private int _xp;
-
-    // private List<Player>? _goleiros = new List<Player>();
-    // private List<Player>? _defesas = new List<Player>();
-    // private List<Player>? _atacantes = new List<Player>();
-    // private List<Player>? _unknown = new List<Player>();
+    private DateOnly _creationDate;
 
 
     #endregion
@@ -54,6 +49,8 @@ public class Team : ModelAbstract
     public int XP
     { get { return _xp; } set { _xp = value; } }
 
+    public DateOnly CreationDate
+    { get { return _creationDate; } set { _creationDate = value; } }
 
 
     // public int CountJogadores
@@ -96,6 +93,14 @@ public class Team : ModelAbstract
         // SortJogadores(jogadores);
     }
 
+    public Team(TeamDto package)
+    {
+        this._id = package.Id;
+        this._name = package.Name;
+        this._jogadores = package.Players.Select(playerDto => new Player(playerDto)).ToList();
+        this._eventsHistory = package.EventsHistory;
+        this._xp = package.XP;
+    }
 
     // Methods
 

@@ -13,13 +13,18 @@ namespace Templates;
 public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
 {
     protected const string FolderPath = "DataBase";
-    protected  string _fileName;
-    protected  string _filePath;
+    protected string _fileName;
+    protected string _filePath;
 
-    protected  List<T> _mainRepo = new();
+    protected T? _lastAdded;
+
+    protected List<T> _mainRepo = new();
     protected int _nextId;
 
-    public List<T> MainRepo { get { return _mainRepo; } set { _mainRepo = value; }}
+    public List<T> MainRepo { get { return _mainRepo; } set { _mainRepo = value; } }
+    
+    [JsonIgnore]
+    public T? LastAdded { get { return _lastAdded; } }
 
     public int NextId
     {
@@ -40,7 +45,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         _fileName = "default.json";
         _filePath = Path.Combine(FolderPath, _fileName);
-     }
+    }
 
 
     /// <summary>
@@ -51,7 +56,6 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         _fileName = fileName;
         _filePath = Path.Combine(FolderPath, _fileName);
-        // VerifyFileExists();
     }
 
 
@@ -63,6 +67,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         item.Id = _nextId;
         _mainRepo.Add(item);
+        _lastAdded = item;
         _nextId += 1;
     }
 
@@ -171,6 +176,10 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
             ?? throw new NullReferenceException("Deserializer returned null");
         return temp;
     }
-    
+
+    public virtual T? Last()
+    {
+        return _mainRepo.LastOrDefault();
+    }
 
 }

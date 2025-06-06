@@ -1,6 +1,6 @@
-using jogo;
+using Models;
 using Lib.TeamFormation;
-using Model;
+using Models;
 
 namespace Container.DTOs;
 

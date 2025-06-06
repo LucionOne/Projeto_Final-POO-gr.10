@@ -1,6 +1,6 @@
-using jogador;
+using Models;
 
-namespace Model;
+namespace Models;
 
 public abstract class Event
 {

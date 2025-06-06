@@ -1,4 +1,4 @@
-using jogador;
+using Models;
 
 namespace Container.DTOs;
 

@@ -1,5 +1,5 @@
 using Context;
-using jogador;
+using Models;
 using Templates;
 using View;
 using Container.DTOs;

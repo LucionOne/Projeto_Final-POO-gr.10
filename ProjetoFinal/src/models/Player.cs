@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Templates;
 using Container.DTOs;
 
-namespace jogador;
+namespace Models;
 
 // Gestão de Jogadores
 // CRUD[1] dos jogadores;

@@ -1,6 +1,6 @@
-using team;
+using Models;
 using Lib.TeamFormation;
-using jogador;
+using Models;
 using System.Xml.Schema;
 
 namespace Lit.TeamBuilder;

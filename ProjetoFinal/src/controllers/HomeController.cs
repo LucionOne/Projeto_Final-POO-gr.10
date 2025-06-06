@@ -1,7 +1,7 @@
 using View;
 using Templates;
 using MyRepository;
-using jogo;
+using Models;
 using Context;
 
 namespace Controller;
@@ -25,7 +25,7 @@ public class HomeController
             { 1, CreateGame },
             { 2, LoadGame },
             { 3, ManagePlayers },
-            { 4, Option4 }
+            { 4, ManageTeams }
         };
     }
 
@@ -87,10 +87,11 @@ public class HomeController
         playerController.BeginInteraction();
     }
 
-    public void Option4()
+    public void ManageTeams()
     {
-        Console.WriteLine("Option 4");
-        Console.ReadLine();
+        var teamView = new TeamView();
+        var teamController = new TeamController(_data, teamView);
+        teamController.BeginInteraction();
     }
 }
 

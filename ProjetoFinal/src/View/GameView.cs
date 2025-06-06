@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO.Pipelines;
 using Container.DTOs;
-using jogo;
+using Models;
 using Templates;
 
 namespace View;
