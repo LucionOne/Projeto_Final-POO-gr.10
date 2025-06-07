@@ -2,38 +2,41 @@
 using Context;
 using MyRepository;
 using View;
+using VS;
 
 public class Program
 {
-    public static void Main_()//for debugs only
-    {
-        for (var i = 0; i <= 10-1; i++)
-        {
-            Console.WriteLine(i);
-        }
-    }
-
-
     public static void Main()
     {
-        Console.Clear();
-
-        DataContext data = LoadFiles();
-        HomeView _view = new();
-
-        var homeController = new HomeController(data, _view);
-
-        bool isRunning = true;
-        while (isRunning)
+        var vibe = new VibeShell();
+        vibe.Render();
+        Console.ReadLine();
+        var Header = new List<string>
         {
-            homeController.BeginInteraction();
-
-            data.SaveDataBase();            
-
-            Console.ReadLine();
-            isRunning = false;
-        }
+            "Hello World!"
+        };
+        vibe.ChangeHeader(Header);
     }
+    // public static void Main()
+    // {
+    //     Console.Clear();
+
+    //     DataContext data = LoadFiles();
+    //     HomeView _view = new();
+
+    //     var homeController = new HomeController(data, _view);
+
+    //     bool isRunning = true;
+    //     while (isRunning)
+    //     {
+    //         homeController.BeginInteraction();
+
+    //         data.SaveDataBase();
+
+    //         Console.ReadLine();
+    //         isRunning = false;
+    //     }
+    // }
 
 
     private static DataContext LoadFiles()

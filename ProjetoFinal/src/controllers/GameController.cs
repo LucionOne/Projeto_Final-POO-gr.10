@@ -72,21 +72,6 @@ public class GameController
         }
         return true;
     }
-            // "=======================================",
-            // "|            O P T I O N S            |",
-            // "+-------------------------------------+",
-            // "|01| Add Goal                         |",
-            // "|02|                                  |",
-            // "|03| Add player to line               |",
-            // "|04| Create Team                      |",
-            // "|05|                                  |",
-            // "|06|                                  |",
-            // "|07| Next Match                       |",
-            // "|08|                                  |",
-            // "|09| Edit Game Info                   |",
-            // "+-------------------------------------+",
-            // "|00| Exit Game                        |",
-            // "=======================================",
 
 
     private Game HandleContext(Context actionContext)
