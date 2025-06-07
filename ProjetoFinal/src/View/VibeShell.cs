@@ -1,8 +1,9 @@
 
+// in development, not in use yet, got to make sure the controller works fine
 
-namespace VS;
+namespace VS; //need a better namespace
 
-public class VibeShell
+public class VibeShell //Temp name?
 {
 
     public int WindowSize = 102;
@@ -55,7 +56,7 @@ public class VibeShell
         Console.Clear();
 
         Console.WriteLine(new string('=', WindowSize));
-        
+
         foreach (var section in new[] { Header, PageInfo, MainWindow, InfBar })
         {
             Console.WriteLine(new string('-', WindowSize));
@@ -64,13 +65,13 @@ public class VibeShell
                 Console.WriteLine($"|{line}|");
             }
         }
-            Console.WriteLine(new string('=', WindowSize));
+        Console.WriteLine(new string('=', WindowSize));
     }
 
 
     public void ChangeHeader(List<string> newHeader, bool render = true)
     {
-        Header = PadLineRight(newHeader,FillSize);
+        Header = PadLineRight(newHeader, FillSize);
         if (render) Render();
     }
 
@@ -154,6 +155,8 @@ public class VibeShell
 
 }
 
+
+//for color control, needs a PadRight() and be applied
 public class WrtLine
 {
     public List<Wrt> Line = new();

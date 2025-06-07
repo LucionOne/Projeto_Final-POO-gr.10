@@ -13,6 +13,10 @@ public class PlayerController
     private DataContext _data;
     private PlayerView _view;
 
+    private bool _saved {get{ return _data.PlayerRepo.Saved; }}
+
+    private bool isRunning;
+
     // Constructor
     public PlayerController(DataContext data, PlayerView view)
     {
@@ -23,21 +27,22 @@ public class PlayerController
     // Main interaction loop
     public void BeginInteraction()
     {
-        bool isRunning = true;
+        isRunning = true;
         while (isRunning)
         {
-            int input = _view.MainMenu();
-            isRunning = HandleUserChoice(input);
+            int input = _view.MainMenu(_saved);
+            HandleUserChoice(input);
         }
     }
 
     // Handles user menu choices
-    private bool HandleUserChoice(int choice)
+    private void HandleUserChoice(int choice)
     {
         switch (choice)
         {
             case 0:
-                return false; // Exit
+                isRunning = _view.Bye(_saved);
+                break;
             case 1:
                 CreatePlayer();
                 break;
@@ -53,8 +58,9 @@ public class PlayerController
             case 5:
                 SaveChanges();
                 break;
+            default:
+                throw new ArgumentOutOfRangeException("Invalid choice. Please select a valid option.");
         }
-        return true;
     }
 
     // Creates a new player and adds to repository

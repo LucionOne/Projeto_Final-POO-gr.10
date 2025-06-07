@@ -18,6 +18,8 @@ public class PlayerDto
     };
 
 
+    public PlayerDto() { }
+
     public PlayerDto(Player package)
     {
         Id = package.Id;
@@ -25,7 +27,5 @@ public class PlayerDto
         Age = package.Age;
         Position = package.Position;
     }
-
-    public PlayerDto() { }
 }
     

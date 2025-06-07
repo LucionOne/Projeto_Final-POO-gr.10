@@ -1,6 +1,7 @@
 using Models;
 using System.Text.Json;
 using Templates;
+using Container.DTOs;
 
 namespace MyRepository;
 
@@ -27,6 +28,11 @@ public class TeamRepo : RepoAbstract<Team>
         TeamRepo temp = JsonSerializer.Deserialize<TeamRepo>(file)
             ?? throw new NullReferenceException("Deserializer returned null");
         return temp;
+    }
+
+    public List<TeamDto> ToDtoList()
+    {
+        return _mainRepo.Select(t => new TeamDto(t)).ToList();
     }
 }
 

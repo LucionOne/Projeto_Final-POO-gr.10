@@ -16,7 +16,6 @@ namespace Models;
 public class Player : IModel
 {
 
-
     public enum PlayerPosition
     {
         Any,
@@ -27,7 +26,7 @@ public class Player : IModel
     }
 
     // private attributes
-    private string? _name;
+    private string _name = string.Empty;
 
     private int _age;
 
@@ -71,10 +70,10 @@ public class Player : IModel
             return _position switch
             {
                 0 => "Unknown",
-                1 => "Goleiro",
-                2 => "Defesa",
-                3 => "Ataque",
-                _ => throw new ArgumentOutOfRangeException("PosicaoString: _posição inválida.")
+                1 => "Goalkeeper",
+                2 => "Defender",
+                3 => "Attacker",
+                _ => "Corrupted"
             };
         }
     }
@@ -97,6 +96,11 @@ public class Player : IModel
         Position = dto.Position;
     }
 
+    public Player(int id)
+    {
+        _id = id;
+    }
+
 
     // methods
     public override string ToString()
@@ -107,5 +111,9 @@ public class Player : IModel
     public string ToStringAlt()
     {
         return $"ID: {Id}\nNome: {Name}\nIdade: {Age}\nPosição: {PositionString}";
+    }
+    public PlayerDto ToDto()
+    {
+        return new PlayerDto(this);
     }
 }

@@ -17,7 +17,16 @@ public class TeamDto
     {
         Id = team.Id;
         Name = team.Name;
-        Players = team.Jogadores.Select(p => new PlayerDto(p)).ToList();
+        Players = team.Jogadores.Select(p => p.ToDto()).ToList();
+        EventsHistory = team.EventsHistory;
+        XP = team.XP;
+        date = team.CreationDate;
+    }
+    public TeamDto(Team team, List<PlayerDto> players)
+    {
+        Id = team.Id;
+        Name = team.Name;
+        Players = players;
         EventsHistory = team.EventsHistory;
         XP = team.XP;
         date = team.CreationDate;

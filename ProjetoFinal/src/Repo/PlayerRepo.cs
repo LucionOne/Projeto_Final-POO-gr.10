@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using Templates;
 using Microsoft.VisualBasic;
+using Container.DTOs;
 
 namespace MyRepository;
 
@@ -34,8 +35,11 @@ public class PlayersRepo : RepoAbstract<Player>
             ?? throw new NullReferenceException("Deserializer returned null");
         return temp;
     }
-    
 
+    public List<PlayerDto> ToDtoList()
+    {
+        return _mainRepo.Select(p => new PlayerDto(p)).ToList();
+    }
 
     // public override PlayersRepo LoadFromDataBase()
     // {

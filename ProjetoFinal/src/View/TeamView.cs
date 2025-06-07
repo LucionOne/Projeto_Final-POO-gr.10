@@ -1,12 +1,41 @@
 using Templates;
+using Templates.view;
 using Container.DTOs;
 using System.Dynamic;
 using System.ComponentModel.Design;
 
 namespace View;
 
-public class TeamView : ViewBasicFunctions
+public class TeamView : ViewBasicFunctions, ITeamView
 {
+
+    public bool ConfirmSaveToDB()
+    {
+        var confirmation = GetValidInput<bool>(">> y/n: ", "Do you want to save changes to the database?", true);
+        return confirmation;
+    }
+
+    public TeamDto GetTeamEdit(List<PlayerDto> players, TeamDto team)
+    {
+        Console.Clear();
+        Console.WriteLine(GetTeamString(team));
+        Console.WriteLine("========================================================");
+        Console.WriteLine("|                  E D I T   T E A M                   |");
+        Console.WriteLine("+------------------------------------------------------+");
+
+        var editedTeam = GetTeamInput(players);
+        editedTeam.Id = team.Id; // Keep the same ID
+        editedTeam.Players = team.Players; // Keep the same players
+
+        return editedTeam;
+    }
+
+
+
+
+
+
+
     public int MainMenu(bool saved)
     {
         string? strSaved;
@@ -37,7 +66,7 @@ public class TeamView : ViewBasicFunctions
         return choice;
     }
 
-    public TeamDto GetTeamInput()
+    public TeamDto GetTeamInput(List<PlayerDto> players)
     {
 
         string name = string.Empty;
@@ -66,7 +95,7 @@ public class TeamView : ViewBasicFunctions
         return team;
     }
 
-    public int ShowAndGetTeamId(List<TeamDto> teams)
+    public int GetTeamId(List<TeamDto> teams)
     {
         var menu = FormattedTeamsToString(teams);
 
@@ -209,7 +238,7 @@ public class TeamView : ViewBasicFunctions
     }
 
 
-    public bool ConfirmDelete(TeamDto team)
+    public bool ConfirmDeleteTeam(TeamDto team)
     {
         Console.Clear();
         var confirmation = GetValidInput<bool>(

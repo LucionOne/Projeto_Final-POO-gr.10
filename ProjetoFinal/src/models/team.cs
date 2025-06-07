@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Dynamic;
+using System.Security.Cryptography;
 using Container.DTOs;
 using Templates;
 
@@ -27,7 +28,8 @@ public class Team : ModelAbstract
     #region Private Attributes
 
     private string _name = string.Empty;
-    private List<Player> _jogadores = new();
+    private List<Player> _jogadores = new(); //Prep to be deleted
+    private List<int> _playersId = new();
     private List<Event> _eventsHistory = new();
     private int _xp;
     private DateOnly _creationDate;
@@ -51,6 +53,8 @@ public class Team : ModelAbstract
 
     public DateOnly CreationDate
     { get { return _creationDate; } set { _creationDate = value; } }
+
+    public List<int> PlayersId { get { return _playersId; } set { _playersId = value ?? new List<int>(); } }
 
 
     // public int CountJogadores
@@ -102,6 +106,11 @@ public class Team : ModelAbstract
         this._xp = package.XP;
     }
 
+    public Team(int id)
+    {
+        _id = id;
+    }
+
     // Methods
 
     public void AddJogador(Player jogador)
@@ -120,6 +129,11 @@ public class Team : ModelAbstract
         _jogadores.RemoveAt(index);
         return true;
 
+    }
+
+    public TeamDto ToDto()
+    {
+        return new TeamDto(this);
     }
 
     // public void RemoveJogador(Player jogador)

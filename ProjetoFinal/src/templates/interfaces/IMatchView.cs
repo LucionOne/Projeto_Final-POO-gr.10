@@ -2,7 +2,7 @@ using Container.DTOs;
 
 namespace Templates;
 
-public interface IGameView : IView
+public interface IMatchView : IView
 {
     GameDto AcquireGameInfo();
     int GetIdForGame(List<GameDto> games);

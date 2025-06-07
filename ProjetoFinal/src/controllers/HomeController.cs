@@ -66,8 +66,8 @@ public class HomeController
     {
         // Console.WriteLine("Option 1");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, _data.GamesRepo);
-        gameController.BeginInteraction(GameController.Context.CreateGame);
+        var gameController = new MatchController(gameView, _data.GamesRepo);
+        gameController.BeginInteraction(MatchController.Context.CreateGame);
     }
 
 
@@ -75,8 +75,8 @@ public class HomeController
     {
         // Console.WriteLine("Option 2");
         var gameView = new GameView();
-        var gameController = new GameController(gameView, _data.GamesRepo);
-        gameController.BeginInteraction(GameController.Context.LoadGame);
+        var gameController = new MatchController(gameView, _data.GamesRepo);
+        gameController.BeginInteraction(MatchController.Context.LoadGame);
     }
 
     public void ManagePlayers()

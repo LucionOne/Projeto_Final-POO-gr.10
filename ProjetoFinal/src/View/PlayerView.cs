@@ -8,8 +8,11 @@ namespace View;
 
 public class PlayerView : ViewBasicFunctions
 {
-    public int MainMenu()
+    public int MainMenu(bool saved)
     {
+        string? strSaved;
+        if (saved) { strSaved = ""; } else { strSaved = "*"; }
+
         var menulist = new List<string>
         {
             "=============================",
@@ -19,7 +22,7 @@ public class PlayerView : ViewBasicFunctions
             "|02| Edit Player            |",
             "|03| Delete Player          |",
             "|04| List Players           |",
-            "|05| Save Changes           |",
+           $"|05| Save Changes{strSaved.PadRight(11)}|",
             "+---------------------------+",
             "|00| Exit                   |",
             "=============================",
@@ -67,7 +70,7 @@ public class PlayerView : ViewBasicFunctions
             "|03| Attacker     |",
             "===================",
         });
-        
+
         while (!isValid)
         {
             position = GetValidInput<int>(positionPrompt, expPosition, clear: true);
@@ -168,4 +171,29 @@ public class PlayerView : ViewBasicFunctions
         return string.Join("\n", strList);
     }
 
+    public void ShowToUser(string msg)
+    {
+        Console.WriteLine(msg);
+    }
+
+    public bool Bye(bool saved)
+    {
+        Console.Clear();
+
+        if (!saved)
+        {
+            var confirmation = GetValidInput<bool>(
+                ">> y/n: ",
+                "Changes not Saved! Leave Anyway?",
+                true
+            );
+            if (confirmation)
+            { Console.Clear(); return false; }
+            else { Console.Clear(); return true; }
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

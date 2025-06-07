@@ -111,7 +111,13 @@ public class Game : ModelAbstract
         _local = Package.Local;
         _tipoDeCampo = Package.TipoDeCampo;
     }
-    
+
+    public Game(int id)
+    {
+        _id = id;
+    }
+
+
     public Game() { }
 
     // public Game(DateOnly date, TimeOnly horaInicio, string local, string tipoDeCampo, int quantidadeJogadoresPorTeam, int limiteJogadores, int limiteTeams)

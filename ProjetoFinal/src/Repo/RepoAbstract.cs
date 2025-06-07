@@ -53,7 +53,6 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     {
         item.Id = _nextId;
         _mainRepo.Add(item);
-        // _lastAdded = item;
         _nextId += 1;
         _saved = false;
     }
@@ -87,6 +86,13 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     public virtual void UpdateById(int id, T item)
     {
         int index = _mainRepo.FindIndex(x => x.Id == id);
+
+        if (index == -1)
+        {
+            _mainRepo.Add(item);
+            return;
+        }
+        
         _mainRepo[index] = item;
         _saved = false;
     }

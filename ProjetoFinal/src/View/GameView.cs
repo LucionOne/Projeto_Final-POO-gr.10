@@ -6,7 +6,7 @@ using Templates;
 
 namespace View;
 
-public class GameView : ViewBasicFunctions, IGameView
+public class GameView : ViewBasicFunctions, IMatchView
 {
 
     public GameDto AcquireGameInfo()
