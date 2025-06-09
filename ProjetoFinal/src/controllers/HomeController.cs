@@ -10,12 +10,13 @@ namespace Controller;
 
 public class HomeController
 {
-    private HomeView _view;
+    private IHomeView _view;
     private Dictionary<int, Action> _userActions;
     private DataContext _data;
+    bool isRunning = true;
 
 
-    public HomeController(DataContext data, HomeView view)
+    public HomeController(DataContext data, IHomeView view)
     {
 
         _data = data;
@@ -32,25 +33,21 @@ public class HomeController
 
     public void BeginInteraction() //needs to be MVC like ⚠️
     {
-        bool isRunning = true;
         while (isRunning)
         {
-            _view.Menu();
-            int choice = _view.GetChoice(">> ");
-            isRunning = HandleUserChoice(choice);
+            int choice = _view.MainMenu();
+            HandleUserChoice(choice);
         }
     }
 
 
-    private bool HandleUserChoice(int input)
+    private void HandleUserChoice(int input)
     {
         if (input == 0)
         {
-            _view.Bye();
-            return false;
+            isRunning = !_view.Bye();
         }
-
-        if (_userActions.TryGetValue(input, out var action))
+        else if (_userActions.TryGetValue(input, out var action))
         {
             action();
         }
@@ -58,8 +55,6 @@ public class HomeController
         {
             _view.InvalidChoice(input);
         }
-
-        return true;
     }
 
 

@@ -1,13 +1,14 @@
 
 // in development, not in use yet, got to make sure the controller works fine
 
+using System.Dynamic;
 using System.Reflection.Metadata;
 
 namespace VS; //need a better namespace
 
 public class VibeShell //Temp name?
 {
-
+    #region Properties
     public int WindowSize = 102;
     public int FillSize { get { return WindowSize - 2; } }
     public int MainViewFillSize;
@@ -19,139 +20,122 @@ public class VibeShell //Temp name?
         set => _scale = (value >= 0 && value <= 1) ? value : 0.5f;
     }
 
-    public int MainWindowHeight = 30;
+    public int MainWindowHeight = 10;
 
-    public List<string> Header = new();
-    public List<string> PageInfo = new();
-    public List<string> MainWindow { get { return JoinViews(MainView, SecView); } }
-    public List<string> InfBar = new();
+    private List<string> Header = new();
+    private List<string> PageInfo = new();
+    private List<string> MainWindow { get { return JoinViews(MainView, SecView); } }
+    private List<string> InfBar = new();
 
-    public List<string> MainView = new();
-    public List<string> SecView = new();
+    private List<string> MainView = new();
+    private List<string> SecView = new();
+
+    private List<string> RawHeader = new();
+    private List<string> RawPageInfo = new();
+    private List<string> RawMainView = new();
+    private List<string> RawSecView = new();
+    private List<string> RawInfBar = new();
+    #endregion Properties
 
 
-
-
-
+    #region Constructor
 
     public VibeShell()
     {
-        ScaleFillSize();
-        Header = new List<string>
-        {
-            $"{"Header"}",//.PadRight(FillSize)}",
-        };
-
-        PageInfo = new List<string>
-        {
-            $"{"PageInfo"}",//.PadRight(FillSize)}",
-        };
-
-        MainView = new List<string>
-        {
-            $"{"MainView"}",//.PadRight(MainViewFillSize)}",
-        };
-
-        SecView = new List<string>
-        {
-            $"{"SecView"}",//.PadRight(SecViewFillSize)}",
-        };
-
-        InfBar = new List<string>
-        {
-            $"{"infBar"}",//.PadRight(FillSize)}",
-        };
-    }
-
-    public VibeShell(int size = 102, float scale = 0.5f, int mainWindowHeight = 30)
-    {
-
-        MainWindowHeight = mainWindowHeight;
-        WindowSize = size;
-        Scale = scale;
-        ScaleFillSize();
-
-        Header = new List<string>
+        setScale(Scale);
+        var _header = new List<string>
         {
             $"{"Header"}",
         };
 
-        PageInfo = new List<string>
+        var _pageInfo = new List<string>
         {
             $"{"PageInfo"}",
         };
 
-        MainView = new List<string>
+        var _mainView = new List<string>
         {
             $"{"MainView"}",
         };
 
-        SecView = new List<string>
+        var _secView = new List<string>
         {
             $"{"SecView"}",
         };
 
-        InfBar = new List<string>
+        var _infBar = new List<string>
         {
             $"{"infBar"}",
         };
+
+        ChangeHeader(_header, false);
+        ChangePageInfo(_pageInfo, false);
+        ChangeMainView(_mainView, false);
+        ChangeSecView(_secView, false);
+        ChangeInfBar(_infBar, false);
     }
 
-public VibeShell(List<string> header, List<string> pageInfo, List<string> mainView, List<string> secView, List<string> infBar, int size = 102, float scale = 0.5f, int mainWindowHeight = 30)
+    public VibeShell(int size = 102, float scale = 0.5f, int mainWindowHeight = 10)
+    {
+
+        MainWindowHeight = mainWindowHeight;
+        WindowSize = size;
+        Scale = scale;
+        ScaleFillSize();
+
+        var _header = new List<string>
+        {
+            $"{"Header"}",
+        };
+
+        var _pageInfo = new List<string>
+        {
+            $"{"PageInfo"}",
+        };
+
+        var _mainView = new List<string>
+        {
+            $"{"MainView"}",
+        };
+
+        var _secView = new List<string>
+        {
+            $"{"SecView"}",
+        };
+
+        var _infBar = new List<string>
+        {
+            $"{"infBar"}",
+        };
+
+        ChangeHeader(_header, false);
+        ChangePageInfo(_pageInfo, false);
+        ChangeMainView(_mainView, false);
+        ChangeSecView(_secView, false);
+        ChangeInfBar(_infBar, false);
+
+
+    }
+
+    public VibeShell(List<string> header, List<string> pageInfo, List<string> mainView, List<string> secView, List<string> infBar, int size = 102, float scale = 0.5f, int mainWindowHeight = 30)
     {
         MainWindowHeight = mainWindowHeight;
         WindowSize = size;
         Scale = scale;
         ScaleFillSize();
 
-        Header = PadLineRight(header, FillSize);
-        PageInfo = PadLineRight(pageInfo, FillSize);
-        MainView = PadLineRight(mainView, MainViewFillSize);
-        SecView = PadLineRight(secView, SecViewFillSize);
-        InfBar = PadLineRight(infBar, FillSize);
+        ChangeHeader(header, false);
+        ChangePageInfo(pageInfo, false);
+        ChangeMainView(mainView, false);
+        ChangeSecView(secView, false);
+        ChangeInfBar(infBar, false);
     }
+    #endregion Constructor
 
 
 
 
-
-    public void SetSize(int size)
-    {
-        WindowSize = size;
-        ScaleFillSize();
-    }
-
-
-
-
-
-
-
-    public void Clear(bool extraClean = false, bool render = true)
-    {
-        if (extraClean)
-        {
-            Header = ["".PadRight(FillSize)];
-            PageInfo = ["".PadRight(FillSize)];
-        }
-
-        MainView = ["".PadRight(MainViewFillSize)];
-        SecView = ["".PadRight(SecViewFillSize)];
-        InfBar = ["".PadRight(FillSize)];
-
-        if (render) Render();
-    }
-
-
-
-
-
-
-
-
-
-
-
+    #region Scale
 
 
     public void ScaleFillSize()
@@ -181,57 +165,190 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
         SecViewFillSize -= 1; //set a space a division
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public void setScale(float scale)
     {
         Scale = scale;
         ScaleFillSize();
+        ChangeAllPads(false);
+    }
+
+    public void SetSize(int size)
+    {
+        WindowSize = size;
+        ScaleFillSize();
+        ChangeAllPads(false);
     }
 
 
 
+    #endregion Scale
+
+
+    #region Getters
+
+
+    public int GetHeaderHeight()
+    {
+        return Header.Count;
+    }
+    public int GetPageInfoHeight()
+    {
+        return PageInfo.Count;
+    }
+    public int GetMainViewHeight()
+    {
+        return MainView.Count;
+    }
+    public int GetSecViewHeight()
+    {
+        return SecView.Count;
+    }
+    public int GetInfBarHeight()
+    {
+        return InfBar.Count;
+    }
+    public int GetMainWindowHeight()
+    {
+        return MainWindow.Count;
+    }
+    public int GetFullHeight()
+    {
+        return GetHeaderHeight() + GetPageInfoHeight() + GetMainWindowHeight() + GetInfBarHeight() + 5; // 5 for borders
+    }
+
+    public int GetMaxLineLength()
+    {
+        var minSize = 0;
+
+        foreach (var line in RawMainView)
+        {
+            if (line.Length > minSize)
+                minSize = line.Length;
+        }
+        return minSize;
+    }
+
+    public float GetMinScaleForMainView()
+    {
+        int maxLineLength = GetMaxLineLength();
+        if (maxLineLength == 0) return 0.0f;
+        // Ensure at least 1 column for the separator
+        int availableWidth = FillSize;// - 1;
+        float minScale = (float)maxLineLength / availableWidth;
+        // Clamp between 0 and 1
+        return Math.Min(Math.Max(minScale, 0f), 1f);
+    }
+
+    public (int X, int Y) GetHeaderPosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += 1; //for border
+        X += 1; //for border
+
+        return (X, Y);
+    }
+    public (int X, int Y) GetPageInfoPosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += GetHeaderHeight();
+        Y += 1; //for border
+
+        X += 1; //for border
+        return (X, Y);
+    }
+    public (int X, int Y) GetMainViewPosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += GetHeaderHeight();
+        Y += GetPageInfoHeight();
+        Y += 3; //for border
+
+        X += 1; //for border
+        return (X, Y);
+    }
+    public (int X, int Y) GetSecViewPosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += GetHeaderHeight();
+        Y += GetPageInfoHeight();
+        Y += 3; //for border
+
+        X += MainViewFillSize;
+        X += 2; //for border
+
+        return (X, Y);
+    }
+    public (int X, int Y) GetInfBarPosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += GetHeaderHeight();
+        Y += GetPageInfoHeight();
+        Y += GetMainWindowHeight();
+
+        Y += 4; //for border
+
+        X += 1; //for border
+        return (X, Y);
+    }
+    public (int X, int Y) GetReadLinePosition()
+    {
+        int X = 0;
+        int Y = 0;
+
+        Y += GetHeaderHeight();
+        Y += GetPageInfoHeight();
+        Y += GetMainWindowHeight();
+        Y += GetInfBarHeight();
+
+        Y += 5; //for border
+
+        return (X, Y);
+    }
+
+    public int GetFillSize()
+    {
+        return FillSize;
+    }
+
+
+    #endregion Getters
 
 
 
 
 
-
-
-
-
-
+    #region Render
 
     public void Render()
     {
         Console.Clear();
 
-        Console.WriteLine(new string('=', WindowSize));
+        Console.WriteLine($"┏{new string('━', FillSize)}┓");
 
         foreach (var section in new[] { Header, PageInfo, MainWindow, InfBar })
         {
             if (!Object.ReferenceEquals(section, Header))
-            { Console.WriteLine(new string('-', WindowSize)); }
+            { Console.WriteLine($"┣{new string('─', FillSize)}┫"); }
 
             foreach (var line in section)
             {
-                Console.WriteLine($"|{line}|");
+                Console.WriteLine($"┃{line}┃");
             }
         }
-
-        Console.WriteLine(new string('=', WindowSize));
+        Console.WriteLine($"┗{new string('━', FillSize)}┛");
     }
 
+    #endregion Render
 
 
 
@@ -248,38 +365,56 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
-
-
+    #region Edit Views
 
 
     public void ChangeHeader(List<string> newHeader, bool render = true)
     {
-        Header = PadLineRight(newHeader, FillSize);
+        RawHeader = newHeader;
+        Header = ProcessView(newHeader, FillSize);
         if (render) Render();
     }
 
     public void ChangePageInfo(List<string> newPageInfo, bool render = true)
     {
-        PageInfo = PadLineRight(newPageInfo, FillSize);
+        RawPageInfo = newPageInfo;
+        PageInfo = ProcessView(newPageInfo, FillSize);
         if (render) Render();
     }
 
     public void ChangeMainView(List<string> newMainView, bool render = true)
     {
-        MainView = PadLineRight(newMainView, MainViewFillSize);
+        RawMainView = newMainView;
+        MainView = ProcessView(newMainView, MainViewFillSize);
         if (render) Render();
     }
 
     public void ChangeSecView(List<string> newSecView, bool render = true)
     {
-        SecView = PadLineRight(newSecView, SecViewFillSize);
+        RawSecView = newSecView;
+        SecView = ProcessView(newSecView, SecViewFillSize);
         if (render) Render();
     }
     public void ChangeInfBar(List<string> newInfBar, bool render = true)
     {
-        InfBar = PadLineRight(newInfBar, FillSize);
+        RawInfBar = newInfBar;
+        InfBar = ProcessView(newInfBar, FillSize);
         if (render) Render();
     }
+
+    public void ChangeAllPads(bool _render = false)
+    {
+        Header = ProcessView(RawHeader, FillSize);
+        PageInfo = ProcessView(RawPageInfo, FillSize);
+        MainView = ProcessView(RawMainView, MainViewFillSize);
+        SecView = ProcessView(RawSecView, SecViewFillSize);
+        InfBar = ProcessView(RawInfBar, FillSize);
+
+        if (_render) Render();
+    }
+
+
+
 
     public List<string> GetHeader()
     {
@@ -304,11 +439,73 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
+    public void clearHeader(bool render = true)
+    {
+        ChangeHeader(new List<string> { "" });
+        if (render) Render();
+    }
+    public void clearPageInfo(bool render = true)
+    {
+        ChangePageInfo(new List<string> { "" });
+        if (render) Render();
+    }
+    public void clearMainView(bool render = true)
+    {
+        ChangeMainView(new List<string> { "" });
+        if (render) Render();
+    }
+    public void clearSecView(bool render = true)
+    {
+        ChangeSecView(new List<string> { "" });
+        if (render) Render();
+    }
+    public void clearInfBar(bool render = true)
+    {
+        ChangeInfBar(new List<string> { "" });
+        if (render) Render();
+    }
+
+
+
+    public void Clear(bool extraClean = false, bool render = true)
+    {
+        if (extraClean)
+        {
+            ChangeHeader(new List<string> { "" });
+            ChangePageInfo(new List<string> { "" });
+        }
+
+        ChangeMainView(new List<string> { "" });
+        ChangeSecView(new List<string> { "" });
+        ChangeInfBar(new List<string> { "" });
+
+        if (render) Render();
+    }
+    #endregion Edit Views
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+    #region PostProcessing Views
+
+    private List<string> ProcessView(List<string> view, int fill)
+    {
+        List<string> processedView = view.ToList(); //clones the list
+
+        processedView = PadLineRight(processedView, fill);
+
+        return processedView;
+    }
 
 
 
@@ -330,7 +527,6 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
-
     private List<string> PadLineRight(List<string> strings, int pad)
     {
         List<string> paddedList = new();
@@ -344,24 +540,18 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
-
-
-
-
-    private List<string> JoinViews(List<string> viewA, List<string> viewB)
+    private List<string> JoinViews(List<string> _mainView, List<string> _secView)
     {
-        EqualizeViewsCount(viewA, viewB);
+        EqualizeViewsCount(_mainView, _secView);
 
-        if (viewA.Count != viewB.Count) throw new Exception("viewA needs to be equal to viewB");
+        if (_mainView.Count != _secView.Count) throw new Exception("viewA needs to be equal to viewB");
 
         List<string> strings = new();
 
-        for (int i = 0; i < viewA.Count; i++)
+        for (int i = 0; i < _mainView.Count; i++)
         {
-            strings.Add(viewA[i] + '|' + viewB[i]);
+            strings.Add(_mainView[i] + '|' + _secView[i]);
         }
-
-
 
 
         return strings;
@@ -369,41 +559,42 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
-    private void EqualizeViewsCount(List<string> viewA, List<string> viewB)
+    private void EqualizeViewsCount(List<string> _mainView, List<string> _secView)
     {
-        var difference = viewA.Count - viewB.Count;
+        var difference = _mainView.Count - _secView.Count;
 
 
 
-        if (difference > 0) //viewA bigger
+        if (difference > 0) // Main bigger
         {
             for (var x = difference; x > 0; x--)
             {
-                viewB.Add($"{new string(' ', SecViewFillSize)}");
+                _secView.Add($"{new string(' ', SecViewFillSize)}");
             }
         }
 
-        else if (difference < 0)// viewB bigger
+        else if (difference < 0)// Sec bigger
         {
             for (var x = difference; x < 0; x++)
             {
-                viewA.Add($"{new string(' ', MainViewFillSize)}");
+                _mainView.Add($"{new string(' ', MainViewFillSize)}");
             }
         }
 
-        int minHeightDif = MainWindowHeight - viewA.Count;
+        int minHeightDif = MainWindowHeight - _mainView.Count;
 
         if (minHeightDif > 0)
         {
             for (var x = minHeightDif; x > 0; x--)
             {
-                viewA.Add($"{new string(' ', MainViewFillSize)}");
-                viewB.Add($"{new string(' ', SecViewFillSize)}");
+                _mainView.Add($"{new string(' ', MainViewFillSize)}");
+                _secView.Add($"{new string(' ', SecViewFillSize)}");
             }
         }
 
     }
 
+    #endregion PostProcessing Views
 
 
 
@@ -430,36 +621,65 @@ public VibeShell(List<string> header, List<string> pageInfo, List<string> mainVi
 
 
 
-public int HandleMenu(
-    List<string> options,
-    List<string>? descriptions = null,
-    int defaultIndex = 0,
-    float? menuScale = null,
-    bool renderEachChange = true
-)
+
+
+
+
+
+
+    #region Menu Handling
+
+
+
+
+    // public T BasicInput<T>()
+    // {
+    //     while (true)
+    //     {
+    //         var input = Console.ReadLine() ?? string.Empty;
+    //         if (Parser.TryParse<T>(input, out var result))
+    //             return result!;
+    //         Console.WriteLine("Invalid input. Please try again:");
+    //     }
+    // }
+
+    // public string ReadLine()
+    // {
+    //     var Input = Console.ReadLine() ?? string.Empty;
+    //     return Input;
+    // }
+
+
+
+    public int HandleMenu(
+        List<string> options,
+        List<List<string>>? descriptions = null,
+        int defaultIndex = 0,
+        float? menuScale = null,
+        bool renderEachChange = true
+    )
     {
-        // 1) If the caller gave us a new scale, apply it now:
+        // Apply new scale if provided
         if (menuScale.HasValue)
-            setScale(menuScale.Value);  // you already call ScaleFillSize()
+            setScale(menuScale.Value);
 
-        // 2) Ensure descriptions aligns with options
+        // Ensure descriptions aligns with options: each description is a list of lines
         if (descriptions == null || descriptions.Count != options.Count)
-            descriptions = Enumerable.Repeat(string.Empty, options.Count).ToList();
+        {
+            descriptions = Enumerable.Repeat(
+                new List<string>(),
+                options.Count
+            ).ToList();
+        }
 
         int index = defaultIndex;
 
-        // Local helper: pad/truncate lines to height and width
+        // Helper: pad or truncate a list of strings to targetCount and width
         List<string> PadLines(List<string> lines, int targetCount, int width)
         {
-            var result = new List<string>(lines);
-            // truncate or pad each existing line
-            for (int i = 0; i < result.Count; i++)
-                result[i] = result[i].PadRight(width).Substring(0, width);
-
-            // add blank lines if too few
+            var result = new List<string>(lines.Select(line => line.PadRight(width).Substring(0, width)));
             while (result.Count < targetCount)
                 result.Add(new string(' ', width));
-
             return result;
         }
 
@@ -467,34 +687,33 @@ public int HandleMenu(
         {
             // Build menu lines with highlighting
             var menuLines = options
-                .Select((opt, i) => ((i == index) ? "> " : "  ") + opt)
+                .Select((opt, i) => (i == index ? "> " : "  ") + opt)
                 .Select(line => line.PadRight(MainViewFillSize).Substring(0, MainViewFillSize))
                 .ToList();
 
             ChangeMainView(menuLines, render: false);
 
-            // Build description panel
-            var descLines = PadLines(
-                new List<string> { descriptions[index] },
-                menuLines.Count,
+            // Build description panel from multiple lines
+            var descPanel = PadLines(
+                descriptions[index],       // the list of lines for current description
+                menuLines.Count,           // match number of menu lines
                 SecViewFillSize
             );
-            ChangeSecView(descLines, render: false);
+            ChangeSecView(descPanel, render: false);
 
             if (renderEachChange)
                 Render();
         }
 
-        // Initial draw
+        // Initial render
         RenderMenu();
         Console.CursorVisible = false;
 
         // Input loop
-        ConsoleKeyInfo key;
         do
         {
-            key = Console.ReadKey(true);
-            switch (key.Key)
+            var key = Console.ReadKey(true).Key;
+            switch (key)
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.LeftArrow:
@@ -525,12 +744,11 @@ public int HandleMenu(
 
 
 
-
-    public T GetParsedInput<T>(int x, int y, int width = 20)
+    public T GetParsedInput<T>(int x, int y, int width = 20, Func<char, bool>? charFilter = null)
     {
         T? result;
 
-        var inputField = new CursorInputField(x, y, width);
+        var inputField = new CursorInputField(x, y, width, charFilter);
 
         while (true)
         {
@@ -555,14 +773,64 @@ public int HandleMenu(
         }
     }
 
-    private List<string> PadLinesToHeight(List<string> lines, int height, int width)
+    public List<int> PickMultipleById(List<string> items, string exitCode = "XX", string prompt = "Enter ID (or XX to finish):")
     {
-        var padded = new List<string>(lines);
-        while (padded.Count < height)
-        {
-            padded.Add(new string(' ', width));
-        }
-        return padded;
-    }
+        var numbered = items
+            .Select((text, idx) => $"{idx + 1}. {text}")
+            .ToList();
 
+        var pickedIds = new List<int>();
+
+        // Initial layout
+        ChangeMainView(numbered, render: false);
+
+        var (secX, secY) = GetSecViewPosition();
+        int inputY = secY;
+        int inputX = 2 + prompt.Length + secX;
+
+
+        void RenderSec(string footer = "Selected: —")
+        {
+            var secView = new List<string>();
+
+            secView.Add(prompt.PadRight(SecViewFillSize));
+            for (int i = 1; i < MainView.Count - 1; i++)
+                secView.Add(new string(' ', SecViewFillSize));
+
+            secView.Add(footer.PadRight(SecViewFillSize));
+            ChangeSecView(secView);
+        }
+
+        RenderSec();
+        Console.CursorVisible = true;
+
+        while (true)
+        {
+            Console.SetCursorPosition(inputX, inputY);
+            Console.Write(new string(' ', 10)); // clear input box
+            Console.SetCursorPosition(inputX, inputY);
+
+            string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
+
+            if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
+                break;
+
+            if (int.TryParse(raw, out int id) && id >= 1 && id <= items.Count)
+            {
+                pickedIds.Add(id);
+                RenderSec("Selected: " + string.Join(", ", pickedIds));
+            }
+            else
+            {
+                RenderSec($"Invalid ID (1–{items.Count})");
+                Thread.Sleep(800);
+                RenderSec("Selected: " + string.Join(", ", pickedIds));
+            }
+        }
+
+    Console.CursorVisible = false;
+    return pickedIds;
+}
+
+#endregion Menu Handling
 }

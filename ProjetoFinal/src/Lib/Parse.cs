@@ -14,6 +14,10 @@ public static class Parser
             case TypeCode.Boolean:
                 return TryParseBool(input, out result);
 
+            case TypeCode.String:
+                result = (T)(object)input;
+                return true;
+
             default:
                 return TryParseByReflection(input, out result);
         }

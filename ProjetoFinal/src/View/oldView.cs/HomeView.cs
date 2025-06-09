@@ -23,9 +23,9 @@ public class HomeView : ViewBasicFunctions
             "============================="});
 
 
-    public void Menu()
+    public int MainMenu()
     {
-        Console.WriteLine(MenuString);
+        return GetChoice(">> ", MenuString, 0, 4, true);
     }
 
 
@@ -35,6 +35,9 @@ public class HomeView : ViewBasicFunctions
         Console.ReadLine();
     }
 
-    public void Bye()
-    { Console.WriteLine("Bye!!"); }
+    public bool Bye()
+    {
+        Console.WriteLine("Bye!!");
+        return false;
+    }
 }

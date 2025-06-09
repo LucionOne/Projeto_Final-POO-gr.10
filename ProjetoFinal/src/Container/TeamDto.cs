@@ -12,6 +12,7 @@ public class TeamDto
     public int XP { get; set; }
     public DateOnly date = new();
     public TeamEnumRL Side = TeamEnumRL.Unset;
+    public List<int> IdList = new();
 
     public TeamDto() { }
 
