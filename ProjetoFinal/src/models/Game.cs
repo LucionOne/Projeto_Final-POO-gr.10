@@ -33,7 +33,7 @@ public class Game : ModelAbstract
 
     #region Constant Attributes
 
-        public const int TeamsMínimos = 2;
+    public const int TeamsMínimos = 2;
 
     #endregion
 
@@ -63,53 +63,61 @@ public class Game : ModelAbstract
     #region Public Attributes
 
     public string Title
-        { get { return _title; } set { _title = value ?? string.Empty; } }
+    { get { return _title; } set { _title = value ?? string.Empty; } }
 
     public int HomeScore
     { get { return _homeScore; } set { _homeScore = value; } }
     public int AdversaryScore
-        { get { return _adversaryScore; } set { _adversaryScore = value; } }
+    { get { return _adversaryScore; } set { _adversaryScore = value; } }
 
-    public Team HomeTeam 
-        { get { return _homeTeam; } set { _homeTeam = value ?? new Team(); } }
+    public Team HomeTeam
+    { get { return _homeTeam; } set { _homeTeam = value ?? new Team(); } }
     public Team AdversaryTeam
-        { get { return _adversaryTeam; } set { _adversaryTeam = value ?? new Team(); } }
+    { get { return _adversaryTeam; } set { _adversaryTeam = value ?? new Team(); } }
 
     public DateOnly Date
-        { get { return _date; } set { _date = value; } }
-    public TimeOnly HoraInicio 
-        { get { return _horaInicio; } set { _horaInicio = value; } }
-        
-    public string Local 
-        { get { return _local; } set { _local = value ?? string.Empty; } }
-    public string TipoDeCampo 
-        { get { return _tipoDeCampo; } set { _tipoDeCampo = value ?? string.Empty; } }
+    { get { return _date; } set { _date = value; } }
+    public TimeOnly HoraInicio
+    { get { return _horaInicio; } set { _horaInicio = value; } }
 
-    public List<Player> FilaJogadoresSemTeam 
-        { get { return _filaJogadoresSemTeam; } set { _filaJogadoresSemTeam = value; } }
-    public List<Team> TeamsToPlay 
-        { get { return _teamsToPlay; } set { _teamsToPlay = value; } }
+    public string Local
+    { get { return _local; } set { _local = value ?? string.Empty; } }
+    public string TipoDeCampo
+    { get { return _tipoDeCampo; } set { _tipoDeCampo = value ?? string.Empty; } }
+
+    public List<Player> FilaJogadoresSemTeam
+    { get { return _filaJogadoresSemTeam; } set { _filaJogadoresSemTeam = value; } }
+    public List<Team> TeamsToPlay
+    { get { return _teamsToPlay; } set { _teamsToPlay = value; } }
 
     public List<Event> Events
-        { get { return events; } set { events = value; } }
+    { get { return events; } set { events = value; } }
     public TeamFormation TeamFormation
-        { get { return _teamFormation; } set { _teamFormation = value; } }
+    { get { return _teamFormation; } set { _teamFormation = value; } }
 
     #endregion
 
     // Constructor
 
-    public Game(GameDto Package)
+    public Game(GameDto package)
     {
-        // _homeTeam = Package.HomeTeam;
-        // _adversaryTeam = Package.AdversaryTeam;
-        
-        // _homeTeam = new Team(); //debug temp
-        // _adversaryTeam = new Team(); //debug temp
-        _date = Package.Date;
-        _horaInicio = Package.HoraInicio;
-        _local = Package.Local;
-        _tipoDeCampo = Package.TipoDeCampo;
+        if (package == null) return;
+
+        _id = package.Id;
+        _title = package.Title ?? string.Empty;
+        _homeScore = package.HomeScore;
+        _adversaryScore = package.AdversaryScore;
+        _homeTeam = package.HomeTeam != null ? new Team(package.HomeTeam) : new Team();
+        _adversaryTeam = package.AdversaryTeam != null ? new Team(package.AdversaryTeam) : new Team();
+        _date = package.Date;
+        _horaInicio = package.HoraInicio;
+        _local = package.Local ?? string.Empty;
+        _tipoDeCampo = package.TipoDeCampo ?? string.Empty;
+
+        _filaJogadoresSemTeam = package.FilaJogadoresSemTeam?.Select(p => new Player(p)).ToList() ?? new List<Player>();
+        _teamsToPlay = package.TeamsToPlay?.Select(t => new Team(t)).ToList() ?? new List<Team>();
+        events = package.Events?.Select(e => new Event(e)).ToList() ?? new List<Event>();
+        _teamFormation = package.TeamFormation != null ? new TeamFormation(package.TeamFormation) : new TeamFormation();
     }
 
     public Game(int id)
@@ -137,34 +145,33 @@ public class Game : ModelAbstract
     public void AddJogadorSemTeam(Player jogador)
     {
         if (_filaJogadoresSemTeam == null)
-            {_filaJogadoresSemTeam = new List<Player>();}
+        { _filaJogadoresSemTeam = new List<Player>(); }
         _filaJogadoresSemTeam.Add(jogador);
     }
 
-    // public bool ValidateTeam(Team team)
-    // {
-    //     if (team.Jogadores == null)
-    //         return false;
+    public void AddTeamInLine(Team team)
+    {
+        _teamsToPlay.Add(team);
+    }
 
-    //     if (team.Jogadores.Count != _quantidadeJogadoresPorTeam)
-    //         return false;
-        
-    //     if (team.Goleiros.Count != QuantidadeGoleiro)
-    //         return false;
-        
-    //     if (team.Defesas.Count != QuantidadeDefesa)
-    //         return false;
-        
-    //     if (team.Atacantes.Count != QuantidadeAtacante)
-    //         return false;
-        
-    //     // if (team.Unknown.Count > 0)
-    //     //     return false;
 
-    //     return true;
-    // }
+    public GameDto ToDto()
+    {
+        return new GameDto(this);
+    }
 
-    
+    public void SetHome()
+    {
+
+    }
+
+    public void SwitchDefeated(Controller.TeamEnumRL winner)
+    {
+        if (HomeTeam.Side != winner)
+        {
+            HomeTeam = TeamsToPlay[0];
+        }
+    }
 
 
 }

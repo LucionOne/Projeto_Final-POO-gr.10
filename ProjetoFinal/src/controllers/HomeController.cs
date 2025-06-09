@@ -3,6 +3,8 @@ using Templates;
 using MyRepository;
 using Models;
 using Context;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.CompilerServices;
 
 namespace Controller;
 
@@ -17,12 +19,11 @@ public class HomeController
     {
 
         _data = data;
-
         _view = view;
 
         _userActions = new Dictionary<int, Action>
         {
-            { 1, CreateGame },
+            { 1, StartGame },
             { 2, LoadGame },
             { 3, ManagePlayers },
             { 4, ManageTeams }
@@ -62,63 +63,33 @@ public class HomeController
     }
 
 
-    public void CreateGame()
+    public void StartGame()
     {
-        // Console.WriteLine("Option 1");
-        var gameView = new GameView();
-        var gameController = new MatchController(gameView, _data.GamesRepo);
-        gameController.BeginInteraction(MatchController.Context.CreateGame);
+
+        // var gameView = new GameView();
+        // var gameController = new MatchController(gameView, _data);
+        // gameController.BeginInteraction(StartContext.Create);
     }
 
 
     public void LoadGame()
     {
-        // Console.WriteLine("Option 2");
-        var gameView = new GameView();
-        var gameController = new MatchController(gameView, _data.GamesRepo);
-        gameController.BeginInteraction(MatchController.Context.LoadGame);
+        // var gameView = new GameView();
+        // var gameController = new MatchController(gameView, _data);
+        // gameController.BeginInteraction(StartContext.Load);
     }
 
     public void ManagePlayers()
     {
-        // Console.WriteLine("Option 3");
         var playerView = new PlayerView();
-        var playerController = new PlayerController(_data, playerView);
+        var playerController = new PlayerController(playerView, _data);
         playerController.BeginInteraction();
     }
 
     public void ManageTeams()
     {
         var teamView = new TeamView();
-        var teamController = new TeamController(_data, teamView);
+        var teamController = new TeamController(teamView, _data);
         teamController.BeginInteraction();
     }
 }
-
-    // private bool HandleUserChoice(int input)
-    // {
-    //     switch (input)
-    //     {
-    //         case 0:
-    //             console.Bye();
-    //             return false;
-    //         case 1:
-    //             Console.WriteLine("You chose option 1");
-    //             break;
-    //         case 2:
-    //             Console.WriteLine("You chose option 2");
-    //             // Add logic for option 2
-    //             break;
-    //         case 3:
-    //             Console.WriteLine("You chose option 3");
-    //             // Add logic for option 3
-    //             break;
-    //         case 4:
-    //             Console.WriteLine("You chose option 4");
-    //             // Add logic for option 4
-    //             break;
-    //         default:
-    //             Console.WriteLine("Invalid choice, please try again.");
-    //             break;
-    //     }
-    // }

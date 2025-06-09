@@ -12,8 +12,8 @@ public class GameDto
     public int HomeScore { get; set; }
     public int AdversaryScore { get; set; }
 
-    public TeamDto HomeTeam { get; set; }
-    public TeamDto AdversaryTeam { get; set; }
+    public TeamDto HomeTeam { get; set; } = new();
+    public TeamDto AdversaryTeam { get; set; } = new();
 
     public DateOnly Date { get; set; }
     public TimeOnly HoraInicio { get; set; }
@@ -25,14 +25,11 @@ public class GameDto
     public List<TeamDto> TeamsToPlay { get; set; } = new();
 
     public List<Event> Events { get; set; } = new();
-    public TeamFormation TeamFormation { get; set; }
+    public TeamFormation TeamFormation { get; set; } = new();
 
 
-    public GameDto()
+    public GameDto()//Game game, List<TeamDto> teams)
     {
-        HomeTeam = new TeamDto();
-        AdversaryTeam = new TeamDto();
-        TeamFormation = new TeamFormation();
     }
 
     public GameDto(Game game)

@@ -1,3 +1,4 @@
+using Container.DTOs;
 using Models;
 using System;
 using System.IO;
@@ -10,7 +11,7 @@ public class GamesRepo : RepoAbstract<Game>
 {
     public GamesRepo(string fileName = "Games.json") : base(fileName) { }
 
-    public GamesRepo() : base() 
+    public GamesRepo() : base()
     {
         _fileName = "Games.json";
         _filePath = Path.Combine(FolderPath, _fileName);
@@ -40,7 +41,11 @@ public class GamesRepo : RepoAbstract<Game>
             ?? throw new NullReferenceException("Deserializer returned null");
         return temp;
     }
-    
+
+    public List<GameDto> RepoToDto()
+    {
+        return _mainRepo.Select(g => new GameDto(g)).ToList();
+    }
 
 
 

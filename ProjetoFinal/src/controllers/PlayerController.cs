@@ -18,10 +18,10 @@ public class PlayerController
     private bool isRunning;
 
     // Constructor
-    public PlayerController(DataContext data, PlayerView view)
+    public PlayerController(PlayerView view, DataContext data)
     {
-        _data = data;
         _view = view;
+        _data = data;
     }
 
     // Main interaction loop

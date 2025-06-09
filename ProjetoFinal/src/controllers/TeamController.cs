@@ -3,6 +3,7 @@ using Models;
 using Templates;
 using View;
 using Container.DTOs;
+using Mapper;
 
 namespace Controller;
 
@@ -15,12 +16,12 @@ public class TeamController
 
     private bool isRunning = true;
 
-    private List<TeamDto> RepoDto {get { return RepoToDto(); }}
+    private List<TeamDto> RepoDto { get { return TeamRepoToDto(); } }
 
-    public TeamController(DataContext data, TeamView view)
+    public TeamController(TeamView view, DataContext data)
     {
-        _data = data;
         _view = view;
+        _data = data;
     }
 
     public void BeginInteraction()
@@ -88,7 +89,7 @@ public class TeamController
 
         var teamToEdit = _data.TeamRepo.GetById(id) ?? new Team(id);
 
-        var teamDto = _view.GetTeamEdit(_data.PlayerRepo.ToDtoList(), Map(teamToEdit));
+        var teamDto = _view.GetTeamEdit(_data.PlayerRepo.ToDtoList(), MapTeam(teamToEdit));
 
         _data.TeamRepo.UpdateById(id, new Team(teamDto));
     }
@@ -107,7 +108,7 @@ public class TeamController
             return;
         }
 
-        var confirmation = _view.ConfirmDeleteTeam(Map(teamToDelete));
+        var confirmation = _view.ConfirmDeleteTeam(MapTeam(teamToDelete));
 
         if (confirmation)
         {
@@ -118,22 +119,13 @@ public class TeamController
 
     // Map methods
 
-    public List<TeamDto> RepoToDto()
+    public List<TeamDto> TeamRepoToDto()
     {
-        return _data.TeamRepo.GetAll().Select(t => Map(t)).ToList();
+        return Mapper.TeamDtoMapper.MapToDtoList(_data.TeamRepo.GetAll(), _data);
     }
 
-    public TeamDto Map(Team team)
+    public TeamDto MapTeam(Team team)
     {
-        List<int> playersIdList = team.PlayersId ?? new List<int>();
-        List<PlayerDto> playersInstances = new();
-
-        foreach (var id in playersIdList)
-        {
-            Player? player = _data.PlayerRepo.GetById(id) ?? new(id);
-            PlayerDto playerDto = new(player);
-            playersInstances.Add(playerDto);
-        }
-        return new TeamDto(team, playersInstances);
+        return Mapper.TeamDtoMapper.MapToDto(team, _data);
     }
 }

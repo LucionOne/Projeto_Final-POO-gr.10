@@ -28,11 +28,25 @@ public class TeamFormation
         NumberAny = numberAny;
     }
 
+    public TeamFormation(TeamFormation package)
+    {
+        if (package == null)
+        {
+            throw new ArgumentNullException(nameof(package), "TeamFormation cannot be null");
+        }
+
+        MaxPlayers = package.MaxPlayers;
+        NumberGoalkeepers = package.NumberGoalkeepers;
+        NumberDefenders = package.NumberDefenders;
+        NumberAttackers = package.NumberAttackers;
+        NumberAny = package.NumberAny;
+    }
+
     public static bool validFormation(TeamFormation formation)
     {
         return formation != null &&
-        (formation.MaxPlayers == (formation.NumberAttackers+formation.NumberDefenders+formation.NumberGoalkeepers));
-               
+        (formation.MaxPlayers == (formation.NumberAttackers + formation.NumberDefenders + formation.NumberGoalkeepers));
+
     }
 
 }

@@ -1,3 +1,4 @@
+using Controller;
 using Models;
 
 namespace Container.DTOs;
@@ -10,6 +11,7 @@ public class TeamDto
     public List<Event> EventsHistory { get; set; } = new();
     public int XP { get; set; }
     public DateOnly date = new();
+    public TeamEnumRL Side = TeamEnumRL.Unset;
 
     public TeamDto() { }
 
@@ -21,6 +23,7 @@ public class TeamDto
         EventsHistory = team.EventsHistory;
         XP = team.XP;
         date = team.CreationDate;
+        Side = team.Side;
     }
     public TeamDto(Team team, List<PlayerDto> players)
     {
@@ -30,5 +33,6 @@ public class TeamDto
         EventsHistory = team.EventsHistory;
         XP = team.XP;
         date = team.CreationDate;
+        Side = team.Side;
     }
 }
