@@ -21,10 +21,8 @@ public class VibeTeamView : ITeamView
     public VibeTeamView(VibeShell vibe)
     {
         _vibe = vibe;
-        List<string> infBar = new();
-
         _vibe.BetterChangeHeader("  T E A M   M A N A G E M E N T", false);
-        _vibe.ChangeInfBar(infBar, false);
+        _vibe.ChangeInfBar([], false);
 
     }
 

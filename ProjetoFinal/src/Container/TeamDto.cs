@@ -1,4 +1,3 @@
-using Controller;
 using Models;
 
 namespace Container.DTOs;
@@ -11,7 +10,7 @@ public class TeamDto
     public List<Event> EventsHistory { get; set; } = new();
     public int XP { get; set; }
     public DateOnly Date = new();
-    public TeamEnumRL Side = TeamEnumRL.Unset;
+    public Controller.TeamEnumRL Side = Controller.TeamEnumRL.Unset;
     public List<int> IdList = new();
 
     public TeamDto() { }

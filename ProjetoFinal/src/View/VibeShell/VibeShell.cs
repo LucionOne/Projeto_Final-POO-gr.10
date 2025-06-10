@@ -529,7 +529,7 @@ public class VibeShell //Temp name?
     }
     public void clearInfBar(bool render = true)
     {
-        ChangeInfBar(new List<string> { "" });
+        ChangeInfBar(new List<string> { });
         if (render) Render();
     }
 

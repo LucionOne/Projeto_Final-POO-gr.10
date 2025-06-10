@@ -11,14 +11,14 @@ public class PlayerController
 {
     // Fields for data context and view
     private DataContext _data;
-    private PlayerView _view;
+    private IPlayerView _view;
 
     private bool _saved {get{ return _data.PlayerRepo.Saved; }}
 
     private bool isRunning;
 
     // Constructor
-    public PlayerController(PlayerView view, DataContext data)
+    public PlayerController(IPlayerView view, DataContext data)
     {
         _view = view;
         _data = data;
@@ -66,7 +66,8 @@ public class PlayerController
     // Creates a new player and adds to repository
     private void CreatePlayer()
     {
-        var playerDto = _view.GetPlayerInput() ?? throw new ArgumentNullException("Player input cannot be null.");
+        PlayerDto? playerDto = _view.GetPlayerInput();
+        if (playerDto == null) { return; }
         var player = new Player(playerDto);
         _data.PlayerRepo.Add(player);
     }
@@ -76,12 +77,6 @@ public class PlayerController
     {
         var players = _data.PlayerRepo.GetAll();
 
-        if (players == null || !players.Any())
-        {
-            return;
-        }
-
-        // Convert players to DTOs for the view
         var playersDto = players.Select(p => new PlayerDto
         {
             Id = p.Id,
@@ -92,29 +87,28 @@ public class PlayerController
 
         var playerId = _view.GetPlayerId(playersDto);
 
-        Player playerInfo = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
+        if (playerId < 0) { return; }
 
-        var confirmation = _view.GetValidInput<bool>(
-            "\nEdit? y/n: ",
-            playerInfo.ToStringAlt(),
-            true);
+        Player oldPlayer = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
+
+        var oldPlayerDto = new PlayerDto(oldPlayer);
+
+        PlayerDto? newPlayerDto = _view.GetPlayerEdit(oldPlayerDto);
+
+        if (newPlayerDto == null) { return; }
+
+        // playerDto.Id = playerId;
+
+        var confirmation = _view.ConfirmPlayerEdit(oldPlayerDto, newPlayerDto);
 
         if (confirmation)
         {
-            var oldPlayerDto = new PlayerDto(playerInfo);
-            var playerDto = _view.GetPlayerInput(oldPlayerDto) ?? throw new ArgumentNullException("Player input cannot be null.");
-            playerDto.Id = playerId;
-            var player = new Player(playerDto);
-
-            var menu = _view.ComparerPlayers(oldPlayerDto, playerDto);
-
-            bool commit = _view.GetValidInput<bool>(
-                "Overwrite? y/n: ",
-                menu,
-                true
-            );
-
+            var player = new Player(newPlayerDto);
             _data.PlayerRepo.UpdateById(playerId, player);
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -123,12 +117,6 @@ public class PlayerController
     {
         var players = _data.PlayerRepo.GetAll();
 
-        if (players == null || !players.Any())
-        {
-            return;
-        }
-
-        // Convert players to DTOs for the view
         var playersDto = players.Select(p => new PlayerDto
         {
             Id = p.Id,
@@ -141,10 +129,7 @@ public class PlayerController
 
         Player playerInfo = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
 
-        var confirmation = _view.GetValidInput<bool>(
-            "\nDelete? y/n: ",
-            playerInfo.ToStringAlt(),
-            true);
+        bool confirmation = _view.ConfirmPlayerDelete(new PlayerDto(playerInfo));
 
         if (confirmation) _data.PlayerRepo.RemoveAt(playerId);
     }
@@ -160,16 +145,17 @@ public class PlayerController
             Age = p.Age,
             Position = p.Position
         }).ToList();
-        Console.Clear(); // Yeah I know ⚠️
-        string _;
-        var success = _view.DisplayPlayerList(playersDto, out _);
-        Console.ReadLine(); // Yeah I know ⚠️
+
+        _view.ShowPlayers(playersDto);
+
     }
 
     // Saves changes to the database
     private void SaveChanges()
     {
-        _data.PlayerRepo.WriteToDataBase();
+        bool confirmation = _view.ConfirmSaveToDatabase(_saved);
+        if (confirmation) _data.PlayerRepo.WriteToDataBase();
+        else return;
     }
 
 }

@@ -77,15 +77,13 @@ public class HomeController
 
     public void ManagePlayers()
     {
-        var playerView = new PlayerView();
-        var playerController = new PlayerController(playerView, _data);
+        var vibePlayerView = new VibePlayerView(_view.GetVibe());
+        var playerController = new PlayerController(vibePlayerView, _data);
         playerController.BeginInteraction();
     }
 
     public void ManageTeams()
     {
-        var teamView = new TeamView();
-        var _vibe = new VibeShell();
         var vibeTeamView = new VibeTeamView(_view.GetVibe());
         var teamController = new TeamController(vibeTeamView, _data);
         teamController.BeginInteraction();
