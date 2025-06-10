@@ -35,7 +35,20 @@ public class VibeShell //Temp name?
     private List<string> RawMainView = new();
     private List<string> RawSecView = new();
     private List<string> RawInfBar = new();
+
+
+    public const string Alphabet = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public const string Numbers = "1234567890";
+
     #endregion Properties
+
+
+
+
+
+
+
+
 
 
     #region Constructor
@@ -135,6 +148,28 @@ public class VibeShell //Temp name?
 
 
 
+
+
+
+
+
+
+    #region Methods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #region Scale
 
 
@@ -182,6 +217,18 @@ public class VibeShell //Temp name?
 
 
     #endregion Scale
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #region Getters
@@ -327,6 +374,14 @@ public class VibeShell //Temp name?
 
 
 
+
+
+
+
+
+
+
+
     #region Render
 
     public void Render()
@@ -367,6 +422,19 @@ public class VibeShell //Temp name?
 
     #region Edit Views
 
+    public void BetterChangeHeader(string newHeader, bool render = true, char character = ' ')
+    {
+        int fill = FillSize / 2;
+        string betterHeader = new string(character, fill) + newHeader;
+        ChangeHeader([betterHeader],render);
+
+    }
+    public void BetterChangePageInfo(string newPageInfo, bool render = true, char character = ' ')
+    {
+        int fill = FillSize / 2;
+        string betterPageInfo = new string(character, fill) + newPageInfo;
+        ChangePageInfo([betterPageInfo], render);
+    }
 
     public void ChangeHeader(List<string> newHeader, bool render = true)
     {
@@ -472,9 +540,9 @@ public class VibeShell //Temp name?
         if (extraClean)
         {
             ChangeHeader(new List<string> { "" });
-            ChangePageInfo(new List<string> { "" });
         }
 
+        ChangePageInfo(new List<string> { "" });
         ChangeMainView(new List<string> { "" });
         ChangeSecView(new List<string> { "" });
         ChangeInfBar(new List<string> { "" });
@@ -496,7 +564,7 @@ public class VibeShell //Temp name?
 
 
 
-    #region PostProcessing Views
+    #region PostProcessing
 
     private List<string> ProcessView(List<string> view, int fill)
     {
@@ -594,22 +662,7 @@ public class VibeShell //Temp name?
 
     }
 
-    #endregion PostProcessing Views
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #endregion PostProcessing
 
 
 
@@ -632,25 +685,26 @@ public class VibeShell //Temp name?
 
 
 
-    // public T BasicInput<T>()
-    // {
-    //     while (true)
-    //     {
-    //         var input = Console.ReadLine() ?? string.Empty;
-    //         if (Parser.TryParse<T>(input, out var result))
-    //             return result!;
-    //         Console.WriteLine("Invalid input. Please try again:");
-    //     }
-    // }
-
-    // public string ReadLine()
-    // {
-    //     var Input = Console.ReadLine() ?? string.Empty;
-    //     return Input;
-    // }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region HandleMenu
     public int HandleMenu(
         List<string> options,
         List<List<string>>? descriptions = null,
@@ -733,6 +787,7 @@ public class VibeShell //Temp name?
         }
         while (true);
     }
+    #endregion HandleMenu
 
 
 
@@ -742,8 +797,7 @@ public class VibeShell //Temp name?
 
 
 
-
-
+    #region Simple Input
     public T GetParsedInput<T>(int x, int y, int width = 20, Func<char, bool>? charFilter = null)
     {
         T? result;
@@ -773,41 +827,207 @@ public class VibeShell //Temp name?
         }
     }
 
-    public List<int> PickMultipleById(List<string> items, string exitCode = "XX", string prompt = "Enter ID (or XX to finish):")
+
+
+
+    public T HandleInputAt<T>(
+        string prompt,
+        int x, int y,
+        int width = 20,
+        Func<char, bool>? charFilter = null,
+        int errorDelayMs = 800,
+        bool clear = false
+)
     {
-        var numbered = items
-            .Select((text, idx) => $"{idx + 1}. {text}")
-            .ToList();
+        int inputX = x + prompt.Length;
+        int inputY = y;
+        var inputField = new CursorInputField(inputX, inputY, width, charFilter);
 
-        var pickedIds = new List<int>();
+        while (true)
+        {
+            // Draw prompt
+            Console.SetCursorPosition(x, y);
+            Console.Write(prompt);
 
-        // Initial layout
+            // Clear input area
+            Console.SetCursorPosition(inputX, inputY);
+            Console.Write(new string(' ', width));
+            Console.SetCursorPosition(inputX, inputY);
+
+            // Read raw input (ReadInput stops at Enter without producing a newline)
+            string raw = inputField.ReadInput();
+
+            // Try to parse
+            if (Parser.TryParse<T>(raw, out var result))
+            {
+                if (clear)
+
+                    // Clear any leftover message
+                    Console.SetCursorPosition(x, y);
+                Console.Write(new string(' ', width + prompt.Length));
+                return result!;
+            }
+
+            // Write error in the same box
+            Console.SetCursorPosition(inputX, inputY);
+            string err = "Invalid".PadRight(width);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(err);
+            Console.ResetColor();
+
+            Thread.Sleep(errorDelayMs);
+
+            // Clear the error message before retry
+            Console.SetCursorPosition(inputX, inputY);
+            Console.Write(new string(' ', err.Length));
+        }
+    }
+    #endregion Simple Input
+
+
+
+
+
+
+
+
+
+    #region Show Items
+
+    /// <summary>
+    /// Show a list of header lines + numbered items in MainView. In SecView, prompt for an ID and display
+    /// its multi-line description. Loop until the user enters exitCode.
+    /// </summary>
+    public void HandleListItems(
+    List<SelectableItem> items,
+    List<string> headerLines,
+    string exitCode = "XX",
+    string prompt = "Enter ID (or XX to exit):"
+)
+{
+    // 1) Build MainView: header + real IDs with labels
+    var numbered = new List<string>(headerLines);
+    numbered.AddRange(items.Select(item => $"{item.Label}"));//{item.Id}. {item.Label}"));
+    ChangeMainView(numbered, render: false);
+
+    // 2) Determine input position in SecView
+    var (secX, secY) = GetSecViewPosition();
+    int inputX = secX + prompt.Length + 1;
+    int inputY = secY;
+
+    void RenderSec(List<string> descLines)
+    {
+        var sec = new List<string> { prompt.PadRight(SecViewFillSize) };
+        int slotCount = numbered.Count - 1;
+
+        for (int i = 0; i < slotCount; i++)
+        {
+            sec.Add(i < descLines.Count
+                ? descLines[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
+                : new string(' ', SecViewFillSize));
+        }
+
+        sec.Add(new string(' ', SecViewFillSize));
+        ChangeSecView(sec, render: false);
+        Render();
+    }
+
+    RenderSec(new());
+    Console.CursorVisible = true;
+
+    while (true)
+    {
+        Console.SetCursorPosition(inputX, inputY);
+        Console.Write(new string(' ', 10));
+        Console.SetCursorPosition(inputX, inputY);
+
+        string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
+
+        if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
+            break;
+
+        if (int.TryParse(raw, out int id))
+        {
+            var match = items.FirstOrDefault(i => i.Id == id);
+            if (match != null)
+            {
+                RenderSec(match.Description ?? new());
+                continue;
+            }
+        }
+
+        // Invalid ID
+        var sec = GetSecView();
+        sec[^1] = "Invalid ID".PadRight(SecViewFillSize);
+        ChangeSecView(sec, render: false);
+        Render();
+        Thread.Sleep(700);
+        RenderSec(new());
+    }
+
+    Console.CursorVisible = false;
+}
+
+
+    #endregion Show Items
+
+
+
+
+
+
+
+
+
+    #region id handlers
+
+    public List<int> HandleMultiIds(
+        List<SelectableItem> choices,
+        List<string> headerLines,
+        string exitCode = "XX",
+        string prompt = "Enter ID (or XX to finish):"
+    )
+    {
+        // 1) Show all choices in MainView
+        var numbered = new List<string>(headerLines);
+        numbered.AddRange(choices.Select(c => $"{c.Label}")); //{c.Id}. 
         ChangeMainView(numbered, render: false);
 
         var (secX, secY) = GetSecViewPosition();
+        int inputX = secX + prompt.Length + 1;
         int inputY = secY;
-        int inputX = 2 + prompt.Length + secX;
 
+        List<int> selectedIds = new();
+        SelectableItem? lastSelected = null;
 
-        void RenderSec(string footer = "Selected: —")
+        void RenderSec(List<string> descLines, string footer)
         {
-            var secView = new List<string>();
+            var sec = new List<string>();
+            sec.Add(prompt.PadRight(SecViewFillSize));
+            int contentHeight = numbered.Count - 1;
 
-            secView.Add(prompt.PadRight(SecViewFillSize));
-            for (int i = 1; i < MainView.Count - 1; i++)
-                secView.Add(new string(' ', SecViewFillSize));
+            for (int i = 0; i < contentHeight; i++)
+            {
+                if (i < descLines.Count)
+                    sec.Add(descLines[i]
+                        .PadRight(SecViewFillSize)
+                        .Substring(0, SecViewFillSize));
+                else
+                    sec.Add(new string(' ', SecViewFillSize));
+            }
 
-            secView.Add(footer.PadRight(SecViewFillSize));
-            ChangeSecView(secView);
+            sec.Add(footer.PadRight(SecViewFillSize));
+            ChangeSecView(sec, render: false);
+            Render();
         }
 
-        RenderSec();
+        RenderSec(new(), "Selected: —");
         Console.CursorVisible = true;
 
         while (true)
         {
             Console.SetCursorPosition(inputX, inputY);
-            Console.Write(new string(' ', 10)); // clear input box
+            Console.Write(new string(' ', 10));
             Console.SetCursorPosition(inputX, inputY);
 
             string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
@@ -815,22 +1035,160 @@ public class VibeShell //Temp name?
             if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
                 break;
 
-            if (int.TryParse(raw, out int id) && id >= 1 && id <= items.Count)
+            if (int.TryParse(raw, out int id))
             {
-                pickedIds.Add(id);
-                RenderSec("Selected: " + string.Join(", ", pickedIds));
+                var match = choices.FirstOrDefault(c => c.Id == id);
+                if (match != null)
+                {
+                    if (!selectedIds.Contains(id))
+                        selectedIds.Add(id);
+
+                    lastSelected = match;
+                    string footer = $"Selected: {string.Join(", ", selectedIds)}";
+                    RenderSec(match.Description, footer);
+                    continue;
+                }
+            }
+
+            // Invalid ID
+            var secFb = GetSecView();
+            secFb[^1] = $"Invalid ID".PadRight(SecViewFillSize);
+            ChangeSecView(secFb, render: false);
+            Render();
+            Thread.Sleep(700);
+            if (lastSelected != null)
+            {
+                string footer = $"Selected: {string.Join(", ", selectedIds)}";
+                RenderSec(lastSelected.Description, footer);
             }
             else
             {
-                RenderSec($"Invalid ID (1–{items.Count})");
-                Thread.Sleep(800);
-                RenderSec("Selected: " + string.Join(", ", pickedIds));
+                RenderSec(new(), "Selected: —");
             }
         }
 
-    Console.CursorVisible = false;
-    return pickedIds;
-}
+        Console.CursorVisible = false;
+        return selectedIds;
+    }
 
-#endregion Menu Handling
+
+    /// <summary>
+    /// Show only validIds in MainView (with header). Prompt for an ID to view its description.
+    /// When the user types exitCode, return the last valid ID they viewed (or -1 if none).
+    /// </summary>
+    public int HandleSelectById(
+    List<SelectableItem> choices,
+    List<string> headerLines,
+    string exitCode = "XX",
+    string prompt = "Enter ID (or XX to confirm):"
+)
+    {
+        // Build MainView: header + all choice labels with their real ID
+        var numbered = new List<string>(headerLines);
+        numbered.AddRange(choices.Select(c => $"{c.Label}"));//{c.Id}. {c.Label}"));
+        ChangeMainView(numbered, render: false);
+
+        var (secX, secY) = GetSecViewPosition();
+        int inputX = secX + prompt.Length + 1;
+        int inputY = secY;
+
+        int lastId = -1;
+        void RenderSec(List<string> desc, string footer)
+        {
+            var sec = new List<string> { prompt.PadRight(SecViewFillSize) };
+            int slots = numbered.Count - 1;
+            for (int i = 0; i < slots; i++)
+                sec.Add(i < desc.Count
+                    ? desc[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
+                    : new string(' ', SecViewFillSize));
+            sec.Add(footer.PadRight(SecViewFillSize));
+            ChangeSecView(sec, render: false);
+            Render();
+        }
+
+        // first draw
+        RenderSec(new(), "Selected: —");
+        Console.CursorVisible = true;
+
+        while (true)
+        {
+            Console.SetCursorPosition(inputX, inputY);
+            Console.Write(new string(' ', 10));
+            Console.SetCursorPosition(inputX, inputY);
+
+            string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
+            if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
+                break;
+
+            if (int.TryParse(raw, out var id))
+            {
+                // find the item with that real ID
+                var item = choices.FirstOrDefault(c => c.Id == id);
+                if (item != null)
+                {
+                    lastId = id;
+                    RenderSec(item.Description, $"Selected: {id}");
+                    continue;
+                }
+            }
+
+            // invalid
+            var secFb = GetSecView();
+            secFb[^1] = $"Not a valid ID".PadRight(SecViewFillSize);
+            ChangeSecView(secFb, render: false);
+            Render();
+            Thread.Sleep(700);
+            if (lastId > 0)
+            {
+                var prev = choices.First(c => c.Id == lastId);
+                RenderSec(prev.Description, $"Selected: {lastId}");
+            }
+            else
+            {
+                RenderSec(new(), "Selected: —");
+            }
+        }
+
+        Console.CursorVisible = false;
+        return lastId;
+    }
+    #endregion id handlers
+
+
+
+    #endregion Menu Handling
+
+
+
+
+    #endregion Methods
+
+
+
+
+
+
+
+
+
+
+    #region  Support Classes
+
+
+    public class SelectableItem
+    {
+        public int Id { get; }
+        public string Label { get; }
+        public List<string> Description { get; }
+
+        public SelectableItem(int id, string label, List<string> description)
+        {
+            Id = id;
+            Label = label;
+            Description = description ?? new List<string>();
+        }
+
+    }
+    #endregion Support Classes
 }
+    //

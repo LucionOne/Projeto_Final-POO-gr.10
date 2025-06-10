@@ -149,7 +149,7 @@ public class TeamView : ViewBasicFunctions, ITeamView
             }
             else
             {
-                stringList.Add($"|{team.Id.ToString().PadRight(5)}| {team.Name.PadRight(20)}| {team.Players.Count.ToString().PadRight(14)}| {team.date.ToString("dd/MM/yy").PadRight(8)} |");
+                stringList.Add($"|{team.Id.ToString().PadRight(5)}| {team.Name.PadRight(20)}| {team.Players.Count.ToString().PadRight(14)}| {team.Date.ToString("dd/MM/yy").PadRight(8)} |");
             }
         }
 
@@ -209,7 +209,7 @@ public class TeamView : ViewBasicFunctions, ITeamView
             $"|ID   : {team.Id.ToString().PadRight(47)}|",
             $"|Name : {team.Name.PadRight(47)}|",
             $"|XP   : {team.XP.ToString().PadRight(47)}|",
-            $"|Date : {team.date.ToString("dd/MM/yy").PadRight(47)}|",
+            $"|Date : {team.Date.ToString("dd/MM/yy").PadRight(47)}|",
             "+------------------------------------------------------+"
         };
 

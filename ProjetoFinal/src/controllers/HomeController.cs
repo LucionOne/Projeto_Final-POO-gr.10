@@ -5,6 +5,7 @@ using Models;
 using Context;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.CompilerServices;
+using VS;
 
 namespace Controller;
 
@@ -84,7 +85,9 @@ public class HomeController
     public void ManageTeams()
     {
         var teamView = new TeamView();
-        var teamController = new TeamController(teamView, _data);
+        var _vibe = new VibeShell();
+        var vibeTeamView = new VibeTeamView(_view.GetVibe());
+        var teamController = new TeamController(vibeTeamView, _data);
         teamController.BeginInteraction();
     }
 }

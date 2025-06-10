@@ -9,14 +9,13 @@ public class VibeHomeView : IHomeView
 {
     VibeShell _vibe = new();
 
-
     public VibeHomeView(VibeShell vibe)
     {
         _vibe = vibe;
         _vibe.SetSize(80);
         var fillSize = _vibe.GetFillSize();
         string header = "H O M E   M E N U";
-        var fill = (fillSize-header.Length) / 2;
+        var fill = (fillSize - header.Length) / 2;
         _vibe.ChangeHeader([$"{new string(' ', fill)}H O M E   M E N U"]);
         _vibe.ChangePageInfo([$"{new string('+', fillSize)}"]);
         _vibe.ChangeInfBar(["  >> "]);
@@ -24,6 +23,13 @@ public class VibeHomeView : IHomeView
 
     public int MainMenu()
     {
+        _vibe.SetSize(102);
+        var fillSize = _vibe.GetFillSize();
+        string header = "H O M E   M E N U";
+        var fill = (fillSize - header.Length) / 2;
+        _vibe.ChangeHeader([$"{new string(' ', fill)}H O M E   M E N U"]);
+        _vibe.ChangePageInfo([$"{new string('+', fillSize)}"]);
+        _vibe.ChangeInfBar(["  >> "]);
         List<string> options = new()
         {
             "Start Game",
@@ -65,5 +71,9 @@ public class VibeHomeView : IHomeView
         _vibe.ChangeInfBar(["Invalid choice, please try again."]);
     }
     
+    public VibeShell GetVibe()
+    {
+        return _vibe;
+    }
     
 }

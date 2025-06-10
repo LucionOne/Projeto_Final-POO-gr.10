@@ -1,6 +1,6 @@
 using Context;
 using Models;
-using Templates;
+using Templates.view;
 using View;
 using Container.DTOs;
 using Mapper;
@@ -10,7 +10,7 @@ namespace Controller;
 public class TeamController
 {
     private DataContext _data;
-    private TeamView _view;
+    private ITeamView _view;
 
     private bool _saved { get { return _data.TeamRepo.Saved; } }
 
@@ -18,7 +18,7 @@ public class TeamController
 
     private List<TeamDto> RepoDto { get { return TeamRepoToDto(); } }
 
-    public TeamController(TeamView view, DataContext data)
+    public TeamController(ITeamView view, DataContext data)
     {
         _view = view;
         _data = data;

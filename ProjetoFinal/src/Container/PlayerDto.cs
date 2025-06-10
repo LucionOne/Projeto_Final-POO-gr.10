@@ -16,6 +16,14 @@ public class PlayerDto
         3 => "Attacker",
         _ => "Corrupted"
     };
+    public string PositionStringMini => Position switch
+    {
+        0 => "Any",
+        1 => "Goal",
+        2 => "Def",
+        3 => "Att",
+        _ => "???"
+    };
 
 
     public PlayerDto() { }

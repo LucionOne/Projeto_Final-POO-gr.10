@@ -10,7 +10,7 @@ public class TeamDto
     public List<PlayerDto> Players { get; set; } = new();
     public List<Event> EventsHistory { get; set; } = new();
     public int XP { get; set; }
-    public DateOnly date = new();
+    public DateOnly Date = new();
     public TeamEnumRL Side = TeamEnumRL.Unset;
     public List<int> IdList = new();
 
@@ -23,7 +23,7 @@ public class TeamDto
         Players = team.Jogadores.Select(p => p.ToDto()).ToList();
         EventsHistory = team.EventsHistory;
         XP = team.XP;
-        date = team.CreationDate;
+        Date = team.CreationDate;
         Side = team.Side;
     }
     public TeamDto(Team team, List<PlayerDto> players)
@@ -33,7 +33,15 @@ public class TeamDto
         Players = players;
         EventsHistory = team.EventsHistory;
         XP = team.XP;
-        date = team.CreationDate;
+        Date = team.CreationDate;
         Side = team.Side;
     }
+    public TeamDto(string name, DateOnly date, List<int> ids)
+    {
+        this.Name = name;
+        this.Date = date;
+        this.IdList = ids;
+    }
+
+    
 }

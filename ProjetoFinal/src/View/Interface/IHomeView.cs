@@ -1,3 +1,5 @@
+using VS;
+
 namespace Templates
 {
     public interface IHomeView
@@ -5,6 +7,6 @@ namespace Templates
         int MainMenu();
         bool Bye();
         void InvalidChoice<T>(T error);
-
+        VibeShell GetVibe();
     }
 }
