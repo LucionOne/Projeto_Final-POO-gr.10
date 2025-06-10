@@ -1,6 +1,7 @@
 using Templates.view;
 using Container.DTOs;
 using VS;
+using System.Runtime.InteropServices;
 
 
 namespace View;
@@ -68,12 +69,45 @@ public class VibePlayerView : IPlayerView
     public PlayerDto? GetPlayerInput()
     {
         _vibe.BetterChangePageInfo(" C R E A T E   P L A Y E R", render: false);
-        return null;
+        _vibe.clearSecView(render:false);
+        var form = new List<string>
+        {
+            "Enter Player Details",
+            "Name: ",
+            "Age: ",
+            "Position: ",
+            "0-Any | 1-Goalkeeper", "2-Defender | 3-Attacker"
+        };
+
+        _vibe.ChangeMainView(form, render:true);
+
+        var pos = _vibe.GetMainViewPosition();
+        string name = _vibe.HandleInputAt<string>(form[1],pos.X,pos.Y+1);
+        int age = _vibe.HandleInputAt<int>(form[2], pos.X, pos.Y + 2, 3, c => VibeShell.Numbers.Contains(c));
+        int position = _vibe.HandleInputAt<int>(form[3], pos.X, pos.Y + 3, 1, c => "0123".Contains(c));
+
+        return new PlayerDto(name, age, position);
     }
     public PlayerDto? GetPlayerEdit(PlayerDto oldPlayer)
     {
         _vibe.BetterChangePageInfo(" E D I T   P L A Y E R", render: false);
-        return null;
+        _vibe.clearSecView(render: false);
+        var form = new List<string>
+        {
+            "Edit Player Details",
+            $"Name ({oldPlayer.Name}): ",
+            $"Age ({oldPlayer.Age}): ",
+            $"Position ({oldPlayer.Position}): ",
+            "0-Any | 1-Goalkeeper", "2-Defender | 3-Attacker"
+        };
+        _vibe.ChangeMainView(form, render: true);
+        var pos = _vibe.GetMainViewPosition();
+        string name = _vibe.HandleInputAt<string>(form[1], pos.X, pos.Y + 1);
+        int age = _vibe.HandleInputAt<int>(form[2], pos.X, pos.Y + 2, 3, c => VibeShell.Numbers.Contains(c));
+        int position = _vibe.HandleInputAt<int>(form[3], pos.X, pos.Y + 3, 1, c => "0123".Contains(c));
+
+        return new PlayerDto(oldPlayer.Id, name, age, position);
+
     }
 
     private VibeShell.SelectableItem PLayerToSelectableItem(PlayerDto player)
@@ -105,7 +139,7 @@ public class VibePlayerView : IPlayerView
             "",
             "Old Player",
             "",
-            $"Name: {oldPlayer.Name.PadRight(15)} |ID: {oldPlayer.Id}",
+            $"ID: {oldPlayer.Id.ToString().PadRight(4)}| Name: {oldPlayer.Name}",
             $"Age: {oldPlayer.Age.ToString().PadRight(3)}| {oldPlayer.PositionString}"
         }, render: false);
         _vibe.ChangeSecView(new List<string>
@@ -113,13 +147,15 @@ public class VibePlayerView : IPlayerView
             "",
             "New Player",
             "",
-            $"Name: {newPlayer.Name.PadRight(15)} |ID: {newPlayer.Id}",
+            $"ID: {newPlayer.Id.ToString().PadRight(4)}| Name: {newPlayer.Name}",
             $"Age: {newPlayer.Age.ToString().PadRight(3)}| {newPlayer.PositionString}"
-        }, render: true);
+        }, render: false);
 
-        (var X, var Y) = _vibe.GetInfBarPosition();
+        _vibe.ChangeInfBar([""], render: true);
 
-        bool confirmation = _vibe.HandleInputAt<bool>("  Save Changes? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
+        var pos = _vibe.GetInfBarPosition();
+
+        bool confirmation = _vibe.HandleInputAt<bool>("  Save Changes? y/n: ", pos.X, pos.Y, 5, c => "yesnoYESNO".Contains(c));
 
         return confirmation;
     }
@@ -138,6 +174,24 @@ public class VibePlayerView : IPlayerView
         (var X, var Y) = _vibe.GetInfBarPosition();
 
         bool confirmation = _vibe.HandleInputAt<bool>("  Delete Player? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
+
+        return confirmation;
+    }
+    public bool ConfirmPlayerAdd(PlayerDto player)
+    {
+        _vibe.BetterChangePageInfo(" C O N F I R M   A D D", render: false);
+        _vibe.ChangeMainView(new List<string>
+        {
+            "",
+            "  Add Player?",
+            "",
+            $" ID: {player.Id.ToString().PadRight(4)}| Name: {player.Name}",
+            $" Age: {player.Age.ToString().PadRight(3)}| {player.PositionString}"
+        }, render: true);
+
+        (var X, var Y) = _vibe.GetInfBarPosition();
+        _vibe.ChangeInfBar([""]);
+        bool confirmation = _vibe.HandleInputAt<bool>("  Add Player? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
 
         return confirmation;
     }

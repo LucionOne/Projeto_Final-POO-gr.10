@@ -68,6 +68,8 @@ public class PlayerController
     {
         PlayerDto? playerDto = _view.GetPlayerInput();
         if (playerDto == null) { return; }
+        bool confirmation = _view.ConfirmPlayerAdd(playerDto);
+        if (!confirmation) { return; }
         var player = new Player(playerDto);
         _data.PlayerRepo.Add(player);
     }

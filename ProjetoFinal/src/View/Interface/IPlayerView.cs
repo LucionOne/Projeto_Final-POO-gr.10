@@ -9,6 +9,7 @@ public interface IPlayerView
     int GetPlayerId(List<PlayerDto> players);
     bool ConfirmPlayerEdit(PlayerDto oldPlayer, PlayerDto newPlayer);
     bool ConfirmPlayerDelete(PlayerDto player);
+    bool ConfirmPlayerAdd(PlayerDto player);
     bool ConfirmSaveToDatabase(bool saved);
     void ShowPlayers(List<PlayerDto> players);
 }

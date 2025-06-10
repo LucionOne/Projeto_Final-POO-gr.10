@@ -10,7 +10,7 @@ public class PlayerDto
     public int Position { get; set; }
     public string PositionString => Position switch
     {
-        0 => "Unknown",
+        0 => "Any",
         1 => "Goalkeeper",
         2 => "Defender",
         3 => "Attacker",
@@ -34,6 +34,19 @@ public class PlayerDto
         Name = package.Name;
         Age = package.Age;
         Position = package.Position;
+    }
+    public PlayerDto(int id, string name, int age, int position)
+    {
+        Id = id;
+        Name = name;
+        Age = age;
+        Position = position;
+    }
+    public PlayerDto(string name, int age, int position)
+    {
+        Name = name;
+        Age = age;
+        Position = position;
     }
 }
     
