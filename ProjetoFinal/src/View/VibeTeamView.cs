@@ -21,38 +21,17 @@ public class VibeTeamView : ITeamView
     public VibeTeamView(VibeShell vibe)
     {
         _vibe = vibe;
+        List<string> infBar = new();
 
-        List<string> header = new()
-        {
-            "Team Management",
-        };
-
-        List<string> pageInfo = new()
-        {
-            "Manage your teams efficiently",
-        };
-
-        List<string> mainView = new()
-        {
-            "01. Create Team",
-            "02. Edit Team",
-            "03. Delete Team",
-            "04. List Teams",
-            "05. Save Changes",
-            "00. Exit",
-        };
-        List<string> infBar = new()
-        { };
-
-        _vibe.ChangeHeader(header, false);
-        _vibe.ChangePageInfo(pageInfo, false);
-        _vibe.ChangeMainView(mainView, false);
+        _vibe.BetterChangeHeader("  T E A M   M A N A G E M E N T", false);
         _vibe.ChangeInfBar(infBar, false);
 
     }
 
     public int MainMenu(bool saved)
     {
+        _vibe.BetterChangePageInfo("   M A I N   M E N U  ", false, ' ');
+
         string savedStr;
         string savedStrDescription;
         if (saved)
@@ -136,6 +115,7 @@ public class VibeTeamView : ITeamView
 
     public bool Bye(bool saved)
     {
+        _vibe.BetterChangePageInfo("   M A I N   M E N U  ", false);
         if (saved)
         {
             _vibe.Clear(true, true);
@@ -179,8 +159,8 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
 
     // 1) Clear out the views
     _vibe.Clear(render: false);
-    _vibe.ChangePageInfo(new List<string> { "Making a Team" }, false);
-    _vibe.ChangeSecView(new List<string> { "" }, false);
+    _vibe.BetterChangePageInfo(" G E T T I N G   T E A M   I N F O", false);
+    _vibe.ChangeSecView(new List<string> (), false);
 
     // 2) Ask for team name & date (unchanged)
     var questionName  = "  Team name: ";
@@ -190,7 +170,7 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
     _vibe.ChangeMainView(new List<string> { "", questionName, "", questionDate });
 
     var (X, Y) = _vibe.GetMainViewPosition();
-    string  name    = _vibe.HandleInputAt<string>(questionName, X, Y + 1, 20);
+    string  teamName    = _vibe.HandleInputAt<string>(questionName, X, Y + 1, 20);
     bool    confirm = _vibe.HandleInputAt<bool>(questionDate2, X, Y + 3, 2, c => "yesnoYESNO".Contains(c), clear: true);
 
     DateOnly date = confirm
@@ -214,8 +194,10 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
     // 4) Clear the main view and let the user pick multiple player IDs
     _vibe.clearMainView(true);
 
+    _vibe.BetterChangePageInfo($" G E T T I N G   P L A Y E R S   F O R : {teamName}", false);
+    
     // Optional header lines for the list
-    var header = new List<string>
+        var header = new List<string>
     {
         "==================================================",
         "|             P L A Y E R   L I S T              |",
@@ -231,16 +213,15 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
         prompt:     "Enter Player ID (XX to finish):"
     );
 
-    return new TeamDto(name, date, ids);
+    return new TeamDto(teamName, date, ids);
 }
 
 
     public bool ConfirmSaveToDB()
     {
+        _vibe.BetterChangePageInfo($" S A V E   T O   D A T A B A S E", false);
         _vibe.clearMainView(false);
         _vibe.clearSecView(false);
-        _vibe.ChangePageInfo(["S A V E   T O   D A T A B A S E"], false);
-        _vibe.ChangeInfBar(["  >>"], false);
         var options = new List<string>
         {
             "Save to the DataBase",
@@ -311,8 +292,7 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
 
     public void ShowTeams(List<TeamDto> teams)
     {
-        var descriptions = MakeDescriptions(teams);
-        var heads = MakeTeamHeads(teams);
+        _vibe.BetterChangePageInfo($" S H O W   D A T A  B A S E", false);
 
         var header = new List<string>
         {
@@ -393,10 +373,8 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
 
     public bool ConfirmDeleteTeam(TeamDto team)
     {
-        _vibe.clearMainView(false);
         _vibe.clearSecView(false);
-        _vibe.ChangePageInfo(["D E L E T E   T E A M"], false);
-        _vibe.ChangeInfBar(["  >>"], false);
+        _vibe.BetterChangePageInfo($" D E L E T E   T E A M ?", false);
 
         var options = new List<string>
         {
@@ -418,8 +396,8 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
 public TeamDto GetTeamEdit(List<PlayerDto> players, TeamDto team)
 {
     _vibe.Clear(render: false);
-    _vibe.ChangePageInfo(["E D I T   T E A M"], false);
-    _vibe.ChangeSecView([""], false);
+
+    _vibe.BetterChangePageInfo($" E D I T   T E A M", false);
 
     var questionName  = "  Team name: ";
     var questionDate  = "  Date of Creation (yyyy-MM-dd): ";
@@ -479,11 +457,11 @@ public TeamDto GetTeamEdit(List<PlayerDto> players, TeamDto team)
 
     var header = new List<string>
     {
-        "===================================================",
-        "|              P L A Y E R   L I S T              |",
-        "+----+---------------------+----+-----------------+",
-        "| ID | Name                | yo | Position        |",
-        "+----+---------------------+----+-----------------+"
+        "==================================================",
+        "|             P L A Y E R   L I S T              |",
+        "+----+---------------------+----+----------------+",
+        "| ID | Name                | yo | Position       |",
+        "+----+---------------------+----+----------------+"
     };
 
     List<int> ids = _vibe.HandleMultiIds(

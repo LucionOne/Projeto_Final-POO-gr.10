@@ -12,24 +12,17 @@ public class VibeHomeView : IHomeView
     public VibeHomeView(VibeShell vibe)
     {
         _vibe = vibe;
-        _vibe.SetSize(80);
-        var fillSize = _vibe.GetFillSize();
-        string header = "H O M E   M E N U";
-        var fill = (fillSize - header.Length) / 2;
-        _vibe.ChangeHeader([$"{new string(' ', fill)}H O M E   M E N U"]);
-        _vibe.ChangePageInfo([$"{new string('+', fillSize)}"]);
+        _vibe.BetterChangeHeader(" G A M E S   M A N A G E M E N T   A P P",render: false);
+        _vibe.BetterChangePageInfo($" H O M E   M E N U");
         _vibe.ChangeInfBar(["  >> "]);
     }
 
     public int MainMenu()
     {
-        _vibe.SetSize(102);
-        var fillSize = _vibe.GetFillSize();
-        string header = "H O M E   M E N U";
-        var fill = (fillSize - header.Length) / 2;
-        _vibe.ChangeHeader([$"{new string(' ', fill)}H O M E   M E N U"]);
-        _vibe.ChangePageInfo([$"{new string('+', fillSize)}"]);
+        _vibe.BetterChangeHeader(" G A M E S   M A N A G E M E N T   A P P",render: false);
+        _vibe.BetterChangePageInfo(" H O M E   M E N U",render:false);
         _vibe.ChangeInfBar(["  >> "]);
+
         List<string> options = new()
         {
             "Start Game",

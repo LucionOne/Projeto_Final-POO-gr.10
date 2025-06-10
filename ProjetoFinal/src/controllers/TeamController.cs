@@ -112,7 +112,7 @@ public class TeamController
 
         if (confirmation)
         {
-            _data.TeamRepo.Remove(teamToDelete);
+            _data.TeamRepo.RemoveAt(id);
         }
 
     }

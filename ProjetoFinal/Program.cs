@@ -40,7 +40,6 @@ public class Program
 
 
 
-
     public static void Main()
     {
         Console.Clear();
@@ -52,6 +51,8 @@ public class Program
 
         DataContext data = LoadFiles();
         VibeShell vibe = new();
+        vibe.SetSize(102);
+
         VibeHomeView _view = new(vibe);
 
 

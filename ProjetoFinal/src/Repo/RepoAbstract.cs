@@ -93,6 +93,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
             return;
         }
         
+        item.Id = id;
         _mainRepo[index] = item;
         _saved = false;
     }

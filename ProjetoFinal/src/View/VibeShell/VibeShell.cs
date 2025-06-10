@@ -424,14 +424,14 @@ public class VibeShell //Temp name?
 
     public void BetterChangeHeader(string newHeader, bool render = true, char character = ' ')
     {
-        int fill = FillSize / 2;
+        int fill = (FillSize-newHeader.Length) / 2;
         string betterHeader = new string(character, fill) + newHeader;
         ChangeHeader([betterHeader],render);
 
     }
     public void BetterChangePageInfo(string newPageInfo, bool render = true, char character = ' ')
     {
-        int fill = FillSize / 2;
+        int fill = (FillSize-newPageInfo.Length) / 2;
         string betterPageInfo = new string(character, fill) + newPageInfo;
         ChangePageInfo([betterPageInfo], render);
     }
@@ -545,7 +545,7 @@ public class VibeShell //Temp name?
         ChangePageInfo(new List<string> { "" });
         ChangeMainView(new List<string> { "" });
         ChangeSecView(new List<string> { "" });
-        ChangeInfBar(new List<string> { "" });
+        ChangeInfBar(new List<string> ());
 
         if (render) Render();
     }

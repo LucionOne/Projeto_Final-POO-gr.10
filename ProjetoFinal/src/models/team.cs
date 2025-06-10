@@ -44,7 +44,7 @@ public class Team : ModelAbstract
 
     public string Name
     { get { return _name; } set { _name = value; } }
-
+    [JsonIgnore]
     public List<Player> Jogadores
     { get { return _jogadores ?? new List<Player>(); } }
 
@@ -106,7 +106,6 @@ public class Team : ModelAbstract
     {
         this._id = package.Id;
         this._name = package.Name;
-        this._jogadores = package.Players.Select(playerDto => new Player(playerDto)).ToList();
         this._eventsHistory = package.EventsHistory;
         this._xp = package.XP;
         this._playersId = package.IdList; 
