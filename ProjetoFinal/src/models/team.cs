@@ -109,6 +109,7 @@ public class Team : ModelAbstract
         this._jogadores = package.Players.Select(playerDto => new Player(playerDto)).ToList();
         this._eventsHistory = package.EventsHistory;
         this._xp = package.XP;
+        this._playersId = package.IdList; 
     }
 
     public Team(int id)
