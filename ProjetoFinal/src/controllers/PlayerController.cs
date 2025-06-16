@@ -129,6 +129,8 @@ public class PlayerController
 
         var playerId = _view.GetPlayerId(playersDto);
 
+        if (playerId < 0) return;
+
         Player playerInfo = _data.PlayerRepo.GetById(playerId) ?? throw new NullReferenceException("PlayerInfo Can't Be Null");
 
         bool confirmation = _view.ConfirmPlayerDelete(new PlayerDto(playerInfo));

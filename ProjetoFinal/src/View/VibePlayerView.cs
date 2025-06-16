@@ -38,6 +38,7 @@ public class VibePlayerView : IPlayerView
 
         return choice;
     }
+
     public bool Bye(bool saved)
     {
         _vibe.BetterChangePageInfo(" G O O D B Y E", render: false);
@@ -66,10 +67,11 @@ public class VibePlayerView : IPlayerView
         }
 
     }
+
     public PlayerDto? GetPlayerInput()
     {
         _vibe.BetterChangePageInfo(" C R E A T E   P L A Y E R", render: false);
-        _vibe.clearSecView(render:false);
+        _vibe.clearSecView(render: false);
         var form = new List<string>
         {
             "Enter Player Details",
@@ -79,15 +81,16 @@ public class VibePlayerView : IPlayerView
             "0-Any | 1-Goalkeeper", "2-Defender | 3-Attacker"
         };
 
-        _vibe.ChangeMainView(form, render:true);
+        _vibe.ChangeMainView(form, render: true);
 
         var pos = _vibe.GetMainViewPosition();
-        string name = _vibe.HandleInputAt<string>(form[1],pos.X,pos.Y+1);
+        string name = _vibe.HandleInputAt<string>(form[1], pos.X, pos.Y + 1);
         int age = _vibe.HandleInputAt<int>(form[2], pos.X, pos.Y + 2, 3, c => VibeShell.Numbers.Contains(c));
         int position = _vibe.HandleInputAt<int>(form[3], pos.X, pos.Y + 3, 1, c => "0123".Contains(c));
 
         return new PlayerDto(name, age, position);
     }
+
     public PlayerDto? GetPlayerEdit(PlayerDto oldPlayer)
     {
         _vibe.BetterChangePageInfo(" E D I T   P L A Y E R", render: false);
@@ -118,9 +121,11 @@ public class VibePlayerView : IPlayerView
         $"{player.Id.ToString().PadRight(4)}| {player.Name.PadRight(15)}| {player.PositionStringMini}",
         [$"ID: {player.Id.ToString().PadRight(4)}| Name: {player.Name}", $"Position: {player.PositionString}", $"Age: {player.Age.ToString().PadRight(3)}"]);
     }
+
     public int GetPlayerId(List<PlayerDto> players)
     {
         _vibe.BetterChangePageInfo(" S E L E C T   P L A Y E R", render: false);
+
         if (players.Count == 0)
         {
             _vibe.ChangeMainView(new List<string> { "No players available." }, render: true);
@@ -129,8 +134,18 @@ public class VibePlayerView : IPlayerView
 
         var items = players.Select(PLayerToSelectableItem).ToList();
 
-        return _vibe.HandleSelectById(items, new List<string> { "ID  | Name" });
+        int idSelected = _vibe.HandleSelectById(items, new List<string> { "ID  | Name" });
+        
+        if (idSelected == -1)
+        {
+            _vibe.clearSecView(render: false);
+            _vibe.ChangeMainView(new List<string> { "No player selected." }, render: true);
+            return -1;
+        }
+
+        return idSelected;
     }
+
     public bool ConfirmPlayerEdit(PlayerDto oldPlayer, PlayerDto newPlayer)
     {
         _vibe.BetterChangePageInfo(" C O N F I R M   E D I T", render: false);
@@ -159,6 +174,7 @@ public class VibePlayerView : IPlayerView
 
         return confirmation;
     }
+
     public bool ConfirmPlayerDelete(PlayerDto player)
     {
         _vibe.BetterChangePageInfo(" C O N F I R M   D E L E T E", render: false);
@@ -173,10 +189,13 @@ public class VibePlayerView : IPlayerView
 
         (var X, var Y) = _vibe.GetInfBarPosition();
 
+        _vibe.ChangeInfBar([""], render: true);
+
         bool confirmation = _vibe.HandleInputAt<bool>("  Delete Player? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
 
         return confirmation;
     }
+
     public bool ConfirmPlayerAdd(PlayerDto player)
     {
         _vibe.BetterChangePageInfo(" C O N F I R M   A D D", render: false);
@@ -195,6 +214,7 @@ public class VibePlayerView : IPlayerView
 
         return confirmation;
     }
+
     public bool ConfirmSaveToDatabase(bool saved)
     {
         _vibe.BetterChangePageInfo(" C O N F I R M   S A V E", render: false);
@@ -214,6 +234,7 @@ public class VibePlayerView : IPlayerView
             return false;
         }
     }
+
     public void ShowPlayers(List<PlayerDto> players)
     {
         _vibe.BetterChangePageInfo(" P L A Y E R   L I S T", render: false);

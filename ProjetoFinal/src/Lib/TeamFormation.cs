@@ -7,15 +7,25 @@ public class TeamFormation
     public readonly int NumberDefenders;
     public readonly int NumberAttackers;
     public readonly int NumberAny = 0;
+    public bool UsingFormation = false;
 
     public bool IsValid => MaxPlayers == (NumberGoalkeepers + NumberDefenders + NumberAttackers + NumberAny);
 
+
+
     public TeamFormation()
     {
+        UsingFormation = false;
         MaxPlayers = 11; // Default value
-        NumberDefenders = 7; // Default value
-        NumberAttackers = 3; // Default value
-        NumberGoalkeepers = 1; // Default value
+        // NumberDefenders = 7; // Default value
+        // NumberAttackers = 3; // Default value
+        // NumberGoalkeepers = 1; // Default value
+    }
+
+    public TeamFormation(int MaxPlayers, bool UsingFormation)
+    {
+        this.UsingFormation = UsingFormation;
+        this.MaxPlayers = MaxPlayers;
     }
 
 
@@ -42,7 +52,7 @@ public class TeamFormation
         NumberAny = package.NumberAny;
     }
 
-    public static bool validFormation(TeamFormation formation)
+    public static bool isValid(TeamFormation formation)
     {
         return formation != null &&
         (formation.MaxPlayers == (formation.NumberAttackers + formation.NumberDefenders + formation.NumberGoalkeepers));

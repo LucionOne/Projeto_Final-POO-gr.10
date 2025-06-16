@@ -21,7 +21,7 @@ public class VibeHomeView : IHomeView
     {
         _vibe.BetterChangeHeader(" G A M E S   M A N A G E M E N T   A P P",render: false);
         _vibe.BetterChangePageInfo(" H O M E   M E N U",render:false);
-        _vibe.ChangeInfBar(["  >> "]);
+        _vibe.ChangeInfBar([]);
 
         List<string> options = new()
         {

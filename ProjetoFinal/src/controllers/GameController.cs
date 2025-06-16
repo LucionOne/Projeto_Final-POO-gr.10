@@ -1,112 +1,137 @@
-using Context;
 using Models;
-using Templates.view;
 using Container.DTOs;
+using Templates;
+using System.ComponentModel;
+using Context;
+using System.Collections;
 
 namespace Controller;
 
+
 public class GameController
 {
+    public enum StartContext
+    {
+        Create,
+        Load,
+        Cancel
+    }
+
+    public enum TeamEnumRL
+    {
+        HomeR,
+        VisitantL,
+        Unset
+    }
+
+    private readonly IGameView _view;
     private DataContext _data;
-    private IGameView _view;
 
     private bool _saved { get { return _data.GamesRepo.Saved; } }
     private bool isRunning = true;
 
-    private List<GameDto> RepoDto { get { return RepoToDto(); } }
+    private Game game = new();
 
-    public GameController(DataContext data, IGameView view)
+
+    public GameController(IGameView view, DataContext data)
     {
-        _data = data;
         _view = view;
+        _data = data;
     }
 
-    public void BeginInteraction()
+    public void BeginInteraction(StartContext actionContext)
     {
         isRunning = true;
+        game = HandleContext(actionContext);
         while (isRunning)
         {
-            int input = _view.MainMenu(_saved);
-            HandleUserChoice(input);
+            GameDto gameDto = new(game);
+            int choice = _view.MainMenu(_saved, gameDto);
+            HandleChoice(choice);
         }
     }
 
-    private void HandleUserChoice(int choice)
+    private void HandleChoice(int choice)
     {
+
         switch (choice)
         {
             case 0:
                 isRunning = _view.Bye(_saved);
                 break;
-            case 1:
-                CreateGame();
-                break;
-            case 2:
-                EditGame();
-                break;
-            case 3:
-                DeleteGame();
-                break;
-            case 4:
-                ListGames();
-                break;
+
             case 5:
-                SaveToDataBase();
+                WriteToDatabase();
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Invalid choice. Please select a valid option.");
+                Console.WriteLine("invalid choice");
+                break;
         }
     }
 
-    private void SaveToDataBase()
+    private Game HandleContext(StartContext actionContext)
     {
-        bool confirmation = _view.ConfirmSaveToDB();
-        if (confirmation) { _data.GamesRepo.WriteToDataBase(); }
-    }
-
-    private void CreateGame()
-    {
-        var gameDto = _view.GetGameInput(_data.TeamRepo.GetAll().Select(t => new TeamDto(t)).ToList());
-        var game = new Game(gameDto);
-        _data.GamesRepo.Add(game);
-    }
-
-    private void ListGames()
-    {
-        _view.ShowGames(RepoDto);
-    }
-
-    private void EditGame()
-    {
-        var id = _view.GetGameId(RepoDto);
-        if (id < 0) { return; }
-        var gameToEdit = _data.GamesRepo.GetById(id) ?? new Game(id);
-        var gameDto = _view.GetGameEdit(_data.TeamRepo.GetAll().Select(t => new TeamDto(t)).ToList(), Map(gameToEdit));
-        _data.GamesRepo.UpdateById(id, new Game(gameDto));
-    }
-
-    private void DeleteGame()
-    {
-        var id = _view.GetGameId(RepoDto);
-        if (id < 0) { return; }
-        var gameToDelete = _data.GamesRepo.GetById(id);
-        if (gameToDelete == null) { return; }
-        var confirmation = _view.ConfirmDeleteGame(Map(gameToDelete));
-        if (confirmation)
+        Game game = new();
+        switch (actionContext)
         {
-            _data.GamesRepo.Remove(gameToDelete);
+            case StartContext.Create:
+                game = CreateGame();
+                break;
+            case StartContext.Load:
+                game = GetGameFromDb();
+                break;
+            case StartContext.Cancel:
+                isRunning = false;
+                break;
+        }
+        return game;
+    }
+
+    public Game CreateGame()
+    {
+        GameDto? gamePackage = _view.GetGameInput(); // Get basic info
+
+        if (gamePackage == null) { isRunning = false; return new(); }
+
+        Game game = new Game(gamePackage);
+        _data.GamesRepo.Add(game); // Adds the game to the repo
+        Game game1 = _data.GamesRepo.Last() // Return the ref of the game in its repo
+            ?? throw new InvalidOperationException("Failed to retrieve from the repository.");
+
+        return game1;
+    }
+
+    public Game GetGameFromDb()
+    {
+        List<GameDto> dtoList = RepoToDto();
+        int id = _view.GetGameId(dtoList);
+
+        if (id < 0) { isRunning = false; return new(); }
+
+        Game game = _data.GamesRepo.GetById(id) ?? throw new ArgumentNullException("The id returned a null game");
+
+        return game;
+    }
+
+    public void WriteToDatabase()
+    {
+        if (_saved)
+        {
+            bool confirm = _view.ConfirmSaveToDatabase(_saved);
+            if (confirm)
+            {
+                _data.GamesRepo.WriteToDataBase();
+            }
+        }
+        else
+        {
+            _data.GamesRepo.WriteToDataBase();
         }
     }
 
-    // Map methods
-    public List<GameDto> RepoToDto()
+    private List<GameDto> RepoToDto()
     {
-        return _data.GamesRepo.GetAll().Select(g => Map(g)).ToList();
+        return _data.GamesRepo.GetAll().Select(game => new GameDto(game)).ToList();
     }
 
-    public GameDto Map(Game game)
-    {
-        // You may want to expand this mapping if GameDto needs more info
-        return new GameDto(game);
-    }
 }

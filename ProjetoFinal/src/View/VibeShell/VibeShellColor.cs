@@ -88,7 +88,7 @@ public class VibeShellColor //Temp name?
             }
         }
 
-        SecViewFillSize -= 1; //set a space a division
+        SecViewFillSize -= 1; //set a space for division
     }
 
     public void Render()

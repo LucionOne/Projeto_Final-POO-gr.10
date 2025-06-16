@@ -3,6 +3,7 @@
 
 using System.Dynamic;
 using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 
 namespace VS; //need a better namespace
 
@@ -20,7 +21,7 @@ public class VibeShell //Temp name?
         set => _scale = (value >= 0 && value <= 1) ? value : 0.5f;
     }
 
-    public int MainWindowHeight = 10;
+    public int MinMainWindowHeight = 10;
 
     private List<string> Header = new();
     private List<string> PageInfo = new();
@@ -91,7 +92,7 @@ public class VibeShell //Temp name?
     public VibeShell(int size = 102, float scale = 0.5f, int mainWindowHeight = 10)
     {
 
-        MainWindowHeight = mainWindowHeight;
+        MinMainWindowHeight = mainWindowHeight;
         WindowSize = size;
         Scale = scale;
         ScaleFillSize();
@@ -132,7 +133,7 @@ public class VibeShell //Temp name?
 
     public VibeShell(List<string> header, List<string> pageInfo, List<string> mainView, List<string> secView, List<string> infBar, int size = 102, float scale = 0.5f, int mainWindowHeight = 30)
     {
-        MainWindowHeight = mainWindowHeight;
+        MinMainWindowHeight = mainWindowHeight;
         WindowSize = size;
         Scale = scale;
         ScaleFillSize();
@@ -424,14 +425,14 @@ public class VibeShell //Temp name?
 
     public void BetterChangeHeader(string newHeader, bool render = true, char character = ' ')
     {
-        int fill = (FillSize-newHeader.Length) / 2;
+        int fill = (FillSize - newHeader.Length) / 2;
         string betterHeader = new string(character, fill) + newHeader;
-        ChangeHeader([betterHeader],render);
+        ChangeHeader([betterHeader], render);
 
     }
     public void BetterChangePageInfo(string newPageInfo, bool render = true, char character = ' ')
     {
-        int fill = (FillSize-newPageInfo.Length) / 2;
+        int fill = (FillSize - newPageInfo.Length) / 2;
         string betterPageInfo = new string(character, fill) + newPageInfo;
         ChangePageInfo([betterPageInfo], render);
     }
@@ -463,6 +464,7 @@ public class VibeShell //Temp name?
         SecView = ProcessView(newSecView, SecViewFillSize);
         if (render) Render();
     }
+    
     public void ChangeInfBar(List<string> newInfBar, bool render = true)
     {
         RawInfBar = newInfBar;
@@ -483,26 +485,25 @@ public class VibeShell //Temp name?
 
 
 
-
-    public List<string> GetHeader()
+    public List<string> GetRawHeader()
     {
-        return TrimList(Header);
+        return RawHeader;
     }
-    public List<string> GetPageInfo()
+    public List<string> GetRawPageInfo()
     {
-        return TrimList(PageInfo);
+        return RawPageInfo;
     }
-    public List<string> GetMainView()
+    public List<string> GetRawMainView()
     {
-        return TrimList(MainView);
+        return RawMainView;
     }
-    public List<string> GetSecView()
+    public List<string> GetRawSecView()
     {
-        return TrimList(SecView);
+        return RawSecView;
     }
-    public List<string> GetInfBar()
+    public List<string> GetRawInfBar()
     {
-        return TrimList(InfBar);
+        return RawInfBar;
     }
 
 
@@ -545,7 +546,7 @@ public class VibeShell //Temp name?
         ChangePageInfo(new List<string> { "" });
         ChangeMainView(new List<string> { "" });
         ChangeSecView(new List<string> { "" });
-        ChangeInfBar(new List<string> ());
+        ChangeInfBar(new List<string>());
 
         if (render) Render();
     }
@@ -577,7 +578,6 @@ public class VibeShell //Temp name?
 
 
 
-
     public static List<string> TrimList(List<string> list)
     {
         List<string> trimmedList = new();
@@ -589,9 +589,6 @@ public class VibeShell //Temp name?
 
         return trimmedList;
     }
-
-
-
 
 
 
@@ -607,7 +604,6 @@ public class VibeShell //Temp name?
 
 
 
-
     private List<string> JoinViews(List<string> _mainView, List<string> _secView)
     {
         EqualizeViewsCount(_mainView, _secView);
@@ -620,7 +616,6 @@ public class VibeShell //Temp name?
         {
             strings.Add(_mainView[i] + '|' + _secView[i]);
         }
-
 
         return strings;
     }
@@ -649,7 +644,7 @@ public class VibeShell //Temp name?
             }
         }
 
-        int minHeightDif = MainWindowHeight - _mainView.Count;
+        int minHeightDif = MinMainWindowHeight - _mainView.Count;
 
         if (minHeightDif > 0)
         {
@@ -680,10 +675,10 @@ public class VibeShell //Temp name?
 
 
 
+
+
+
     #region Menu Handling
-
-
-
 
 
 
@@ -816,12 +811,12 @@ public class VibeShell //Temp name?
             else
             {
                 string error = "invalid input";
-                var list = GetPageInfo();
+                var list = GetRawPageInfo();
                 if (list.Count == 0) { list.Add(error); ChangePageInfo(list); }
                 else
                 {
-                    list[0] += $"{error}";//need to make it better
-                    ChangePageInfo(list);
+                    list[0] += $"{error}"; //need to make it better
+                    ChangePageInfo(list); //barely functional
                 }
             }
         }
@@ -882,6 +877,15 @@ public class VibeShell //Temp name?
             Console.Write(new string(' ', err.Length));
         }
     }
+
+    public void WaitForClick()
+    {
+        var pos = GetReadLinePosition();
+        Console.CursorVisible = false;
+        Console.SetCursorPosition(pos.X, pos.Y);
+        Console.ReadKey();
+        Console.CursorVisible = true;
+    }
     #endregion Simple Input
 
 
@@ -904,69 +908,69 @@ public class VibeShell //Temp name?
     string exitCode = "XX",
     string prompt = "Enter ID (or XX to exit):"
 )
-{
-    // 1) Build MainView: header + real IDs with labels
-    var numbered = new List<string>(headerLines);
-    numbered.AddRange(items.Select(item => $"{item.Label}"));//{item.Id}. {item.Label}"));
-    ChangeMainView(numbered, render: false);
-
-    // 2) Determine input position in SecView
-    var (secX, secY) = GetSecViewPosition();
-    int inputX = secX + prompt.Length + 1;
-    int inputY = secY;
-
-    void RenderSec(List<string> descLines)
     {
-        var sec = new List<string> { prompt.PadRight(SecViewFillSize) };
-        int slotCount = numbered.Count - 1;
+        // 1) Build MainView: header + real IDs with labels
+        var numbered = new List<string>(headerLines);
+        numbered.AddRange(items.Select(item => $"{item.Label}"));//{item.Id}. {item.Label}"));
+        ChangeMainView(numbered, render: false);
 
-        for (int i = 0; i < slotCount; i++)
+        // 2) Determine input position in SecView
+        var (secX, secY) = GetSecViewPosition();
+        int inputX = secX + prompt.Length + 1;
+        int inputY = secY;
+
+        void RenderSec(List<string> descLines)
         {
-            sec.Add(i < descLines.Count
-                ? descLines[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
-                : new string(' ', SecViewFillSize));
-        }
+            var sec = new List<string> { prompt.PadRight(SecViewFillSize) };
+            int slotCount = numbered.Count - 1;
 
-        sec.Add(new string(' ', SecViewFillSize));
-        ChangeSecView(sec, render: false);
-        Render();
-    }
-
-    RenderSec(new());
-    Console.CursorVisible = true;
-
-    while (true)
-    {
-        Console.SetCursorPosition(inputX, inputY);
-        Console.Write(new string(' ', 10));
-        Console.SetCursorPosition(inputX, inputY);
-
-        string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
-
-        if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
-            break;
-
-        if (int.TryParse(raw, out int id))
-        {
-            var match = items.FirstOrDefault(i => i.Id == id);
-            if (match != null)
+            for (int i = 0; i < slotCount; i++)
             {
-                RenderSec(match.Description ?? new());
-                continue;
+                sec.Add(i < descLines.Count
+                    ? descLines[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
+                    : new string(' ', SecViewFillSize));
             }
+
+            sec.Add(new string(' ', SecViewFillSize));
+            ChangeSecView(sec, render: false);
+            Render();
         }
 
-        // Invalid ID
-        var sec = GetSecView();
-        sec[^1] = "Invalid ID".PadRight(SecViewFillSize);
-        ChangeSecView(sec, render: false);
-        Render();
-        Thread.Sleep(700);
         RenderSec(new());
-    }
+        Console.CursorVisible = true;
 
-    Console.CursorVisible = false;
-}
+        while (true)
+        {
+            Console.SetCursorPosition(inputX, inputY);
+            Console.Write(new string(' ', 10));
+            Console.SetCursorPosition(inputX, inputY);
+
+            string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
+
+            if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
+                break;
+
+            if (int.TryParse(raw, out int id))
+            {
+                var match = items.FirstOrDefault(i => i.Id == id);
+                if (match != null)
+                {
+                    RenderSec(match.Description ?? new());
+                    continue;
+                }
+            }
+
+            // Invalid ID
+            var sec = GetRawSecView();
+            sec[^1] = "Invalid ID".PadRight(SecViewFillSize);
+            ChangeSecView(sec, render: false);
+            Render();
+            Thread.Sleep(700);
+            RenderSec(new());
+        }
+
+        Console.CursorVisible = false;
+    }
 
 
     #endregion Show Items
@@ -1051,7 +1055,7 @@ public class VibeShell //Temp name?
             }
 
             // Invalid ID
-            var secFb = GetSecView();
+            var secFb = GetRawSecView();
             secFb[^1] = $"Invalid ID".PadRight(SecViewFillSize);
             ChangeSecView(secFb, render: false);
             Render();
@@ -1083,7 +1087,7 @@ public class VibeShell //Temp name?
     string prompt = "Enter ID (or XX to confirm):"
 )
     {
-        // Build MainView: header + all choice labels with their real ID
+        
         var numbered = new List<string>(headerLines);
         numbered.AddRange(choices.Select(c => $"{c.Label}"));//{c.Id}. {c.Label}"));
         ChangeMainView(numbered, render: false);
@@ -1113,14 +1117,14 @@ public class VibeShell //Temp name?
         while (true)
         {
             Console.SetCursorPosition(inputX, inputY);
-            Console.Write(new string(' ', 10));
+            Console.Write(new string(' ', 5));
             Console.SetCursorPosition(inputX, inputY);
 
-            string raw = new CursorInputField(inputX, inputY, 10).ReadInput().Trim();
-            if (raw.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
+            string rawInput = new CursorInputField(inputX, inputY, 5).ReadInput().Trim();
+            if (rawInput.Equals(exitCode, StringComparison.OrdinalIgnoreCase))
                 break;
 
-            if (int.TryParse(raw, out var id))
+            if (int.TryParse(rawInput, out var id))
             {
                 // find the item with that real ID
                 var item = choices.FirstOrDefault(c => c.Id == id);
@@ -1133,8 +1137,8 @@ public class VibeShell //Temp name?
             }
 
             // invalid
-            var secFb = GetSecView();
-            secFb[^1] = $"Not a valid ID".PadRight(SecViewFillSize);
+            var secFb = GetRawSecView();
+            secFb[^1] = $"Not a valid ID";
             ChangeSecView(secFb, render: false);
             Render();
             Thread.Sleep(700);
@@ -1153,6 +1157,7 @@ public class VibeShell //Temp name?
         return lastId;
     }
     #endregion id handlers
+
 
 
 
@@ -1191,4 +1196,3 @@ public class VibeShell //Temp name?
     }
     #endregion Support Classes
 }
-    //

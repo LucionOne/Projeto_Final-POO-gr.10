@@ -50,10 +50,10 @@ public class GameDto
         Local = game.Local;
         TipoDeCampo = game.TipoDeCampo;
 
-        FilaJogadoresSemTeam = game.FilaJogadoresSemTeam?.Select(p => new PlayerDto(p)).ToList()
-            ?? throw new ArgumentNullException(nameof(game.FilaJogadoresSemTeam), "FilaJogadoresSemTeam cannot be null");
-        TeamsToPlay = game.TeamsToPlay?.Select(t => new TeamDto(t)).ToList()
-            ?? throw new ArgumentNullException(nameof(game.TeamsToPlay), "TeamsToPlay cannot be null");
+        FilaJogadoresSemTeam = game.PlayersLineUp?.Select(p => new PlayerDto(p)).ToList()
+            ?? throw new ArgumentNullException(nameof(game.PlayersLineUp), "FilaJogadoresSemTeam cannot be null");
+        TeamsToPlay = game.TeamsLineUp?.Select(t => new TeamDto(t)).ToList()
+            ?? throw new ArgumentNullException(nameof(game.TeamsLineUp), "TeamsToPlay cannot be null");
 
         Events = game.Events?.Select(e => e).ToList()
             ?? throw new ArgumentNullException(nameof(game.Events), "Events cannot be null");

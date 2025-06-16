@@ -85,9 +85,9 @@ public class Game : ModelAbstract
     public string TipoDeCampo
     { get { return _tipoDeCampo; } set { _tipoDeCampo = value ?? string.Empty; } }
 
-    public List<Player> FilaJogadoresSemTeam
+    public List<Player> PlayersLineUp
     { get { return _filaJogadoresSemTeam; } set { _filaJogadoresSemTeam = value; } }
-    public List<Team> TeamsToPlay
+    public List<Team> TeamsLineUp
     { get { return _teamsToPlay; } set { _teamsToPlay = value; } }
 
     public List<Event> Events
@@ -125,31 +125,18 @@ public class Game : ModelAbstract
         _id = id;
     }
 
-
     public Game() { }
-
-    // public Game(DateOnly date, TimeOnly horaInicio, string local, string tipoDeCampo, int quantidadeJogadoresPorTeam, int limiteJogadores, int limiteTeams)
-    // {
-    //     _date = date;
-    //     _horaInicio = horaInicio;
-    //     _local = local ?? string.Empty;
-    //     _tipoDeCampo = tipoDeCampo ?? string.Empty;
-    //     _quantidadeJogadoresPorTeam = quantidadeJogadoresPorTeam;
-    //     // _limiteJogadores = limiteJogadores;
-    //     _limiteTeams = limiteTeams;
-    // }
-
 
     // Methods
 
-    public void AddJogadorSemTeam(Player jogador)
+    public void AddPlayerToLineUp(Player jogador)
     {
         if (_filaJogadoresSemTeam == null)
         { _filaJogadoresSemTeam = new List<Player>(); }
         _filaJogadoresSemTeam.Add(jogador);
     }
 
-    public void AddTeamInLine(Team team)
+    public void AddTeamToLine(Team team)
     {
         _teamsToPlay.Add(team);
     }
@@ -165,11 +152,11 @@ public class Game : ModelAbstract
 
     }
 
-    public void SwitchDefeated(Controller.TeamEnumRL winner)
+    public void SwitchDefeated(Controller.GameController.TeamEnumRL winner)
     {
         if (HomeTeam.Side != winner)
         {
-            HomeTeam = TeamsToPlay[0];
+            HomeTeam = TeamsLineUp[0];
         }
     }
 

@@ -19,9 +19,12 @@ public class CursorInputField
 
     public string ReadInput()
     {
-        var input = new StringBuilder();
-        int pos = 0;                      // our own cursor position in the buffer
+
+        int pos = 0; // position in the Box
+
         Console.CursorVisible = true;
+
+        var inputBuilder = new StringBuilder();
 
         // Initial cursor placement
         Console.SetCursorPosition(X, Y);
@@ -30,22 +33,21 @@ public class CursorInputField
         {
             var key = Console.ReadKey(intercept: true);
 
-            // ENTER finishes
+            // ENTER
             if (key.Key == ConsoleKey.Enter)
                 break;
 
-            
-            // BACKSPACE: only if there's something to delete
+            // BACKSPACE
             if (key.Key == ConsoleKey.Backspace)
             {
-                if (pos == 0)
+                if (pos == 0/* && inputBuilder.Length == 0*/)
                 {
                     Console.SetCursorPosition(X, Y);
                 }
                 else
                 {
                     pos--;
-                    input.Length--;
+                    inputBuilder.Length--;
 
                     Console.SetCursorPosition(X + pos, Y);
                     Console.Write(' ');
@@ -53,23 +55,20 @@ public class CursorInputField
                 }
             }
 
-            else if (key.KeyChar != '\0'            // a real char
-            && input.Length < MaxLength            // within max length
-            && (CharFilter == null || CharFilter(key.KeyChar)))
+            else if (key.KeyChar != '\0'                            // not a null character
+            && inputBuilder.Length < MaxLength                     // within max length
+            && (CharFilter == null || CharFilter(key.KeyChar)))   // c => char.isDigit(c)   or    c => "ABCabc".Contains(c)
             {
-                // insert the char
-                input.Append(key.KeyChar);
+                inputBuilder.Append(key.KeyChar);
 
-                // write it at the correct spot
                 Console.SetCursorPosition(X + pos, Y);
                 Console.Write(key.KeyChar);
 
                 pos++;
             }
-            // you can handle arrows/esc here if you like
         }
 
         Console.CursorVisible = false;
-        return input.ToString();
+        return inputBuilder.ToString();
     }
 }

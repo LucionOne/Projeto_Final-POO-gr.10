@@ -4,7 +4,7 @@ using System.Xml.Schema;
 
 namespace Lit.TeamBuilder;
 
-public class TeamBuilder
+public static class TeamBuilder
 {
 
     public enum PlayerPosition
@@ -16,38 +16,46 @@ public class TeamBuilder
         Corrupted
     }
 
-    public static Team? BuildAllAny(List<Player> players, TeamFormation formation)
+    public static List<Player>? AllAnyPlayersSelection(this List<Player> players, TeamFormation formation)
     {
-        bool valid = players.Count <= formation.MaxPlayers;
+        List<Player> playersList = players.ToList();
+
+        playersList.Shuffle();
+
+        bool valid = playersList.Count <= formation.MaxPlayers;
+
         if (valid)
         {
-            var team = new Team();
+            List<Player> PlayerSelection = new();
 
             for (int i = 0; i < formation.MaxPlayers; i++)
             {
-                var player = players[i];
-                team.AddJogador(player);
-                players.RemoveAt(i);
+                var player = playersList[i];
+                PlayerSelection.Add(player);
+                playersList.RemoveAt(i);
             }
-            return team;
+            return PlayerSelection;
         }
         return null;
     }
 
-    public static Team? BuildBasic(List<Player> players, TeamFormation formation, out PlayerPosition error)
+    public static List<Player>? BasicPlayersSelection(this List<Player> players, TeamFormation formation, out PlayerPosition error)
     {
+        List<Player> playersList = players.ToList();
 
-        (var valid, error) = Validate(players, formation);
+        playersList.Shuffle();
+
+        (var valid, error) = Validate(playersList, formation);
 
         if (valid)
         {
             int totalGoalkeepers = 0, totalDefenders = 0, totalAttackers = 0;
-            var team = new Team();
+            List<Player> playersSelection = new();
 
-            for (int i = 0; i < players.Count;)
+            for (int i = 0; i < playersList.Count;)
             {
 
-                var player = players[i];
+                var player = playersList[i];
                 bool added = false;
 
                 switch (player.Position)
@@ -55,9 +63,9 @@ public class TeamBuilder
                     case 1:
                         if (totalGoalkeepers < formation.NumberGoalkeepers)
                         {
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalGoalkeepers++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         break;
@@ -65,9 +73,9 @@ public class TeamBuilder
                     case 2:
                         if (totalDefenders < formation.NumberDefenders)
                         {
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalDefenders++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         break;
@@ -75,9 +83,9 @@ public class TeamBuilder
                     case 3:
                         if (totalAttackers < formation.NumberAttackers)
                         {
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalAttackers++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         break;
@@ -86,32 +94,31 @@ public class TeamBuilder
                         if (totalAttackers < formation.NumberAttackers)
                         {
                             player.Position = 3;
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalAttackers++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         else if (totalDefenders < formation.NumberDefenders)
                         {
                             player.Position = 2;
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalDefenders++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         else if (totalGoalkeepers < formation.NumberGoalkeepers)
                         {
                             player.Position = 1;
-                            team.AddJogador(player);
+                            playersSelection.Add(player);
                             totalGoalkeepers++;
-                            players.RemoveAt(i);
+                            playersList.RemoveAt(i);
                             added = true;
                         }
                         break;
 
                     default:
                         throw new Exception("Invalid player position");
-
                 }
 
                 if (!added) { i++; }
@@ -120,7 +127,7 @@ public class TeamBuilder
                 totalDefenders == formation.NumberDefenders &&
                 totalAttackers == formation.NumberAttackers)
                 {
-                    return team;
+                    return playersSelection;
                 }
 
             }
@@ -133,7 +140,6 @@ public class TeamBuilder
             return null;
         }
     }
-    
 
     public static (bool valid, PlayerPosition errorIndex) Validate(List<Player> players, TeamFormation formation)
     {
@@ -176,8 +182,5 @@ public class TeamBuilder
 
         return (true, PlayerPosition.Any);
     }
-
-
-
 
 }

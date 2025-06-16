@@ -16,7 +16,8 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected string _filePath;
 
     private bool _saved = true;
-    public bool Saved { get{ return _saved; } } 
+    [JsonIgnore]
+    public bool Saved { get { return _saved; } } 
 
     protected List<T> _mainRepo = new();
     protected int _nextId;

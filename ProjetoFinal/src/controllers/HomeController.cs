@@ -61,18 +61,17 @@ public class HomeController
 
     public void StartGame()
     {
-
-        // var gameView = new GameView();
-        // var gameController = new MatchController(gameView, _data);
-        // gameController.BeginInteraction(StartContext.Create);
+        var gameView = new VibeGameView(_view.GetVibe());
+        var gameController = new GameController(gameView, _data);
+        gameController.BeginInteraction(GameController.StartContext.Create);
     }
 
 
     public void LoadGame()
     {
-        // var gameView = new GameView();
-        // var gameController = new MatchController(gameView, _data);
-        // gameController.BeginInteraction(StartContext.Load);
+        // var gameView = new VibeGameView(_view.GetVibe());
+        // var gameController = new GameController(gameView, _data);
+        // gameController.BeginInteraction();
     }
 
     public void ManagePlayers()

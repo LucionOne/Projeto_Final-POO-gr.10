@@ -29,7 +29,7 @@ public class Team : ModelAbstract
 
     #region Private Attributes
 
-    private TeamEnumRL _side = TeamEnumRL.Unset;
+    private GameController.TeamEnumRL _side = GameController.TeamEnumRL.Unset;
     private string _name = string.Empty;
     private List<Player> _jogadores = new(); //Prep to be deleted
     private List<int> _playersId = new();
@@ -60,7 +60,7 @@ public class Team : ModelAbstract
     public List<int> PlayersId { get { return _playersId; } set { _playersId = value ?? new List<int>(); } }
     
     [JsonIgnore]
-    public TeamEnumRL Side {get{ return _side; } set{ _side = value; }}
+    public GameController.TeamEnumRL Side {get{ return _side; } set{ _side = value; }}
 
     // public int CountJogadores
     //     {get {return _jogadores?.Count ?? 0;}}
