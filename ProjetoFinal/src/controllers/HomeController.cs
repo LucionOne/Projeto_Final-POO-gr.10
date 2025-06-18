@@ -69,9 +69,9 @@ public class HomeController
 
     public void LoadGame()
     {
-        // var gameView = new VibeGameView(_view.GetVibe());
-        // var gameController = new GameController(gameView, _data);
-        // gameController.BeginInteraction();
+        var gameView = new VibeGameView(_view.GetVibe());
+        var gameController = new GameController(gameView, _data);
+        gameController.BeginInteraction(GameController.StartContext.Load);
     }
 
     public void ManagePlayers()

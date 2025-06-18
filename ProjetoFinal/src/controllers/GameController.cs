@@ -30,7 +30,7 @@ public class GameController
     private bool _saved { get { return _data.GamesRepo.Saved; } }
     private bool isRunning = true;
 
-    private Game game = new();
+    private Game game = new(); //Needs to be a ref from _data.GameRepo
 
 
     public GameController(IGameView view, DataContext data)
@@ -51,8 +51,16 @@ public class GameController
         }
     }
 
+    #region Flow Methods
+
     private void HandleChoice(int choice)
     {
+        // "Exit"
+        // "Create Game",
+        // "Edit Game",
+        // "Delete Game",
+        // "List Games",
+        // "Save Changes"
 
         switch (choice)
         {
@@ -60,14 +68,110 @@ public class GameController
                 isRunning = _view.Bye(_saved);
                 break;
 
+            case 1:
+                CreateGameFlow();
+                break;
+
+            case 2:
+                EditGameFlow();
+                break;
+
+            case 3:
+                DeleteGameFlow();
+                break;
+
+            case 4:
+                ListGamesFlow();
+                break;
+
             case 5:
                 WriteToDatabase();
                 break;
+
             default:
                 Console.WriteLine("invalid choice");
                 break;
         }
     }
+
+    public void CreateGameFlow()
+    {
+        GameDto? gamePackage = _view.GetGameInput();
+
+        if (gamePackage == null) { return; }
+
+        bool confirmation = _view.ConfirmGameAdd(gamePackage);
+
+        if (confirmation)
+        {
+            Game game = new(gamePackage);
+            _data.GamesRepo.Add(game);
+            game = _data.GamesRepo.Last()!;
+        }
+    }
+
+    public void EditGameFlow()
+    {
+        // int id = _view.GetGameId(RepoToDto());
+
+        // if (id < 0) { return; }
+
+        // Game oldGame = _data.GamesRepo.GetById(id)
+        //     ?? throw new NullReferenceException("oldGame can't be null");
+        GameDto oldGamePackage = new(game);
+        GameDto? newGamePackage = _view.GetGameEdit(oldGamePackage);
+
+        if (newGamePackage == null) { return; }
+
+        bool confirmation = _view.ConfirmGameEdit(oldGamePackage, newGamePackage);
+        if (confirmation)
+        {
+            newGamePackage.Id = game.Id;
+            _data.GamesRepo.UpdateById(game.Id,new Game(newGamePackage));
+            return;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    public void DeleteGameFlow()
+    {
+        int id = _view.GetGameId(RepoToDto());
+
+        if (id < 0) { return; }
+
+        Game game = _data.GamesRepo.GetById(id) ?? throw new NullReferenceException("Game cannot be null");
+        GameDto toDelete = new GameDto(game);
+
+        bool confirmation = _view.ConfirmGameDelete(toDelete);
+
+        if (confirmation)
+        {
+            _data.GamesRepo.RemoveAt(id);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    public void ListGamesFlow()
+    {
+        _view.ShowGames(RepoToDto());
+    }
+
+    #endregion
+
+
+
+
+
+
+
+
+    #region Context Methods
 
     private Game HandleContext(StartContext actionContext)
     {
@@ -112,6 +216,16 @@ public class GameController
 
         return game;
     }
+    #endregion
+
+
+
+
+
+
+
+
+    #region Others
 
     public void WriteToDatabase()
     {
@@ -133,5 +247,5 @@ public class GameController
     {
         return _data.GamesRepo.GetAll().Select(game => new GameDto(game)).ToList();
     }
-
+    #endregion
 }

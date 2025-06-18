@@ -31,6 +31,10 @@ public class VibeGameView : IGameView
             "List Games",
             saved ? "Save Changes" : "Save Changes *",
             "Exit"
+
+            //  Add Team
+            // 
+            //
         };
 
         int choice = _vibe.HandleMenu(options, renderEachChange: true) + 1;
@@ -151,34 +155,183 @@ public class VibeGameView : IGameView
         };
     }
 
-    public GameDto? GetGameEdit(GameDto oldPlayer)
+    public GameDto? GetGameEdit(GameDto oldGame)
     {
-        return null;
-    }
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" E D I T   G A M E", render: false);
+        _vibe.ChangeInfBar([], false);
 
-    private VibeShell.SelectableItem GameToSelectableItem(GameDto game)
-    {
-        return null;
+        var form = new List<string>
+        {
+            "Title: ",
+            "Data: ",
+            "Horário: ",
+            "Local: ",
+            "Tipo de Campo: ",
+            "Players: ",
+            "Formation: "
+        };
+
+        // Show old game info in secondary view
+        _vibe.ChangeSecView(new List<string>
+        {
+            "Old Game:",
+            $"Title({oldGame.Title}): ",
+            $"Date({oldGame.Date:yyyy-MM-dd}): ",
+            $"Time({oldGame.HoraInicio:HH:mm}): ",
+            $"Local({oldGame.Local}): ",
+            $"Tipo de Campo({oldGame.TipoDeCampo}): ",
+            $"Players({oldGame.TeamFormation.MaxPlayers}): ",
+            $"Formation({(oldGame.TeamFormation.UsingFormation ? "Yes" : "No")}): "
+        });
+
+        _vibe.ChangeMainView(form, render: true);
+
+        var pos = _vibe.GetMainViewPosition();
+
+        string title = _vibe.HandleInputAt<string>(form[0], pos.X, pos.Y, 15);
+        DateOnly date = _vibe.HandleInputAt<DateOnly>("Data (yyyy-MM-dd): ", pos.X, pos.Y + 1, 10, c => "1234567890-".Contains(c));
+        TimeOnly time = _vibe.HandleInputAt<TimeOnly>("Horário (HH:mm): ", pos.X, pos.Y + 2, 5, c => "1234567890:".Contains(c));
+        string local = _vibe.HandleInputAt<string>(form[3], pos.X, pos.Y + 3, 20);
+        string tipoDeCampo = _vibe.HandleInputAt<string>(form[4], pos.X, pos.Y + 4, 20);
+        int maxPlayers = _vibe.HandleInputAt<int>(form[5], pos.X, pos.Y + 5, 2, c => char.IsDigit(c));
+
+        bool useFormation = _vibe.HandleInputAt<bool>("Use a Formation? y/n: ", pos.X, pos.Y + 6, 3, c => "YESnoNOyes".Contains(c));
+
+        TeamFormation formation = new();
+
+        if (useFormation)
+        {
+            bool isValid = false;
+            while (!isValid)
+            {
+            int numberGoalkeepers = _vibe.HandleInputAt<int>("GoalKeepers: ", pos.X, pos.Y + 7, 2, c => char.IsDigit(c), clear: true);
+            int numberAttackers = _vibe.HandleInputAt<int>("Attackers: ", pos.X, pos.Y + 7, 2, c => char.IsDigit(c), clear: true);
+            int numberDefenders = _vibe.HandleInputAt<int>("Defenders: ", pos.X, pos.Y + 7, 2, c => char.IsDigit(c), clear: true);
+            formation = new(maxPlayers: maxPlayers, numberGoalkeepers: numberGoalkeepers, numberDefenders: numberDefenders, numberAttackers: numberAttackers);
+            formation.UsingFormation = useFormation;
+            isValid = TeamFormation.isValid(formation);
+            if (!isValid)
+            {
+                _vibe.ChangeSecView([
+                "The sum of the players",
+                "need to be equal to the",
+                "amount of players in",
+                $"the team - {maxPlayers}"]);
+                _vibe.ChangeInfBar(["Press any key to Continue... "]);
+                _vibe.WaitForClick();
+                _vibe.clearSecView();
+                _vibe.clearInfBar();
+            }
+            }
+        }
+        else
+        {
+            formation = new(maxPlayers, useFormation);
+        }
+
+        return new GameDto
+        {
+            Id = oldGame.Id,
+            Title = title,
+            Date = date,
+            HoraInicio = time,
+            Local = local,
+            TipoDeCampo = tipoDeCampo,
+            TeamFormation = formation,
+            TeamsToPlay = oldGame.TeamsToPlay // preserve teams
+        };
     }
 
     public int GetGameId(List<GameDto> games)
     {
-        return -1;
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" G A M E   S E L E C T I O N", render: false);
+
+        List<VibeShell.SelectableItem> gamesAsItems = games.Select(GameToSelectableItem).ToList();
+
+        int id = _vibe.HandleSelectById(gamesAsItems, ["ID  | Name      | Date"]);
+
+        return id;
     }
 
     public bool ConfirmGameEdit(GameDto oldGame, GameDto newGame)
     {
-        return false;
+        _vibe.Clear();
+        _vibe.BetterChangePageInfo(" C O N F I R M   E D I T", render: false);
+        _vibe.ChangeMainView(new List<string>
+        {
+            "",
+            "Old Game",
+            "",
+            $"ID: {oldGame.Id.ToString().PadRight(4)}| Title: {oldGame.Title}",
+            $"Teams: {oldGame.TeamsToPlay.Count.ToString().PadRight(3)}| Local: {oldGame.Local}",
+            $"Age: {oldGame.TipoDeCampo.PadRight(10)}| {oldGame.Date.ToString("dd/MM/yy")}",
+        }, render: false);
+        _vibe.ChangeSecView(new List<string>
+        {
+            "",
+            "New Game",
+            "",
+            $"ID: {newGame.Id.ToString().PadRight(4)}| Title: {newGame.Title}",
+            $"Teams: {newGame.TeamsToPlay.Count.ToString().PadRight(3)}| Local: {newGame.Local}",
+            $"Age: {newGame.TipoDeCampo.PadRight(10)}| {newGame.Date.ToString("dd/MM/yy")}",
+        }, render: false);
+
+        _vibe.ChangeInfBar([""], render: true);
+
+        var pos = _vibe.GetInfBarPosition();
+
+        bool confirmation = _vibe.HandleInputAt<bool>(" Save Changes? y/n: ", pos.X, pos.Y, 3, c => "yesnoYESNO".Contains(c));
+
+        return confirmation;
     }
 
     public bool ConfirmGameDelete(GameDto player)
     {
-        return false;
+        _vibe.Clear(render:false);
+        _vibe.BetterChangePageInfo(" C O N F I R M   D E L E T E", render: false);
+        _vibe.ChangeMainView(new List<string>
+        {
+            "",
+            "Game to Delete",
+            "",
+            $"ID: {player.Id.ToString().PadRight(4)}| Title: {player.Title}",
+            $"Teams: {player.TeamsToPlay.Count.ToString().PadRight(3)}| Local: {player.Local}",
+            $"Age: {player.TipoDeCampo.PadRight(10)}| {player.Date.ToString("dd/MM/yy")}",
+        }, render: false);
+
+        _vibe.ChangeInfBar([""], render: true);
+
+        var pos = _vibe.GetInfBarPosition();
+
+        bool confirmation = _vibe.HandleInputAt<bool>(" Confirm Deletion? y/n: ", pos.X, pos.Y, 3, c => "yesnoYESNO".Contains(c));
+
+        return confirmation;
+        
     }
 
     public bool ConfirmGameAdd(GameDto player)
     {
-        return false;
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" C O N F I R M   A D D", render: false);
+        _vibe.ChangeMainView(new List<string>
+        {
+            "",
+            "  Add Game?",
+            "",
+            $" ID: {player.Id.ToString().PadRight(4)}| Title: {player.Title}",
+            $" Teams: {player.TeamsToPlay.Count.ToString().PadRight(3)}| Local: {player.Local}",
+            $" Age: {player.TipoDeCampo.PadRight(10)}| {player.Date.ToString("dd/MM/yy")}",
+        }, render: false);
+
+        _vibe.ChangeInfBar([""], render: true);
+
+        var pos = _vibe.GetInfBarPosition();
+
+        bool confirmation = _vibe.HandleInputAt<bool>("  Add Game? y/n: ", pos.X, pos.Y, 5, c => "yesnoYESNO".Contains(c));
+
+        return confirmation;
     }
 
     public bool ConfirmSaveToDatabase(bool saved)
@@ -195,11 +348,31 @@ public class VibeGameView : IGameView
         return choice == 0;
     }
 
-    public void ShowGames(List<GameDto> players) { }
-
-    public int GetTeamMaker()
+    public void ShowGames(List<GameDto> games)
     {
-        return -1;
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" L I S T I N G   G A M E S", render: false);
+
+        List<VibeShell.SelectableItem> gamesAsItems = games.Select(GameToSelectableItem).ToList();
+
+        _vibe.HandleListItems(gamesAsItems, ["ID  | Name      | Date"]);
     }
 
+    private VibeShell.SelectableItem GameToSelectableItem(GameDto game)
+    {
+        return new VibeShell.SelectableItem
+        (
+            game.Id,
+            $"{game.Id.ToString().PadRight(4)}| {game.Title.PadRight(10)}| {game.Date.ToString("dd/MM/yy")}",
+            new List<string>
+            {
+                $"Date: {game.Date:yyyy-MM-dd}",
+                $"Time: {game.HoraInicio:HH:mm}",
+                $"Location: {game.Local}",
+                $"Field Type: {game.TipoDeCampo}",
+                $"Teams: {game.TeamsToPlay.Count}"
+            }
+        );
+    }
+    
 }

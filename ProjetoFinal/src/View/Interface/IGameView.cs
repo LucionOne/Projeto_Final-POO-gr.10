@@ -21,6 +21,4 @@ public interface IGameView
     bool ConfirmSaveToDatabase(bool saved);
 
     void ShowGames(List<GameDto> games);
-
-    int GetTeamMaker();
 }
