@@ -32,5 +32,5 @@ public interface IGameView
     bool ConfirmSaveToDatabase(bool saved);
 
     void ShowGames(List<GameDto> games);
-    void ShowTeams(TeamDto Home, TeamDto Guest, List<TeamDto> TeamLineUp);
+    void ShowTeams(TeamDto Home, TeamDto Guest, List<TeamDto> TeamLineUp, List<PlayerDto> playersLineUp);
 }

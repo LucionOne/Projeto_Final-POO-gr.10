@@ -124,7 +124,8 @@ public class GameController
         List<TeamDto> LineUp = gameRunning.TeamsLineUp
             .Select(t => t.ToDto(_data.PlayerRepo))
             .ToList();
-        _view.ShowTeams(Home, Guest, LineUp);
+        List<PlayerDto> PLineUp = gameRunning.PlayersLineUp.Select(p => p.ToDto()).ToList();
+        _view.ShowTeams(Home, Guest, LineUp, PLineUp);
     }
 
     private void AddEventFlow()
@@ -159,10 +160,7 @@ public class GameController
             gameRunning = new Game(newGamePackage);
             return;
         }
-        else
-        {
-            return;
-        }
+
     }
 
     private void DeleteGameFlow()
@@ -179,11 +177,10 @@ public class GameController
         if (confirmation)
         {
             _data.GamesRepo.RemoveAt(id);
+            _data.GamesRepo.WriteToDataBase();
+            isRunning = false;
         }
-        else
-        {
-            return;
-        }
+
     }
 
     private void ListGamesFlow()

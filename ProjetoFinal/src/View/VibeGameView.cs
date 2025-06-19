@@ -430,11 +430,11 @@ public class VibeGameView : IGameView
         List<VibeShell.SelectableItem> playerItems = players.Select(p =>
             new VibeShell.SelectableItem(
                 p.Id,
-                $"{p.Id.ToString().PadRight(4)}| {p.Name.PadRight(15)}| {p.Position}",
+                $"{p.Id.ToString().PadRight(4)}| {p.Name.PadRight(15)}| {p.PositionString}",
                 new List<string>
                 {
                     $"Name: {p.Name}",
-                    $"Position: {p.Position}",
+                    $"Position: {p.PositionString}",
                     $"Age: {p.Age}"
                 }
             )
@@ -534,7 +534,7 @@ public class VibeGameView : IGameView
         return teams;
     }
 
-    public void ShowTeams(TeamDto home, TeamDto guest, List<TeamDto> teamsInLine)
+    public void ShowTeams(TeamDto home, TeamDto guest, List<TeamDto> teamsInLine, List<PlayerDto> players)
     {
         _vibe.Clear(render: false);
         _vibe.BetterChangePageInfo(" T E A M S   L I N E U P", render: false);
@@ -564,6 +564,18 @@ public class VibeGameView : IGameView
         {
             lines.Add("  No more teams in line.");
         }
+
+        // Show all players lineup in SecView
+        var secLines = new List<string> { "Players Lineup:" };
+        if (players.Count > 0)
+        {
+            secLines.AddRange(players.Select(p => $"- {p.Name.PadRight(15)}| {p.PositionStringMini}"));
+        }
+        else
+        {
+            secLines.Add("No players in lineup.");
+        }
+        _vibe.ChangeSecView(secLines);
 
         _vibe.ChangeMainView(lines, render: true);
         _vibe.ChangeInfBar(new List<string> { "Press any key to continue..." }, render: true);
