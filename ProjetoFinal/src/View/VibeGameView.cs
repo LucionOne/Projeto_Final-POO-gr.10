@@ -403,7 +403,7 @@ public class VibeGameView : IGameView
         _vibe.HandleListItems(gamesAsItems, ["ID  | Name      | Date"]);
     }
 
-    public int TeamMakingMethod()
+    public int GetTeamMakingMethod()
     {
         _vibe.Clear(render: false);
         _vibe.BetterChangePageInfo(" How do you want to distribute the players?");
@@ -511,16 +511,14 @@ public class VibeGameView : IGameView
 
         List<TeamDto> teams = new List<TeamDto>();
 
-        for (int i = 0; i < teamsSelections.Count; i++)
+        foreach (var teamPlayers in teamsSelections)
         {
-            var teamPlayers = teamsSelections[i];
             if (teamPlayers.Count == 0) continue;
 
             List<string> form = new List<string>
             {
-                $"Team Name: ",
+            $"Team Name: ",
             };
-
 
             _vibe.ChangeMainView(form, render: true);
 
@@ -528,14 +526,7 @@ public class VibeGameView : IGameView
 
             string teamName = _vibe.HandleInputAt<string>(form[0], pos.X, pos.Y, 20);
 
-
-            TeamDto team = new TeamDto
-            {
-                Id = -2,
-                Name = teamName,
-                Players = teamPlayers,
-                Date = DateOnly.FromDateTime(DateTime.Now),
-            };
+            TeamDto team = new(-2, teamName, DateOnly.FromDateTime(DateTime.Now), teamPlayers.Select(p => p.Id).ToList());
 
             teams.Add(team);
         }
@@ -553,11 +544,11 @@ public class VibeGameView : IGameView
             $"Home Team: {home.Name}",
         };
 
-        lines.AddRange(home.Players.Select(p => $"  - {p.Name}"));
+        lines.AddRange(home.Players.Select(p => $"  - {p.Name.PadRight(10)}| {p.PositionStringMini}"));
 
         lines.Add("");
         lines.Add($"Guest Team: {guest.Name}");
-        lines.AddRange(guest.Players.Select(p => $"  - {p.Name}"));
+        lines.AddRange(guest.Players.Select(p => $"  - {p.Name.PadRight(10)}| {p.PositionStringMini}"));
 
         lines.Add("");
         lines.Add("Next Teams in Line:");
@@ -566,7 +557,7 @@ public class VibeGameView : IGameView
             foreach (var team in teamsInLine)
             {
                 lines.Add($"  {team.Name}:");
-                lines.AddRange(team.Players.Select(p => $"    - {p.Name}"));
+                lines.AddRange(team.Players.Select(p => $"    - {p.Name.PadRight(10)}| {p.PositionStringMini}"));
             }
         }
         else

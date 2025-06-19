@@ -11,23 +11,26 @@ public interface IGameView
     GameController.GameChoices MainMenu(bool saved, GameDto game);
     bool Bye(bool saved);
 
+    List<TeamDto> FastTeamBuilder(List<List<PlayerDto>> playersFormation);
+
+    List<int> GetPlayers(List<PlayerDto> players);
+    List<int> GetTeams(List<TeamDto> teams, GameDto? game = null);
+
     GameDto? GetGameInput();
     GameDto? GetGameEdit(GameDto game);
+
+    GameController.Sides GetWhoWon(GameDto game);
+
+    Event? GetEventInput(List<PlayerDto> players);
+
     int GetGameId(List<GameDto> games);
+    int GetTeamMakingMethod();
 
     bool ConfirmGameEdit(GameDto oldGame, GameDto newGame);
     bool ConfirmGameDelete(GameDto game);
     bool ConfirmGameAdd(GameDto game);
-
     bool ConfirmSaveToDatabase(bool saved);
 
     void ShowGames(List<GameDto> games);
-
-    List<int> GetPlayers(List<PlayerDto> players);
-    int TeamMakingMethod();
-    GameController.Sides GetWhoWon(GameDto game);
-    List<int> GetTeams(List<TeamDto> teams, GameDto? game = null);
-    List<TeamDto> FastTeamBuilder(List<List<PlayerDto>> playersFormation);
     void ShowTeams(TeamDto Home, TeamDto Guest, List<TeamDto> TeamLineUp);
-    Event? GetEventInput(List<PlayerDto> players);
 }

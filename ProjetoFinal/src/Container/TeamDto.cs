@@ -43,6 +43,12 @@ public class TeamDto
         this.Date = date;
         this.IdList = ids;
     }
+    public TeamDto(int id, string name, DateOnly date, List<int> ids)
+    {
+        this.Name = name;
+        this.Date = date;
+        this.IdList = ids;
+    }
 
     
 }

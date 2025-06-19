@@ -66,7 +66,7 @@ public class GameController
         ListGames,//out
         Save,
         Exit,
-        Peek,//implement
+        Peek,
         FallBack,
     }
 
@@ -138,7 +138,7 @@ public class GameController
         if (_event == null) { return; }
 
         Player? player = _data.PlayerRepo.GetById(_event.PlayerId);
-        
+
         if (player == null) { return; }
 
         player.AddEvent(_event);
@@ -200,7 +200,7 @@ public class GameController
 
     private void AddTeamFlow()
     {
-        int choice = _view.TeamMakingMethod();
+        int choice = _view.GetTeamMakingMethod();
 
         if (choice <= 0 || choice > 3) return;
         var teamsToAdd = new List<Team>();
