@@ -2,7 +2,6 @@ using Models;
 using Lib.TeamFormation;
 using System.Xml.Schema;
 
-namespace Lit.TeamBuilder;
 
 public static class TeamBuilder
 {
@@ -16,11 +15,48 @@ public static class TeamBuilder
         Corrupted
     }
 
-    public static List<Player>? AllAnyPlayersSelection(this List<Player> players, TeamFormation formation)
+        // Returns only the valid, post‑checked teams
+    public static List<List<Player>> AllPossibleTeamsAny(
+        List<Player> players,
+        TeamFormation formation,
+        bool shuffle = false)
+    {
+        if (players.Count < formation.MaxPlayers)
+            return new List<List<Player>>();
+
+        return players
+            .Combinations(formation.MaxPlayers)
+            .Select(combo => combo.ToList())
+            .Select(team => AllAnyPlayersSelection(team, formation, shuffle))
+            .Where(valid => valid is not null)
+            .ToList()!;
+    }
+
+    public static List<List<Player>> AllPossibleTeamsBasic(
+        List<Player> players,
+        TeamFormation formation,
+        bool shuffle = false)
+    {
+        if (players.Count < formation.MaxPlayers)
+            return new List<List<Player>>();
+
+        var result = new List<List<Player>>();
+
+        foreach (var combo in players.Combinations(formation.MaxPlayers))
+        {
+            PlayerPosition error;
+            var team = BasicPlayersSelection(combo.ToList(), formation, out error, shuffle);
+            if (team != null)
+                result.Add(team);
+        }
+        return result;
+    }
+
+    public static List<Player>? AllAnyPlayersSelection(List<Player> players, TeamFormation formation, bool Shuffle = false)
     {
         List<Player> playersList = players.ToList();
 
-        playersList.Shuffle();
+        if (Shuffle) playersList.Shuffle();
 
         bool valid = playersList.Count <= formation.MaxPlayers;
 
@@ -39,11 +75,11 @@ public static class TeamBuilder
         return null;
     }
 
-    public static List<Player>? BasicPlayersSelection(this List<Player> players, TeamFormation formation, out PlayerPosition error)
+    public static List<Player>? BasicPlayersSelection(List<Player> players, TeamFormation formation, out PlayerPosition error, bool Shuffle = false)
     {
         List<Player> playersList = players.ToList();
 
-        playersList.Shuffle();
+        if (Shuffle) playersList.Shuffle();
 
         (var valid, error) = Validate(playersList, formation);
 
@@ -183,4 +219,28 @@ public static class TeamBuilder
         return (true, PlayerPosition.Any);
     }
 
+}
+
+public static class EnumerableExtensions
+{
+    // Generic n‑choose‑k combinations
+    public static IEnumerable<IEnumerable<T>> Combinations<T>(
+        this IEnumerable<T> source, int k)
+    {
+        if (k == 0)
+        {
+            yield return Enumerable.Empty<T>();
+            yield break;
+        }
+
+        var index = 0;
+        foreach (var item in source)
+        {
+            // take this item, then all (k-1)-combinations of the tail
+            var tail = source.Skip(index + 1);
+            foreach (var combo in tail.Combinations(k - 1))
+                yield return new[] { item }.Concat(combo);
+            index++;
+        }
+    }
 }

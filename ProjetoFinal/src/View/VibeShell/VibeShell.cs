@@ -985,7 +985,7 @@ public class VibeShell //Temp name?
 
     #region id handlers
 
-    public List<int> HandleMultiIds(
+    public List<int> HandleMultiSelectIds(
         List<SelectableItem> choices,
         List<string> headerLines,
         string exitCode = "XX",

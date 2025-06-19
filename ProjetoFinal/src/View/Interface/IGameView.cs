@@ -7,7 +7,7 @@ namespace Templates;
 
 public interface IGameView
 {
-    int MainMenu(bool saved, GameDto game);
+    GameController.GameChoices MainMenu(bool saved, GameDto game);
     bool Bye(bool saved);
 
     GameDto? GetGameInput();
@@ -21,4 +21,10 @@ public interface IGameView
     bool ConfirmSaveToDatabase(bool saved);
 
     void ShowGames(List<GameDto> games);
+
+    List<int> GetPlayers(List<PlayerDto> players);
+    int TeamMakingMethod();
+    GameController.Sides GetWhoWon(GameDto game);
+    List<int> GetTeams(List<TeamDto> teams, GameDto? game = null);
+    List<TeamDto> FastTeamBuilder(List<List<PlayerDto>> playersFormation);
 }

@@ -53,11 +53,11 @@ public class Game : ModelAbstract
     private string _tipoDeCampo = string.Empty;
 
     private List<Player> _filaJogadoresSemTeam = new List<Player>();
-    private List<Team> _teamsToPlay = new List<Team>();
+    private List<Team> _teamsLineUp = new List<Team>();
 
     private List<Event> events = new();
     private TeamFormation _teamFormation = new();
-
+    private bool _initialized = false;
     #endregion
 
     #region Public Attributes
@@ -72,7 +72,7 @@ public class Game : ModelAbstract
 
     public Team HomeTeam
     { get { return _homeTeam; } set { _homeTeam = value ?? new Team(); } }
-    public Team AdversaryTeam
+    public Team GuestTeam
     { get { return _adversaryTeam; } set { _adversaryTeam = value ?? new Team(); } }
 
     public DateOnly Date
@@ -88,7 +88,7 @@ public class Game : ModelAbstract
     public List<Player> PlayersLineUp
     { get { return _filaJogadoresSemTeam; } set { _filaJogadoresSemTeam = value; } }
     public List<Team> TeamsLineUp
-    { get { return _teamsToPlay; } set { _teamsToPlay = value; } }
+    { get { return _teamsLineUp; } set { _teamsLineUp = value; } }
 
     public List<Event> Events
     { get { return events; } set { events = value; } }
@@ -108,14 +108,14 @@ public class Game : ModelAbstract
         _homeScore = package.HomeScore;
         _adversaryScore = package.AdversaryScore;
         _homeTeam = package.HomeTeam != null ? new Team(package.HomeTeam) : new Team();
-        _adversaryTeam = package.AdversaryTeam != null ? new Team(package.AdversaryTeam) : new Team();
+        _adversaryTeam = package.GuestTeam != null ? new Team(package.GuestTeam) : new Team();
         _date = package.Date;
         _horaInicio = package.HoraInicio;
         _local = package.Local ?? string.Empty;
         _tipoDeCampo = package.TipoDeCampo ?? string.Empty;
 
         _filaJogadoresSemTeam = package.FilaJogadoresSemTeam?.Select(p => new Player(p)).ToList() ?? new List<Player>();
-        _teamsToPlay = package.TeamsToPlay?.Select(t => new Team(t)).ToList() ?? new List<Team>();
+        _teamsLineUp = package.TeamsToPlay?.Select(t => new Team(t)).ToList() ?? new List<Team>();
         events = package.Events?.Select(e => new Event(e)).ToList() ?? new List<Event>();
         _teamFormation = package.TeamFormation != null ? new TeamFormation(package.TeamFormation) : new TeamFormation();
     }
@@ -131,34 +131,65 @@ public class Game : ModelAbstract
 
     public void AddPlayerToLineUp(Player jogador)
     {
-        if (_filaJogadoresSemTeam == null)
-        { _filaJogadoresSemTeam = new List<Player>(); }
+        // if (_filaJogadoresSemTeam == null)
+        // { _filaJogadoresSemTeam = new List<Player>(); }
         _filaJogadoresSemTeam.Add(jogador);
     }
 
-    public void AddTeamToLine(Team team)
+    public void AddPlayersToLineUp(List<Player> players)
     {
-        _teamsToPlay.Add(team);
+        _filaJogadoresSemTeam.AddRange(players);
     }
 
+    public void AddTeamToLineUp(Team team)
+    {
+        _teamsLineUp.Add(team);
+    }
+    public void AddTeamsToLineUp(List<Team> teams)
+    {
+        _teamsLineUp.AddRange(teams);
+    }
 
     public GameDto ToDto()
     {
         return new GameDto(this);
     }
 
-    public void SetHome()
+    public Team? PopNextTeam()
     {
-
-    }
-
-    public void SwitchDefeated(Controller.GameController.TeamEnumRL winner)
-    {
-        if (HomeTeam.Side != winner)
+        if (_teamsLineUp.Count == 0)
         {
-            HomeTeam = TeamsLineUp[0];
+            return null;
         }
+
+        Team nextTeam = _teamsLineUp[0];
+        _teamsLineUp.RemoveAt(0);
+        return nextTeam;
     }
 
+    public bool initializeTeams()
+    {
+        if (_initialized) return false;
+        if (_teamsLineUp.Count < 2) return false;
+
+        HomeTeam = PopNextTeam()!;
+        GuestTeam = PopNextTeam()!;
+        _initialized = true;
+
+        return true;
+    }
+
+    // public void SetHome()
+    // {
+
+    // }
+
+    // public void SwitchDefeated(Controller.GameController.TeamEnumRL winner)
+    // {
+    //     if (HomeTeam.Side != winner)
+    //     {
+    //         HomeTeam = TeamsLineUp[0];
+    //     }
+    // }
 
 }

@@ -17,12 +17,13 @@ public class GameController
         Cancel
     }
 
-    public enum TeamEnumRL
+    public enum Sides
     {
-        HomeR,
-        VisitantL,
-        Unset
+        Home,
+        Guest,
+        Cancel
     }
+
 
     private readonly IGameView _view;
     private DataContext _data;
@@ -30,7 +31,7 @@ public class GameController
     private bool _saved { get { return _data.GamesRepo.Saved; } }
     private bool isRunning = true;
 
-    private Game game = new(); //Needs to be a ref from _data.GameRepo
+    private Game gameRunning = new(); //Needs to be a ref from _data.GameRepo
 
 
     public GameController(IGameView view, DataContext data)
@@ -42,52 +43,73 @@ public class GameController
     public void BeginInteraction(StartContext actionContext)
     {
         isRunning = true;
-        game = HandleContext(actionContext);
+        gameRunning = HandleContext(actionContext);
         while (isRunning)
         {
-            GameDto gameDto = new(game);
-            int choice = _view.MainMenu(_saved, gameDto);
+            GameDto gameDto = new(gameRunning);
+            GameChoices choice = _view.MainMenu(_saved, gameDto);
             HandleChoice(choice);
         }
     }
 
     #region Flow Methods
 
-    private void HandleChoice(int choice)
+    public enum GameChoices
     {
-        // "Exit"
-        // "Create Game",
-        // "Edit Game",
-        // "Delete Game",
-        // "List Games",
-        // "Save Changes"
+        Exit,
+        CreateGame,
+        EditGame,
+        AddPlayers,
+        AddTeam,
+        EndMatch,
+        DeleteGame,
+        ListGames,
+        Save,
 
+        FallBack
+    }
+
+    private void HandleChoice(GameChoices choice)
+    {
         switch (choice)
         {
-            case 0:
+            case GameChoices.Exit:
                 isRunning = _view.Bye(_saved);
                 break;
 
-            case 1:
+            case GameChoices.CreateGame:
                 CreateGameFlow();
                 break;
 
-            case 2:
+            case GameChoices.EditGame:
                 EditGameFlow();
                 break;
 
-            case 3:
+            case GameChoices.AddPlayers:
+                AddPlayersFlow();
+                break;
+
+            case GameChoices.AddTeam:
+                AddTeamFlow();
+                break;
+
+            case GameChoices.EndMatch:
+                EndMatchFlow();
+                break;
+
+            case GameChoices.DeleteGame:
                 DeleteGameFlow();
                 break;
 
-            case 4:
+            case GameChoices.ListGames:
                 ListGamesFlow();
                 break;
 
-            case 5:
-                WriteToDatabase();
+            case GameChoices.Save:
+                WriteToDatabaseFlow();
                 break;
 
+            case GameChoices.FallBack:
             default:
                 Console.WriteLine("invalid choice");
                 break;
@@ -118,7 +140,7 @@ public class GameController
 
         // Game oldGame = _data.GamesRepo.GetById(id)
         //     ?? throw new NullReferenceException("oldGame can't be null");
-        GameDto oldGamePackage = new(game);
+        GameDto oldGamePackage = new(gameRunning);
         GameDto? newGamePackage = _view.GetGameEdit(oldGamePackage);
 
         if (newGamePackage == null) { return; }
@@ -126,8 +148,8 @@ public class GameController
         bool confirmation = _view.ConfirmGameEdit(oldGamePackage, newGamePackage);
         if (confirmation)
         {
-            newGamePackage.Id = game.Id;
-            _data.GamesRepo.UpdateById(game.Id,new Game(newGamePackage));
+            newGamePackage.Id = gameRunning.Id;
+            _data.GamesRepo.UpdateById(gameRunning.Id,new Game(newGamePackage));
             return;
         }
         else
@@ -162,6 +184,91 @@ public class GameController
         _view.ShowGames(RepoToDto());
     }
 
+    private List<List<PlayerDto>> ConvertToPlayerDtoLists(List<List<Player>> playerLists)
+    {
+        return playerLists
+            .Select(innerList => innerList.Select(player => new PlayerDto(player)).ToList())
+            .ToList();
+    }
+
+    public void AddTeamFlow()
+    {
+        int choice = _view.TeamMakingMethod();
+
+        if (choice <= 0 || choice > 3) return;
+        var teamsToAdd = new List<Team>();
+        switch (choice)
+        {
+            case 1:
+                List<List<Player>> possibleTeamsBasic = TeamBuilder.AllPossibleTeamsBasic(gameRunning.PlayersLineUp, gameRunning.TeamFormation);
+                List<TeamDto> teamsPackageBasic = _view.FastTeamBuilder(ConvertToPlayerDtoLists(possibleTeamsBasic));
+                teamsToAdd = teamsPackageBasic.Select(t => new Team(t)).ToList();
+                break;
+
+            case 2:
+                List<List<Player>> possibleTeamsAny = TeamBuilder.AllPossibleTeamsAny(gameRunning.PlayersLineUp, gameRunning.TeamFormation);
+                List<TeamDto> teamsPackageAny = _view.FastTeamBuilder(ConvertToPlayerDtoLists(possibleTeamsAny));
+                teamsToAdd = teamsPackageAny.Select(t => new Team(t)).ToList();
+                break;
+
+            case 3:
+                List<TeamDto> teams = _data.TeamRepo.ToDtoList();
+                List<int> TeamsIds = _view.GetTeams(teams);
+                teamsToAdd = /*Mapper.*/MapperTools.MapTeamsByIds(TeamsIds, _data);
+                break;
+        }
+        gameRunning.AddTeamsToLineUp(teamsToAdd);
+    }
+
+    public void AddPlayersFlow()
+    {
+        List<int> playersId = _view.GetPlayers(_data.PlayerRepo.ToDtoList());
+
+        if (playersId == null || playersId.Count == 0) return;
+
+        List<Player> players = /*Mapper.*/MapperTools.MapPlayersByIds(playersId, _data);
+
+        gameRunning.AddPlayersToLineUp(players);
+    }
+
+    public void WriteToDatabaseFlow()
+    {
+        if (_saved)
+        {
+            bool confirm = _view.ConfirmSaveToDatabase(_saved);
+            if (confirm)
+            {
+                _data.GamesRepo.WriteToDataBase();
+            }
+        }
+        else
+        {
+            _data.GamesRepo.WriteToDataBase();
+        }
+    }
+
+    public void EndMatchFlow()
+    {
+        Sides winner = _view.GetWhoWon(new GameDto(gameRunning));
+
+        switch (winner)
+        {
+            case Sides.Home://Home Won
+                Team? teamV = gameRunning.PopNextTeam();
+                if (teamV == null) return;
+                gameRunning.GuestTeam = teamV;
+                break;
+
+            case Sides.Guest://Guest Won
+                Team? teamH = gameRunning.PopNextTeam();
+                if (teamH == null) return;
+                gameRunning.HomeTeam = teamH;
+                break;
+
+            case Sides.Cancel:
+                return;
+        }
+    }
     #endregion
 
 
@@ -227,21 +334,6 @@ public class GameController
 
     #region Others
 
-    public void WriteToDatabase()
-    {
-        if (_saved)
-        {
-            bool confirm = _view.ConfirmSaveToDatabase(_saved);
-            if (confirm)
-            {
-                _data.GamesRepo.WriteToDataBase();
-            }
-        }
-        else
-        {
-            _data.GamesRepo.WriteToDataBase();
-        }
-    }
 
     private List<GameDto> RepoToDto()
     {

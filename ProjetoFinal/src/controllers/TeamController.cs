@@ -3,7 +3,7 @@ using Models;
 using Templates.view;
 using View;
 using Container.DTOs;
-using Mapper;
+// using Mapper;
 
 namespace Controller;
 
@@ -121,12 +121,12 @@ public class TeamController
 
     public List<TeamDto> TeamRepoToDto()
     {
-        return Mapper.TeamDtoMapper.MapToDtoList(_data.TeamRepo.GetAll(), _data);
+        return /*Mapper.*/MapperTools.MapToDtoList(_data.TeamRepo.GetAll(), _data);
     }
 
     public TeamDto MapTeam(Team team)
     {
-        return Mapper.TeamDtoMapper.MapToDto(team, _data);
+        return /*Mapper.*/MapperTools.MapToDto(team, _data);
     }
     
 }

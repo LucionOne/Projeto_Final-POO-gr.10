@@ -2,10 +2,10 @@ using Container.DTOs;
 using Models;
 using Context;
 
-namespace Mapper;
+// namespace Mapper;
 
 
-public static class TeamDtoMapper
+public static class MapperTools
 {
     public static TeamDto MapToDto(Team team, DataContext context)
     {
@@ -59,6 +59,26 @@ public static class TeamDtoMapper
         return playersInstances;
     }
 
+    public static List<Player> MapPlayersByIds(List<int> ids, DataContext data)
+    {
+        List<Player> playersInstances = new();
+        foreach (var id in ids)
+        {
+            Player? player = data.PlayerRepo.GetById(id) ?? new(id);
+            playersInstances.Add(player);
+        }
+        return playersInstances;
+    }
+    public static List<Team> MapTeamsByIds(List<int> ids, DataContext data)
+    {
+        List<Team> teamsInstances = new();
+        foreach (var id in ids)
+        {
+            Team? team = data.TeamRepo.GetById(id) ?? new(id);
+            teamsInstances.Add(team);
+        }
+        return teamsInstances;
+    }
 
 
 

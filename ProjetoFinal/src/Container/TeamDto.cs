@@ -10,7 +10,7 @@ public class TeamDto
     public List<Event> EventsHistory { get; set; } = new();
     public int XP { get; set; }
     public DateOnly Date = new();
-    public Controller.GameController.TeamEnumRL Side = Controller.GameController.TeamEnumRL.Unset;
+    public Controller.GameController.Sides Side = Controller.GameController.Sides.Cancel;
     public List<int> IdList = new();
 
     public TeamDto() { }

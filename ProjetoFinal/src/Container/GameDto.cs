@@ -13,7 +13,7 @@ public class GameDto
     public int AdversaryScore { get; set; }
 
     public TeamDto HomeTeam { get; set; } = new();
-    public TeamDto AdversaryTeam { get; set; } = new();
+    public TeamDto GuestTeam { get; set; } = new();
 
     public DateOnly Date { get; set; }
     public TimeOnly HoraInicio { get; set; }
@@ -42,7 +42,7 @@ public class GameDto
         AdversaryScore = game.AdversaryScore;
 
         HomeTeam = new(game.HomeTeam);
-        AdversaryTeam = new(game.AdversaryTeam);
+        GuestTeam = new(game.GuestTeam);
 
         Date = game.Date;
         HoraInicio = game.HoraInicio;

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Templates;
 using Models;
 using Lib.TeamFormation;
+using Controller;
 
 namespace View;
 
@@ -18,7 +19,7 @@ public class VibeGameView : IGameView
         _vibe.BetterChangeHeader(" G A M E   M A N A G E M E N T", render: false);
     }
 
-    public int MainMenu(bool saved, GameDto game)
+    public GameController.GameChoices MainMenu(bool saved, GameDto game)
     {
         _vibe.clearInfBar(render: false);
         _vibe.BetterChangePageInfo(" M A I N   M E N U", render: false);
@@ -27,21 +28,43 @@ public class VibeGameView : IGameView
         {
             "Create Game",
             "Edit Game",
+            "Add Players",
+            "Make Teams LineUp",
+            "End Match",
             "Delete Game",
             "List Games",
             saved ? "Save Changes" : "Save Changes *",
             "Exit"
 
-            //  Add Team
-            // 
-            //
         };
 
-        int choice = _vibe.HandleMenu(options, renderEachChange: true) + 1;
+        int choice = _vibe.HandleMenu(options) + 1;
 
-        if (choice == 6) choice = 0;
+        if (choice == options.Count) choice = 0;
 
-        return choice;
+        switch (choice)
+        {
+            case 0:
+                return GameController.GameChoices.Exit;
+            case 1:
+                return GameController.GameChoices.CreateGame;
+            case 2:
+                return GameController.GameChoices.EditGame;
+            case 3:
+                return GameController.GameChoices.AddPlayers;
+            case 4:
+                return GameController.GameChoices.AddTeam;
+            case 5:
+                return GameController.GameChoices.EndMatch;
+            case 6:
+                return GameController.GameChoices.DeleteGame;
+            case 7:
+                return GameController.GameChoices.ListGames;
+            case 8:
+                return GameController.GameChoices.Save;
+            default:
+                return GameController.GameChoices.FallBack;
+        }
     }
 
     public bool Bye(bool saved)
@@ -356,6 +379,148 @@ public class VibeGameView : IGameView
         List<VibeShell.SelectableItem> gamesAsItems = games.Select(GameToSelectableItem).ToList();
 
         _vibe.HandleListItems(gamesAsItems, ["ID  | Name      | Date"]);
+    }
+
+    public int TeamMakingMethod()
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" How do you want to distribute the players?");
+        List<string> options = new List<string>
+        {
+            "Basic",
+            "Any",
+            "Pick Teams",
+            "Cancel"
+        };
+
+        int choice = _vibe.HandleMenu(options);
+
+        if (choice == 3) choice = -1;
+
+        return choice;
+    }
+
+    public List<int> GetPlayers(List<PlayerDto> players)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" S E L E C T   P L A Y E R S", render: false);
+
+        List<VibeShell.SelectableItem> playerItems = players.Select(p =>
+            new VibeShell.SelectableItem(
+                p.Id,
+                $"{p.Id.ToString().PadRight(4)}| {p.Name.PadRight(15)}| {p.Position}",
+                new List<string>
+                {
+                    $"Name: {p.Name}",
+                    $"Position: {p.Position}",
+                    $"Age: {p.Age}"
+                }
+            )
+        ).ToList();
+
+        List<int> selectedIds = _vibe.HandleMultiSelectIds(playerItems, ["ID  | Name           | Position"]);
+
+        return selectedIds;
+    }
+
+    public GameController.Sides GetWhoWon(GameDto game)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" Who Won?", render: false);
+
+        List<string> options = new List<string>
+        {
+            $"Home Team: {game.HomeTeam.Name}",
+            $"Guest Team: {game.GuestTeam.Name}",
+            "Cancel"
+        };
+
+        int choice = _vibe.HandleMenu(options);
+
+        switch (choice)
+        {
+            case 0:
+                return GameController.Sides.Home;
+            case 1:
+                return GameController.Sides.Guest;
+            case 2:
+                return GameController.Sides.Cancel;
+            default:
+                return GameController.Sides.Cancel;
+        }
+    }
+
+    public List<int> GetTeams(List<TeamDto>teams, GameDto? game)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" S E L E C T   T E A M S", render: false);
+
+        List<VibeShell.SelectableItem> teamItems = teams.Select(t =>
+            new VibeShell.SelectableItem(
+                t.Id,
+                $"{t.Id.ToString().PadRight(4)}| {t.Name.PadRight(15)}| {t.Players.Count} Players",
+                new List<string>
+                {
+                    $"Name: {t.Name}",
+                    $"Players: {t.Players.Count}",
+                    $"XP: {t.XP}",
+                    $"Date: {t.Date:yyyy-MM-dd}",
+                    $"Side: {t.Side}"
+                }
+            )
+        ).ToList();
+
+        if (game != null)
+        {
+            teamItems.Add(new VibeShell.SelectableItem(
+                -1,
+                "Cancel",
+                ["Cancel Team Selection"]
+            ));
+        }
+
+        List<int> selectedIds = _vibe.HandleMultiSelectIds(teamItems, ["ID  | Name           | Players"]);
+
+        return selectedIds;
+    }
+
+    public List<TeamDto> FastTeamBuilder(List<List<PlayerDto>> teamsSelections)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" F A S T   T E A M   B U I L D E R", render: false);
+
+        List<TeamDto> teams = new List<TeamDto>();
+
+        for (int i = 0; i < teamsSelections.Count; i++)
+        {
+            var teamPlayers = teamsSelections[i];
+            if (teamPlayers.Count == 0) continue;
+
+            List<string> form = new List<string>
+            {
+                $"Team Name: ",
+            };
+
+
+            _vibe.ChangeMainView(form, render: true);
+
+            var pos = _vibe.GetMainViewPosition();
+
+            string teamName = _vibe.HandleInputAt<string>(form[0], pos.X, pos.Y, 20);
+
+
+            TeamDto team = new TeamDto
+            {
+                Id = -2,
+                Name = teamName,
+                Players = teamPlayers,
+                Date = DateOnly.FromDateTime(DateTime.Now),
+            };
+
+            teams.Add(team);
+        }
+
+        return teams;
     }
 
     private VibeShell.SelectableItem GameToSelectableItem(GameDto game)

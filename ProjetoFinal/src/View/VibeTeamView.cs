@@ -204,7 +204,7 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
         "+-----+---------------------+----+---------------+"
     };
 
-    List<int> ids = _vibe.HandleMultiIds(
+    List<int> ids = _vibe.HandleMultiSelectIds(
         choices:    selectablePlayers,
         headerLines: header,
         exitCode:   "XX",
@@ -462,7 +462,7 @@ public TeamDto GetTeamEdit(List<PlayerDto> players, TeamDto team)
         "+----+---------------------+----+----------------+"
     };
 
-    List<int> ids = _vibe.HandleMultiIds(
+    List<int> ids = _vibe.HandleMultiSelectIds(
         choices: selectablePlayers,
         headerLines: header,
         exitCode: "XX",
