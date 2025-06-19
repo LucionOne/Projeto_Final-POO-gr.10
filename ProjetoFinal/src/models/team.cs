@@ -1,9 +1,11 @@
 using System.Drawing;
 using System.Dynamic;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using Container.DTOs;
 using Controller;
+using MyRepository;
 using Templates;
 
 namespace Models;
@@ -58,32 +60,9 @@ public class Team : ModelAbstract
     { get { return _creationDate; } set { _creationDate = value; } }
 
     public List<int> PlayersId { get { return _playersId; } set { _playersId = value ?? new List<int>(); } }
-    
+
     [JsonIgnore]
-    public GameController.Sides Side {get{ return _side; } set{ _side = value; }}
-
-    // public int CountJogadores
-    //     {get {return _jogadores?.Count ?? 0;}}
-
-    //     public List<Player> Goleiros
-    //         {get {return _goleiros ?? new List<Player>();}}
-    //     // public int CountGoleiros
-    //     //     {get {return _goleiros?.Count ?? 0;}}
-
-    //     public List<Player> Defesas
-    //         {get {return _defesas ?? new List<Player>();}}
-    //     // public int CountDefesas
-    //     //     {get {return _defesas?.Count ?? 0;}}
-
-    //     public List<Player> Atacantes
-    //         {get {return _atacantes ?? new List<Player>();}}
-    //     // public int CountAtacantes
-    //     //     {get {return _atacantes?.Count ?? 0;}}
-
-    //     public List<Player> Unknown
-    //         {get {return _unknown ?? new List<Player>();}}
-    // // public int CountUnknown
-    //     {get {return _unknown?.Count ?? 0;}}
+    public GameController.Sides Side { get { return _side; } set { _side = value; } }
 
     #endregion
 
@@ -108,7 +87,7 @@ public class Team : ModelAbstract
         this._name = package.Name;
         this._eventsHistory = package.EventsHistory;
         this._xp = package.XP;
-        this._playersId = package.IdList; 
+        this._playersId = package.IdList;
     }
 
     public Team(int id)
@@ -141,94 +120,13 @@ public class Team : ModelAbstract
         return new TeamDto(this);
     }
 
-    // public void RemoveJogador(Player jogador)
-    // {
-    //     if (_jogadores == null)
-    //         {return;}
-
-    //     _jogadores?.Remove(jogador);
-
-    //     switch (jogador.Position)
-    //     {
-    //         case 0:
-    //             _unknown?.Remove(jogador);
-    //             break;
-    //         case 1:
-    //             _goleiros?.Remove(jogador);
-    //             break;
-    //         case 2:
-    //             _defesas?.Remove(jogador);
-    //             break;
-    //         case 3:
-    //             _atacantes?.Remove(jogador);
-    //             break;
-    //         default:
-    //             throw new ArgumentOutOfRangeException("Posição inválida.");
-    //     }
-    // }
-
-
-    // private void SortJogadores(List<Player> jogadores)
-    // {
-    //     foreach (var jogador in jogadores)
-    //         {SortJogador(jogador);}
-    // }
-
-
-    // private void SortJogador(Player jogador)
-    // {
-    //     switch (jogador.Position)
-    //     {
-    //         case 0:
-    //             if (_unknown == null)
-    //                 {_unknown = new List<Player>();}
-    //             _unknown.Add(jogador);
-    //             break;
-    //         case 1:
-    //             if (_goleiros == null)
-    //                 {_goleiros = new List<Player>();}
-    //             _goleiros.Add(jogador);
-    //             break;
-    //         case 2:
-    //             if (_defesas == null)
-    //                 {_defesas = new List<Player>();}
-    //             _defesas.Add(jogador);
-    //             break;
-    //         case 3:
-    //             if (_atacantes == null)
-    //                 {_atacantes = new List<Player>();}
-    //             _atacantes.Add(jogador);
-    //             break;
-    //         default:
-    //             throw new ArgumentOutOfRangeException("Posição inválida.");
-    //     }
-    // }
-
-
-    #region unused
-
-    // public void AddGoleiro(Jogador goleiro)
-    // {
-    //     if (_goleiros == null)
-    //         {_goleiros = new List<Jogador>();}
-    //     _goleiros?.Add(goleiro);
-    // }
-
-    // public void AddDefesa(Jogador defesa)
-    // {
-    //     if (_defesas == null)
-    //         {_defesas = new List<Jogador>();}
-    //     _defesas?.Add(defesa);
-    // }
-
-    // public void AddAtacante(Jogador atacante)
-    // {
-    //     if (_atacantes == null)
-    //         {_atacantes = new List<Jogador>();}
-    //     _atacantes?.Add(atacante);
-    // }
-
-    #endregion
+    public TeamDto toDto(PlayersRepo players)
+    {
+        var dto = new TeamDto(this);
+        dto.Players = MapperTools.MapPlayersByIds(this._playersId, players)
+            .Select(p => new PlayerDto(p)).ToList();
+        return dto;
+    }
 
 
 }

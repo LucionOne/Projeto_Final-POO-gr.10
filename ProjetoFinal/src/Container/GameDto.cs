@@ -61,6 +61,18 @@ public class GameDto
             ?? throw new ArgumentNullException(nameof(game.TeamFormation), "TeamFormation cannot be null");
     }
 
+    public TeamDto? PeekNextTeam()
+    {
+        try
+        {
+            return TeamsToPlay[0];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public override string ToString()
     {
         return $"Id: {Id}, Title: {Title}, Date: {Date}, Start: {HoraInicio}, Local: {Local}, TipoDeCampo: {TipoDeCampo}, HomeScore: {HomeScore}, AdversaryScore: {AdversaryScore})";

@@ -56,7 +56,6 @@ public class GameController
 
     public enum GameChoices
     {
-        Exit,
         CreateGame,
         EditGame,
         AddPlayers,
@@ -65,8 +64,8 @@ public class GameController
         DeleteGame,
         ListGames,
         Save,
-
-        FallBack
+        Exit,
+        FallBack,
     }
 
     private void HandleChoice(GameChoices choice)
@@ -75,10 +74,6 @@ public class GameController
         {
             case GameChoices.Exit:
                 isRunning = _view.Bye(_saved);
-                break;
-
-            case GameChoices.CreateGame:
-                CreateGameFlow();
                 break;
 
             case GameChoices.EditGame:
@@ -97,12 +92,12 @@ public class GameController
                 EndMatchFlow();
                 break;
 
-            case GameChoices.DeleteGame:
-                DeleteGameFlow();
-                break;
-
             case GameChoices.ListGames:
                 ListGamesFlow();
+                break;
+
+            case GameChoices.DeleteGame:
+                DeleteGameFlow();
                 break;
 
             case GameChoices.Save:
@@ -116,30 +111,25 @@ public class GameController
         }
     }
 
-    public void CreateGameFlow()
-    {
-        GameDto? gamePackage = _view.GetGameInput();
+    // public void CreateGameFlow()
+    // {
+    //     GameDto? gamePackage = _view.GetGameInput();
 
-        if (gamePackage == null) { return; }
+    //     if (gamePackage == null) { return; }
 
-        bool confirmation = _view.ConfirmGameAdd(gamePackage);
+    //     bool confirmation = _view.ConfirmGameAdd(gamePackage);
 
-        if (confirmation)
-        {
-            Game game = new(gamePackage);
-            _data.GamesRepo.Add(game);
-            game = _data.GamesRepo.Last()!;
-        }
-    }
+    //     if (confirmation)
+    //     {
+    //         Game game = new(gamePackage);
+    //         _data.GamesRepo.Add(game);
+    //         gameRunning = _data.GamesRepo.Last()!;
+    //     }
+    // }
 
     public void EditGameFlow()
     {
-        // int id = _view.GetGameId(RepoToDto());
 
-        // if (id < 0) { return; }
-
-        // Game oldGame = _data.GamesRepo.GetById(id)
-        //     ?? throw new NullReferenceException("oldGame can't be null");
         GameDto oldGamePackage = new(gameRunning);
         GameDto? newGamePackage = _view.GetGameEdit(oldGamePackage);
 
@@ -212,7 +202,7 @@ public class GameController
                 break;
 
             case 3:
-                List<TeamDto> teams = _data.TeamRepo.ToDtoList();
+                List<TeamDto> teams = _data.TeamRepo.ToDto(_data.PlayerRepo);
                 List<int> TeamsIds = _view.GetTeams(teams);
                 teamsToAdd = /*Mapper.*/MapperTools.MapTeamsByIds(TeamsIds, _data);
                 break;

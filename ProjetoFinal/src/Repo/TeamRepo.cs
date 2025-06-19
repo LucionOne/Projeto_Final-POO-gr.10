@@ -30,9 +30,26 @@ public class TeamRepo : RepoAbstract<Team>
         return temp;
     }
 
-    public List<TeamDto> ToDtoList()
+    public List<TeamDto> ToDto()
     {
         return _mainRepo.Select(t => new TeamDto(t)).ToList();
     }
+
+    public List<Team> Map(List<int> ids)
+    {
+        return MapperTools.MapTeamsByIds(ids, this);
+    }
+
+    public List<TeamDto> ToDto(PlayersRepo players)
+    {
+        return this._mainRepo.Select(team =>
+        {
+            var dto = new TeamDto(team);
+            dto.Players = MapperTools.MapPlayersByIds(team.PlayersId, players).Select(player => new PlayerDto(player)).ToList();
+            return dto;
+        }).ToList();
+    }    
+
+
 }
 

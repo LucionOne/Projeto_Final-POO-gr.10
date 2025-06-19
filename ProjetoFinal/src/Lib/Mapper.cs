@@ -1,6 +1,7 @@
 using Container.DTOs;
 using Models;
 using Context;
+using MyRepository;
 
 // namespace Mapper;
 
@@ -69,6 +70,29 @@ public static class MapperTools
         }
         return playersInstances;
     }
+    public static List<Player> MapPlayersByIds(List<int> ids, PlayersRepo repo)
+    {
+        List<Player> playersInstances = new();
+        foreach (var id in ids)
+        {
+            Player? player = repo.GetById(id) ?? new(id);
+            playersInstances.Add(player);
+        }
+        return playersInstances;
+    }
+
+    public static List<Team> MapTeamsByIds(List<int> ids, TeamRepo repo)
+    {
+        List<Team> teamsInstances = new();
+        foreach (var id in ids)
+        {
+            Team? team = repo.GetById(id) ?? new(id);
+            teamsInstances.Add(team);
+        }
+        return teamsInstances;
+
+    }
+
     public static List<Team> MapTeamsByIds(List<int> ids, DataContext data)
     {
         List<Team> teamsInstances = new();

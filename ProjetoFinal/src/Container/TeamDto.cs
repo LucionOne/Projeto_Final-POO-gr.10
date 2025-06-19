@@ -24,6 +24,7 @@ public class TeamDto
         XP = team.XP;
         Date = team.CreationDate;
         Side = team.Side;
+        IdList = team.PlayersId;
     }
     public TeamDto(Team team, List<PlayerDto> players)
     {
@@ -34,6 +35,7 @@ public class TeamDto
         XP = team.XP;
         Date = team.CreationDate;
         Side = team.Side;
+        IdList = team.PlayersId;
     }
     public TeamDto(string name, DateOnly date, List<int> ids)
     {

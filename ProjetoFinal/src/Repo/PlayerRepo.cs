@@ -41,6 +41,13 @@ public class PlayersRepo : RepoAbstract<Player>
         return _mainRepo.Select(p => new PlayerDto(p)).ToList();
     }
 
+    public List<Player> Map(List<int> ids)
+    {
+        return MapperTools.MapPlayersByIds(ids, this);
+    }
+
+
+
     // public override PlayersRepo LoadFromDataBase()
     // {
     //     string file = File.ReadAllText(_filePath);

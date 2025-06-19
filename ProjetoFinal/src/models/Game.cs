@@ -95,6 +95,14 @@ public class Game : ModelAbstract
     public TeamFormation TeamFormation
     { get { return _teamFormation; } set { _teamFormation = value; } }
 
+    public bool IsTeamsInitialized
+    {
+        get
+        {
+            return HomeTeam != new Team() && GuestTeam != new Team();
+        }
+    }
+
     #endregion
 
     // Constructor

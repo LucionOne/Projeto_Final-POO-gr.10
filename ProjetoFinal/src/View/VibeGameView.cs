@@ -24,21 +24,40 @@ public class VibeGameView : IGameView
         _vibe.clearInfBar(render: false);
         _vibe.BetterChangePageInfo(" M A I N   M E N U", render: false);
         _vibe.ChangeInfBar([], false);
+
+
+        string nextTeamName = game.PeekNextTeam()?.Name ?? "No more teams left";
+
+        var gameStatus = new List<string>
+        {
+            $"Title: {game.Title}",
+            $"Date: {game.Date.ToString("dd/MM/yy").PadRight(9)}| Time: {game.HoraInicio.ToString("HH:mm")}",
+            $"Location: {game.Local}",
+            $"Field Type: {game.TipoDeCampo}",
+            "",
+            $"Home: {game.HomeTeam.Name}",
+            $"Guest: {game.GuestTeam.Name}",
+            "",
+            $"Next Team: {nextTeamName}",
+            $"Teams LineUp: {game.TeamsToPlay.Count}"
+        };
+
         List<string> options = new List<string>
         {
-            "Create Game",
             "Edit Game",
             "Add Players",
-            "Make Teams LineUp",
+            "Teams LineUp",
             "End Match",
             "Delete Game",
             "List Games",
             saved ? "Save Changes" : "Save Changes *",
             "Exit"
-
         };
 
-        int choice = _vibe.HandleMenu(options) + 1;
+        var description = Enumerable.Repeat(gameStatus, options.Count).ToList();
+
+
+        int choice = _vibe.HandleMenu(options, description) + 1;
 
         if (choice == options.Count) choice = 0;
 
@@ -47,20 +66,18 @@ public class VibeGameView : IGameView
             case 0:
                 return GameController.GameChoices.Exit;
             case 1:
-                return GameController.GameChoices.CreateGame;
-            case 2:
                 return GameController.GameChoices.EditGame;
-            case 3:
+            case 2:
                 return GameController.GameChoices.AddPlayers;
-            case 4:
+            case 3:
                 return GameController.GameChoices.AddTeam;
-            case 5:
+            case 4:
                 return GameController.GameChoices.EndMatch;
-            case 6:
+            case 5:
                 return GameController.GameChoices.DeleteGame;
-            case 7:
+            case 6:
                 return GameController.GameChoices.ListGames;
-            case 8:
+            case 7:
                 return GameController.GameChoices.Save;
             default:
                 return GameController.GameChoices.FallBack;
@@ -321,7 +338,7 @@ public class VibeGameView : IGameView
             "",
             $"ID: {player.Id.ToString().PadRight(4)}| Title: {player.Title}",
             $"Teams: {player.TeamsToPlay.Count.ToString().PadRight(3)}| Local: {player.Local}",
-            $"Age: {player.TipoDeCampo.PadRight(10)}| {player.Date.ToString("dd/MM/yy")}",
+            $"Tipo de Campo: {player.TipoDeCampo.PadRight(10)}| {player.Date.ToString("dd/MM/yy")}",
         }, render: false);
 
         _vibe.ChangeInfBar([""], render: true);
@@ -393,9 +410,9 @@ public class VibeGameView : IGameView
             "Cancel"
         };
 
-        int choice = _vibe.HandleMenu(options);
+        int choice = _vibe.HandleMenu(options) +1;
 
-        if (choice == 3) choice = -1;
+        if (choice == 4) choice = -1;
 
         return choice;
     }
@@ -463,9 +480,7 @@ public class VibeGameView : IGameView
                 {
                     $"Name: {t.Name}",
                     $"Players: {t.Players.Count}",
-                    $"XP: {t.XP}",
                     $"Date: {t.Date:yyyy-MM-dd}",
-                    $"Side: {t.Side}"
                 }
             )
         ).ToList();
