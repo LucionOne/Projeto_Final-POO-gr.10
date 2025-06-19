@@ -30,6 +30,7 @@ public interface IGameView
     bool ConfirmGameDelete(GameDto game);
     bool ConfirmGameAdd(GameDto game);
     bool ConfirmSaveToDatabase(bool saved);
+    bool ConfirmStart(bool canStart);
 
     void ShowGames(List<GameDto> games);
     void ShowTeams(TeamDto Home, TeamDto Guest, List<TeamDto> TeamLineUp, List<PlayerDto> playersLineUp);

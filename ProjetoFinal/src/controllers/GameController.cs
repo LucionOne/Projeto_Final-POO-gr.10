@@ -56,6 +56,7 @@ public class GameController
 
     public enum GameChoices
     {
+        Start,
         CreateGame,//out
         AddEvent,
         EditGame,
@@ -111,10 +112,24 @@ public class GameController
             case GameChoices.Peek:
                 PeekFlow();
                 break;
+            case GameChoices.Start:
+                StartFlow();
+                break;
             case GameChoices.FallBack:
             default:
                 break;
         }
+    }
+
+    public void StartFlow()
+    {
+        bool confirm = _view.ConfirmStart(gameRunning.TeamsLineUp.Count >= 2);
+
+        if (confirm)
+        {
+            gameRunning.initializeTeams();
+        }
+
     }
 
     private void PeekFlow()

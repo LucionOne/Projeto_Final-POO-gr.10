@@ -50,9 +50,10 @@ public class VibeGameView : IGameView
             "Teams LineUp",                             //4
             "Peek Players",                             //5
             "End Match",                                //6
-            "Delete Game",                              //7
-            // "List Games",                               //-
-            saved ? "Save Changes" : "Save Changes *",  //8
+            "Start Match",                              //7
+            "Delete Game",                              //8
+            // "List Games",                            //-
+            saved ? "Save Changes" : "Save Changes *",  //9
 
             "Exit"                                      //0
         };
@@ -78,10 +79,12 @@ public class VibeGameView : IGameView
             case 6:
                 return GameController.GameChoices.EndMatch;
             case 7:
-                return GameController.GameChoices.DeleteGame;
+                return GameController.GameChoices.Start;
             // case 8:
             //     return GameController.GameChoices.ListGames;
             case 8:
+                return GameController.GameChoices.DeleteGame;
+            case 9:
                 return GameController.GameChoices.Save;
             case 0:
                 return GameController.GameChoices.Exit;
@@ -155,7 +158,7 @@ public class VibeGameView : IGameView
         // _vibe.ChangeSecView(["Do you want to use a formation?"]);
         bool useFormation = _vibe.HandleInputAt<bool>("Use a Formation? y/n: ", pos.X, pos.Y + 6, 3, c => "YESnoNOyes".Contains(c));
 
-        TeamFormation formation = new();
+        TeamFormation formation = new(false);
 
         if (useFormation)
         {
@@ -332,9 +335,43 @@ public class VibeGameView : IGameView
         return confirmation;
     }
 
+    public bool ConfirmStart(bool canStart)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" C O N F I R M   S T A R T", render: false);
+
+        if (canStart)
+        {
+            _vibe.ChangeMainView(new List<string>
+            {
+                "",
+                "Game is Ready to Start!",
+                "",
+                "Please confirm to start the game.",
+            }, render: false);
+            _vibe.ChangeInfBar([""], render: true);
+
+            var pos = _vibe.GetInfBarPosition();
+            bool confirmation = _vibe.HandleInputAt<bool>(" Start the Game? y/n: ", pos.X, pos.Y, 3, c => "yesYESnoNO".Contains(c));
+            return confirmation;
+        }
+        else
+        {
+            _vibe.ChangeMainView(new List<string>
+            {
+                "",
+                "Cannot Start the Game!",
+                "Check the Teams and Players",
+            }, render: false);
+            _vibe.ChangeInfBar(["Press any key to continue..."], render: true);
+            _vibe.WaitForClick();
+            return false;
+        }
+    }
+
     public bool ConfirmGameDelete(GameDto player)
     {
-        _vibe.Clear(render:false);
+        _vibe.Clear(render: false);
         _vibe.BetterChangePageInfo(" C O N F I R M   D E L E T E", render: false);
         _vibe.ChangeMainView(new List<string>
         {
@@ -353,7 +390,7 @@ public class VibeGameView : IGameView
         bool confirmation = _vibe.HandleInputAt<bool>(" Confirm Deletion? y/n: ", pos.X, pos.Y, 3, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
-        
+
     }
 
     public bool ConfirmGameAdd(GameDto player)

@@ -63,14 +63,15 @@ public class Game : ModelAbstract
 
     #region Public Attributes
 
-    public string Title
-    { get { return _title; } set { _title = value ?? string.Empty; } }
     [JsonIgnore]
     public int HomeScore
     { get { return _homeScore; } set { _homeScore = value; } }
     [JsonIgnore]
     public int AdversaryScore
     { get { return _adversaryScore; } set { _adversaryScore = value; } }
+
+    public string Title
+    { get { return _title; } set { _title = value ?? string.Empty; } }
 
     public Team HomeTeam
     { get { return _homeTeam; } set { _homeTeam = value ?? new Team(); } }
@@ -121,7 +122,7 @@ public class Game : ModelAbstract
         _filaJogadoresSemTeam = package.FilaJogadoresSemTeam?.Select(p => new Player(p)).ToList() ?? new List<Player>();
         _teamsLineUp = package.TeamsToPlay?.Select(t => new Team(t)).ToList() ?? new List<Team>();
         events = package.Events?.Select(e => new Event(e)).ToList() ?? new List<Event>();
-        _teamFormation = package.TeamFormation != null ? new TeamFormation(package.TeamFormation) : new TeamFormation();
+        _teamFormation = package.TeamFormation;
     }
 
     public Game(int id)
@@ -173,7 +174,6 @@ public class Game : ModelAbstract
 
     public bool initializeTeams()
     {
-        if (_initialized) return false;
         if (_teamsLineUp.Count < 2) return false;
 
         HomeTeam = PopNextTeam()!;

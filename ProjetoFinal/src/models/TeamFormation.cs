@@ -4,26 +4,21 @@ namespace Lib.TeamFormation;
 
 public class TeamFormation
 {
-    public /*readonly*/ int MaxPlayers;
-    public /*readonly*/ int NumberGoalkeepers = 1;
-    public /*readonly*/ int NumberDefenders;
-    public /*readonly*/ int NumberAttackers;
-    public /*readonly*/ int NumberAny = 0;
-    public bool UsingFormation = false;
-
+    public int MaxPlayers { get; set; }
+    public int NumberGoalkeepers { get; set; } = 1;
+    public int NumberDefenders { get; set; }
+    public int NumberAttackers { get; set; }
+    public int NumberAny { get; set; } = 0;
+    public bool UsingFormation { get; set; } = false;
 
     [JsonIgnore]
     public bool IsValid => MaxPlayers == (NumberGoalkeepers + NumberDefenders + NumberAttackers + NumberAny);
 
+    public TeamFormation() { }
 
-
-    public TeamFormation()
+    public TeamFormation(bool _using)
     {
-        UsingFormation = false;
-        MaxPlayers = 11; // Default value
-        // NumberDefenders = 7; // Default value
-        // NumberAttackers = 3; // Default value
-        // NumberGoalkeepers = 1; // Default value
+        UsingFormation = _using;
     }
 
     public TeamFormation(int MaxPlayers, bool UsingFormation)
@@ -31,7 +26,6 @@ public class TeamFormation
         this.UsingFormation = UsingFormation;
         this.MaxPlayers = MaxPlayers;
     }
-
 
     public TeamFormation(int maxPlayers, int numberGoalkeepers, int numberDefenders, int numberAttackers, int numberAny = 0)
     {
@@ -60,7 +54,5 @@ public class TeamFormation
     {
         return formation != null &&
         (formation.MaxPlayers == (formation.NumberAttackers + formation.NumberDefenders + formation.NumberGoalkeepers));
-
     }
-
 }
