@@ -1,6 +1,7 @@
 using Container.DTOs;
 using Templates;
 using Lib.TeamFormation;
+using System.Text.Json.Serialization;
 
 namespace Models;
 
@@ -64,9 +65,10 @@ public class Game : ModelAbstract
 
     public string Title
     { get { return _title; } set { _title = value ?? string.Empty; } }
-
+    [JsonIgnore]
     public int HomeScore
     { get { return _homeScore; } set { _homeScore = value; } }
+    [JsonIgnore]
     public int AdversaryScore
     { get { return _adversaryScore; } set { _adversaryScore = value; } }
 
@@ -95,13 +97,7 @@ public class Game : ModelAbstract
     public TeamFormation TeamFormation
     { get { return _teamFormation; } set { _teamFormation = value; } }
 
-    public bool IsTeamsInitialized
-    {
-        get
-        {
-            return HomeTeam != new Team() && GuestTeam != new Team();
-        }
-    }
+    public bool Initialized => _initialized;
 
     #endregion
 

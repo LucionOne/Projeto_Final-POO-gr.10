@@ -45,12 +45,12 @@ public class VibeTeamView : ITeamView
 
         List<string> options = new()
         {
-            "01. Create Team",
-            "02. Edit Team",
-            "03. Delete Team",
-            "04. List Teams",
-           $"05. Save Changes{savedStr}",
-            "00. Exit",
+            " Create Team",
+            " Edit Team",
+            " Delete Team",
+            " List Teams",
+           $" Save Changes{savedStr}",
+            " Exit",
         };
 
         List<string>? createTeamDescription = new()
@@ -258,7 +258,7 @@ public TeamDto GetTeamInput(List<PlayerDto> players)
             }
             foreach (var player in players)
             {
-                playerDescr.Add($"{player.Id.ToString().PadRight(3)}| {player.Name.PadRight(15)}| {player.PositionStringMini}");
+                playerDescr.Add($"|{player.Id.ToString().PadRight(3)}| {player.Name.PadRight(15)}| {player.PositionStringMini.PadRight(14)}|");
             }
             var descr = new List<string>
             {

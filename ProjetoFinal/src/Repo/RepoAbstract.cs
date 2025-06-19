@@ -23,7 +23,8 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     protected int _nextId;
 
     public List<T> MainRepo { get { return _mainRepo; } set { _mainRepo = value; } }
-    public int Count {get { return _mainRepo.Count; }}
+    [JsonIgnore]
+    public int Count { get { return _mainRepo.Count; } }
 
     public int NextId { get { return _nextId; } set { _nextId = value; } }
 

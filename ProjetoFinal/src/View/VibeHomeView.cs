@@ -1,4 +1,5 @@
 using System.Data;
+using System.Runtime.InteropServices;
 using Templates;
 using VS;
 
@@ -12,9 +13,6 @@ public class VibeHomeView : IHomeView
     public VibeHomeView(VibeShell vibe)
     {
         _vibe = vibe;
-        _vibe.BetterChangeHeader(" G A M E S   M A N A G E M E N T   A P P",render: false);
-        _vibe.BetterChangePageInfo($" H O M E   M E N U");
-        _vibe.ChangeInfBar(["  >> "]);
     }
 
     public int MainMenu()
@@ -25,11 +23,11 @@ public class VibeHomeView : IHomeView
 
         List<string> options = new()
         {
-            "Start Game",
-            "Load Game",
-            "Player Management",
-            "Team Management",
-            "Exit"
+            " Start Game",
+            " Load Game",
+            " Player Management",
+            " Team Management",
+            " Exit"
         };
         List<List<string>> descriptions = new()
         {
@@ -39,7 +37,7 @@ public class VibeHomeView : IHomeView
             new List<string> { "Manage teams in the game." },
             new List<string> { "Exit the application." }
         };
-        int choice = _vibe.HandleMenu(options, descriptions, 0) + 1;
+        int choice = _vibe.HandleMenu(options, descriptions) + 1;
 
         if (choice == 5) choice = 0;
 
@@ -48,14 +46,11 @@ public class VibeHomeView : IHomeView
 
     public bool Bye()
     {
-        (int X, int Y) = _vibe.GetInfBarPosition();
-        Console.SetCursorPosition(X, Y);
+        _vibe.BetterChangeHeader(" E X I T  ?");
+        _vibe.ChangeInfBar([""]);
+        var pos = _vibe.GetInfBarPosition();
         var question = "Exit? y/n: ";
-        Console.WriteLine(question);
-        bool confirm = _vibe.GetParsedInput<bool>(X + question.Length, Y, 2, c => char.IsLetterOrDigit(c) || c == ' ' || c == 'y' || c == 'n');
-
-        (var RX, var RY) = _vibe.GetReadLinePosition();
-        Console.SetCursorPosition(RX,RY);
+        bool confirm = _vibe.HandleInputAt<bool>(question, pos.X, pos.Y, 3, c => "YESyesNOno".Contains(c));
         return confirm;
     }
 

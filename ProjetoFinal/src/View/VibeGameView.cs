@@ -197,6 +197,7 @@ public class VibeGameView : IGameView
 
     public GameDto? GetGameEdit(GameDto oldGame)
     {
+        _vibe.setScale(0.6f);
         _vibe.Clear(render: false);
         _vibe.BetterChangePageInfo(" E D I T   G A M E", render: false);
         _vibe.ChangeInfBar([], false);
@@ -216,13 +217,13 @@ public class VibeGameView : IGameView
         _vibe.ChangeSecView(new List<string>
         {
             "Old Game:",
-            $"Title({oldGame.Title}): ",
-            $"Date({oldGame.Date:yyyy-MM-dd}): ",
-            $"Time({oldGame.HoraInicio:HH:mm}): ",
-            $"Local({oldGame.Local}): ",
-            $"Tipo de Campo({oldGame.TipoDeCampo}): ",
-            $"Players({oldGame.TeamFormation.MaxPlayers}): ",
-            $"Formation({(oldGame.TeamFormation.UsingFormation ? "Yes" : "No")}): "
+            $"Title: {oldGame.Title}",
+            $"Date: {oldGame.Date:yyyy-MM-dd}",
+            $"Time: {oldGame.HoraInicio:HH:mm}",
+            $"Local: {oldGame.Local}",
+            $"Tipo de Campo: {oldGame.TipoDeCampo}",
+            $"Players: {oldGame.TeamFormation.MaxPlayers}",
+            $"Formation: {(oldGame.TeamFormation.UsingFormation ? "Yes" : "No")}"
         });
 
         _vibe.ChangeMainView(form, render: true);
@@ -270,17 +271,15 @@ public class VibeGameView : IGameView
             formation = new(maxPlayers, useFormation);
         }
 
-        return new GameDto
-        {
-            Id = oldGame.Id,
-            Title = title,
-            Date = date,
-            HoraInicio = time,
-            Local = local,
-            TipoDeCampo = tipoDeCampo,
-            TeamFormation = formation,
-            TeamsToPlay = oldGame.TeamsToPlay // preserve teams
-        };
+        oldGame.Title = title;
+        oldGame.Date = date;
+        oldGame.HoraInicio = time;
+        oldGame.Local = local;
+        oldGame.TipoDeCampo = tipoDeCampo;
+        oldGame.TeamFormation = formation;
+
+        _vibe.setScale(0.5f);
+        return oldGame;
     }
 
     public int GetGameId(List<GameDto> games)

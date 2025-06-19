@@ -140,6 +140,7 @@ public class GameController
         {
             newGamePackage.Id = gameRunning.Id;
             _data.GamesRepo.UpdateById(gameRunning.Id,new Game(newGamePackage));
+            gameRunning = new Game(newGamePackage);
             return;
         }
         else

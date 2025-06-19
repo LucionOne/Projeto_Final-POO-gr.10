@@ -46,23 +46,20 @@ public class Team : ModelAbstract
 
     public string Name
     { get { return _name; } set { _name = value; } }
+    public List<Event> EventsHistory
+    { get { return _eventsHistory; } set { _eventsHistory = value; } }
+    public DateOnly CreationDate
+    { get { return _creationDate; } set { _creationDate = value; } }
+    public List<int> PlayersId { get { return _playersId; } set { _playersId = value ?? new List<int>(); } }
+    
     [JsonIgnore]
     public List<Player> Jogadores
     { get { return _jogadores ?? new List<Player>(); } }
-
-    public List<Event> EventsHistory
-    { get { return _eventsHistory; } set { _eventsHistory = value; } }
-
-    public int XP
-    { get { return _xp; } set { _xp = value; } }
-
-    public DateOnly CreationDate
-    { get { return _creationDate; } set { _creationDate = value; } }
-
-    public List<int> PlayersId { get { return _playersId; } set { _playersId = value ?? new List<int>(); } }
-
     [JsonIgnore]
     public GameController.Sides Side { get { return _side; } set { _side = value; } }
+    [JsonIgnore]
+    public int XP
+    { get { return _xp; } set { _xp = value; } }
 
     #endregion
 

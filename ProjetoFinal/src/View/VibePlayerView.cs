@@ -24,12 +24,12 @@ public class VibePlayerView : IPlayerView
         _vibe.BetterChangePageInfo(" M A I N   M E N U", render: false);
         List<string> options = new List<string>
         {
-            "Create Player",
-            "Edit Player",
-            "Delete Player",
-            "List Players",
-            saved ? "Save Changes" : "Save Changes *",
-            "Exit"
+            " Create Player",
+            " Edit Player",
+            " Delete Player",
+            " List Players",
+            saved ? " Save Changes" : " Save Changes *",
+            " Exit"
         };
 
         int choice = _vibe.HandleMenu(options, renderEachChange: true) + 1;

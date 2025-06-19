@@ -1,14 +1,18 @@
+using System.Text.Json.Serialization;
+
 namespace Lib.TeamFormation;
 
 public class TeamFormation
 {
-    public readonly int MaxPlayers;
-    public readonly int NumberGoalkeepers = 1;
-    public readonly int NumberDefenders;
-    public readonly int NumberAttackers;
-    public readonly int NumberAny = 0;
+    public /*readonly*/ int MaxPlayers;
+    public /*readonly*/ int NumberGoalkeepers = 1;
+    public /*readonly*/ int NumberDefenders;
+    public /*readonly*/ int NumberAttackers;
+    public /*readonly*/ int NumberAny = 0;
     public bool UsingFormation = false;
 
+
+    [JsonIgnore]
     public bool IsValid => MaxPlayers == (NumberGoalkeepers + NumberDefenders + NumberAttackers + NumberAny);
 
 
