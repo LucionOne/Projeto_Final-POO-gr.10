@@ -2,6 +2,7 @@ using Container.DTOs;
 using Context;
 using Controller;
 using Lib.TeamFormation;
+using Models;
 
 namespace Templates;
 
@@ -27,4 +28,6 @@ public interface IGameView
     GameController.Sides GetWhoWon(GameDto game);
     List<int> GetTeams(List<TeamDto> teams, GameDto? game = null);
     List<TeamDto> FastTeamBuilder(List<List<PlayerDto>> playersFormation);
+    void ShowTeams(TeamDto Home, TeamDto Guest, List<TeamDto> TeamLineUp);
+    Event? GetEventInput(List<PlayerDto> players);
 }

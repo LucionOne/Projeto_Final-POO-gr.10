@@ -44,18 +44,20 @@ public class VibeGameView : IGameView
 
         List<string> options = new List<string>
         {
-            "Edit Game",
-            "Add Players",
-            "Teams LineUp",
-            "End Match",
-            "Delete Game",
-            "List Games",
-            saved ? "Save Changes" : "Save Changes *",
-            "Exit"
+            "Edit Game",                                //1
+            "Add Event",                                //2
+            "Add Players",                              //3
+            "Teams LineUp",                             //4
+            "Peek Players",                             //5
+            "End Match",                                //6
+            "Delete Game",                              //7
+            // "List Games",                               //-
+            saved ? "Save Changes" : "Save Changes *",  //8
+
+            "Exit"                                      //0
         };
 
-        var description = Enumerable.Repeat(gameStatus, options.Count).ToList();
-
+        var description = Enumerable.Repeat(gameStatus, options.Count).ToList(); //little hack
 
         int choice = _vibe.HandleMenu(options, description) + 1;
 
@@ -63,22 +65,26 @@ public class VibeGameView : IGameView
 
         switch (choice)
         {
-            case 0:
-                return GameController.GameChoices.Exit;
             case 1:
                 return GameController.GameChoices.EditGame;
             case 2:
-                return GameController.GameChoices.AddPlayers;
+                return GameController.GameChoices.AddEvent;
             case 3:
-                return GameController.GameChoices.AddTeam;
+                return GameController.GameChoices.AddPlayers;
             case 4:
-                return GameController.GameChoices.EndMatch;
+                return GameController.GameChoices.AddTeam;
             case 5:
-                return GameController.GameChoices.DeleteGame;
+                return GameController.GameChoices.Peek;
             case 6:
-                return GameController.GameChoices.ListGames;
+                return GameController.GameChoices.EndMatch;
             case 7:
+                return GameController.GameChoices.DeleteGame;
+            // case 8:
+            //     return GameController.GameChoices.ListGames;
+            case 8:
                 return GameController.GameChoices.Save;
+            case 0:
+                return GameController.GameChoices.Exit;
             default:
                 return GameController.GameChoices.FallBack;
         }
@@ -321,7 +327,7 @@ public class VibeGameView : IGameView
 
         var pos = _vibe.GetInfBarPosition();
 
-        bool confirmation = _vibe.HandleInputAt<bool>(" Save Changes? y/n: ", pos.X, pos.Y, 3, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>(" Save Changes? y/n: ", pos.X, pos.Y, 3, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
     }
@@ -344,7 +350,7 @@ public class VibeGameView : IGameView
 
         var pos = _vibe.GetInfBarPosition();
 
-        bool confirmation = _vibe.HandleInputAt<bool>(" Confirm Deletion? y/n: ", pos.X, pos.Y, 3, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>(" Confirm Deletion? y/n: ", pos.X, pos.Y, 3, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
         
@@ -368,7 +374,7 @@ public class VibeGameView : IGameView
 
         var pos = _vibe.GetInfBarPosition();
 
-        bool confirmation = _vibe.HandleInputAt<bool>("  Add Game? y/n: ", pos.X, pos.Y, 5, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>("  Add Game? y/n: ", pos.X, pos.Y, 5, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
     }
@@ -536,6 +542,127 @@ public class VibeGameView : IGameView
 
         return teams;
     }
+
+    public void ShowTeams(TeamDto home, TeamDto guest, List<TeamDto> teamsInLine)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" T E A M S   L I N E U P", render: false);
+
+        var lines = new List<string>
+        {
+            $"Home Team: {home.Name}",
+        };
+
+        lines.AddRange(home.Players.Select(p => $"  - {p.Name}"));
+
+        lines.Add("");
+        lines.Add($"Guest Team: {guest.Name}");
+        lines.AddRange(guest.Players.Select(p => $"  - {p.Name}"));
+
+        lines.Add("");
+        lines.Add("Next Teams in Line:");
+        if (teamsInLine.Count > 0)
+        {
+            foreach (var team in teamsInLine)
+            {
+                lines.Add($"  {team.Name}:");
+                lines.AddRange(team.Players.Select(p => $"    - {p.Name}"));
+            }
+        }
+        else
+        {
+            lines.Add("  No more teams in line.");
+        }
+
+        _vibe.ChangeMainView(lines, render: true);
+        _vibe.ChangeInfBar(new List<string> { "Press any key to continue..." }, render: true);
+        _vibe.WaitForClick();
+    }
+
+    public Event? GetEventInput(List<PlayerDto> players)
+    {
+        _vibe.Clear(render: false);
+        _vibe.BetterChangePageInfo(" E V E N T   I N P U T", render: false);
+
+        List<VibeShell.SelectableItem> playerItems = players.Select(p =>
+            new VibeShell.SelectableItem(
+                p.Id,
+                $"{p.Id.ToString().PadRight(4)}| {p.Name.PadRight(15)}| {p.Position}",
+                new List<string>
+                {
+                    $"Name: {p.Name}",
+                    $"Position: {p.Position}",
+                    $"Age: {p.Age}"
+                }
+            )
+        ).ToList();
+
+        int playerId = _vibe.HandleSelectById(playerItems, ["ID  | Name           | Position"]);
+
+        if (playerId == -1) return null;
+
+        var form = new List<string>
+        {
+            "Event Date: ",
+            "Event Time: ",
+            "Event Description: ",
+            "Event Type: ",
+            "1. Goal | 2. Foul",
+            "3. Yellow Card | 4. Red Card",
+            "5. Injury | 6. Other",
+        };
+
+        var pos = _vibe.GetMainViewPosition();
+
+        _vibe.ChangeMainView(form, render: true);
+        DateTime eventDate = _vibe.HandleInputAt<DateTime>("Event Date (yyyy-MM-dd): ", pos.X, pos.Y, 10, "1234567890-".Contains);
+        TimeOnly eventTime = _vibe.HandleInputAt<TimeOnly>("Event Time (HH:mm): ", pos.X, pos.Y + 1, 5, "1234567890:".Contains);
+        string description = _vibe.HandleInputAt<string>(form[2], pos.X, pos.Y + 2, 50);
+        int eventTypeChoice = _vibe.HandleInputAt<int>("Event Type (1-6): ", pos.X, pos.Y + 3, 1, "123456".Contains);
+
+
+        EventType eventType;
+
+        switch (eventTypeChoice)
+        {
+            case 1:
+                eventType = EventType.Goal;
+                break;
+            case 2:
+                eventType = EventType.Foul;
+                break;
+            case 3:
+                eventType = EventType.YellowCard;
+                break;
+            case 4:
+                eventType = EventType.RedCard;
+                break;
+            case 5:
+                eventType = EventType.Injury;
+                break;
+            case 6:
+                eventType = EventType.Other;
+                break;
+            default:
+                _vibe.ChangeInfBar(["Invalid choice, try again."], render: true);
+                _vibe.WaitForClick();
+                _vibe.clearInfBar();
+                return null;
+        }
+
+        return new Event
+        (
+            playerId,
+            eventType,
+            new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, eventTime.Hour, eventTime.Minute, 0),
+            description);
+    }
+    
+
+
+
+
+
 
     private VibeShell.SelectableItem GameToSelectableItem(GameDto game)
     {

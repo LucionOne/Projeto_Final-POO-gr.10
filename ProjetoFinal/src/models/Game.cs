@@ -183,6 +183,36 @@ public class Game : ModelAbstract
         return true;
     }
 
+    public List<int> GetAllUniquePlayerIds()
+    {
+        HashSet<int> playerIds = new HashSet<int>();
+
+        foreach (var player in _filaJogadoresSemTeam)
+        {
+            playerIds.Add(player.Id);
+        }
+
+        foreach (var team in _teamsLineUp)
+        {
+            foreach (var id in team.PlayersId)
+            {
+                playerIds.Add(id);
+            }
+        }
+
+        foreach (var id in HomeTeam.PlayersId)
+        {
+            playerIds.Add(id);
+        }
+
+        foreach (var id in GuestTeam.PlayersId)
+        {
+            playerIds.Add(id);
+        }
+
+        return playerIds.ToList();
+    }
+
     // public void SetHome()
     // {
 

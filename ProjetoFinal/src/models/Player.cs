@@ -34,6 +34,11 @@ public class Player : IModel
 
     private int _id;
 
+    private List<Event> _events = new();
+
+    private int _points;
+    private int _fouls;
+
     // public attributes
     public string Name
     {
@@ -44,6 +49,8 @@ public class Player : IModel
     public int Age { get { return _age; } set { _age = value; } }
 
     public int Id { get { return _id; } set { _id = value; } }
+
+    public List<Event> Events { get { return _events; } set { _events = value; } }
 
     public int Position
     {
@@ -115,5 +122,19 @@ public class Player : IModel
     public PlayerDto ToDto()
     {
         return new PlayerDto(this);
+    }
+    public void AddEvent(Event _event)
+    {
+        this._events.Add(_event);
+        if (_event.Type == EventType.Goal)
+        {
+            _points++;
+        }
+        if (_event.Type == EventType.Foul ||
+            _event.Type == EventType.YellowCard ||
+            _event.Type == EventType.RedCard)
+        {
+            _fouls++;
+        }
     }
 }

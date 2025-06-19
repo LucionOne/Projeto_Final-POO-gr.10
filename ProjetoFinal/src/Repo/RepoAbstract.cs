@@ -108,6 +108,7 @@ public abstract class RepoAbstract<T> : IRepo<T> where T : IModel
     /// <returns></returns>
     public virtual T? GetById(int id)
     {
+        if (id < 0) return default;
         return _mainRepo.FirstOrDefault(x => x.Id == id);
     }
 

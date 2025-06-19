@@ -880,9 +880,9 @@ public class VibeShell //Temp name?
 
     public void WaitForClick()
     {
-        var pos = GetReadLinePosition();
+        // var pos = GetReadLinePosition();
         Console.CursorVisible = false;
-        Console.SetCursorPosition(pos.X, pos.Y);
+        Console.SetCursorPosition(0, 0);
         Console.ReadKey();
         Console.CursorVisible = true;
     }

@@ -115,11 +115,23 @@ public class VibePlayerView : IPlayerView
 
     private VibeShell.SelectableItem PLayerToSelectableItem(PlayerDto player)
     {
+        List<string> description = new();
 
+        description.Add($"ID: {player.Id.ToString().PadRight(4)}| Name: {player.Name}");
+        description.Add($"Position: {player.PositionString}");
+        description.Add($"Age: {player.Age.ToString().PadRight(3)}");
+        description.Add("Events:");
+
+        if (player.Events.Count == 0) description.Add("No Events");
+
+        foreach (var _event in player.Events)
+        {
+            description.Add($"{_event.Type.ToString().PadRight(11)}| {_event.Time.ToString("dd/MM")}");
+        }
         return new VibeShell.SelectableItem(
-        player.Id,
-        $"{player.Id.ToString().PadRight(4)}| {player.Name.PadRight(15)}| {player.PositionStringMini}",
-        [$"ID: {player.Id.ToString().PadRight(4)}| Name: {player.Name}", $"Position: {player.PositionString}", $"Age: {player.Age.ToString().PadRight(3)}"]);
+            player.Id,
+            $"{player.Id.ToString().PadRight(4)}| {player.Name.PadRight(15)}| {player.PositionStringMini}",
+            description);
     }
 
     public int GetPlayerId(List<PlayerDto> players)
@@ -170,7 +182,7 @@ public class VibePlayerView : IPlayerView
 
         var pos = _vibe.GetInfBarPosition();
 
-        bool confirmation = _vibe.HandleInputAt<bool>("  Save Changes? y/n: ", pos.X, pos.Y, 5, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>("  Save Changes? y/n: ", pos.X, pos.Y, 5, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
     }
@@ -191,7 +203,7 @@ public class VibePlayerView : IPlayerView
 
         _vibe.ChangeInfBar([""], render: true);
 
-        bool confirmation = _vibe.HandleInputAt<bool>("  Delete Player? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>("  Delete Player? y/n: ", X, Y, 5, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
     }
@@ -210,7 +222,7 @@ public class VibePlayerView : IPlayerView
 
         (var X, var Y) = _vibe.GetInfBarPosition();
         _vibe.ChangeInfBar([""]);
-        bool confirmation = _vibe.HandleInputAt<bool>("  Add Player? y/n: ", X, Y, 5, c => "yesnoYESNO".Contains(c));
+        bool confirmation = _vibe.HandleInputAt<bool>("  Add Player? y/n: ", X, Y, 5, c => "yesYESnoNO".Contains(c));
 
         return confirmation;
     }

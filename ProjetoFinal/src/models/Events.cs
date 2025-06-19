@@ -8,8 +8,8 @@ public enum EventType
     Foul,
     YellowCard,
     RedCard,
-    Substitution,
-    Another
+    Injury,
+    Other
 }
 
 public class Event
@@ -18,8 +18,8 @@ public class Event
     public int PlayerId;
     public EventType Type { get; set; }
     public DateTime Time { get; set; }
-
     public string Description = "No Description";
+
     public string TypeString => Type.ToString();
 
     public Event(int playerId, EventType type, DateTime time)

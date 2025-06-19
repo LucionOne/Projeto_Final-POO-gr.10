@@ -8,6 +8,7 @@ public class PlayerDto
     public string Name { get; set; } = string.Empty;
     public int Age { get; set; }
     public int Position { get; set; }
+    public List<Event> Events { get; set; } = new();
     public string PositionString => Position switch
     {
         0 => "Any",
@@ -34,6 +35,7 @@ public class PlayerDto
         Name = package.Name;
         Age = package.Age;
         Position = package.Position;
+        Events = package.Events;
     }
     public PlayerDto(int id, string name, int age, int position)
     {

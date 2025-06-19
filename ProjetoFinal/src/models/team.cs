@@ -117,7 +117,7 @@ public class Team : ModelAbstract
         return new TeamDto(this);
     }
 
-    public TeamDto toDto(PlayersRepo players)
+    public TeamDto ToDto(PlayersRepo players)
     {
         var dto = new TeamDto(this);
         dto.Players = MapperTools.MapPlayersByIds(this._playersId, players)

@@ -142,13 +142,7 @@ public class PlayerController
     private void ListPlayers()
     {
         var players = _data.PlayerRepo.GetAll();
-        var playersDto = players.Select(p => new PlayerDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            Age = p.Age,
-            Position = p.Position
-        }).ToList();
+        var playersDto = players.Select(p => new PlayerDto(p)).ToList();
 
         _view.ShowPlayers(playersDto);
 

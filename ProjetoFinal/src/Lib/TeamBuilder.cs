@@ -21,6 +21,20 @@ public static class TeamBuilder
         TeamFormation formation,
         bool shuffle = false)
     {
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
         if (players.Count < formation.MaxPlayers)
             return new List<List<Player>>();
 

@@ -56,15 +56,17 @@ public class GameController
 
     public enum GameChoices
     {
-        CreateGame,
+        CreateGame,//out
+        AddEvent,
         EditGame,
         AddPlayers,
         AddTeam,
         EndMatch,
         DeleteGame,
-        ListGames,
+        ListGames,//out
         Save,
         Exit,
+        Peek,//implement
         FallBack,
     }
 
@@ -103,33 +105,47 @@ public class GameController
             case GameChoices.Save:
                 WriteToDatabaseFlow();
                 break;
-
+            case GameChoices.AddEvent:
+                AddEventFlow();
+                break;
+            case GameChoices.Peek:
+                PeekFlow();
+                break;
             case GameChoices.FallBack:
             default:
-                Console.WriteLine("invalid choice");
                 break;
         }
     }
 
-    // public void CreateGameFlow()
-    // {
-    //     GameDto? gamePackage = _view.GetGameInput();
-
-    //     if (gamePackage == null) { return; }
-
-    //     bool confirmation = _view.ConfirmGameAdd(gamePackage);
-
-    //     if (confirmation)
-    //     {
-    //         Game game = new(gamePackage);
-    //         _data.GamesRepo.Add(game);
-    //         gameRunning = _data.GamesRepo.Last()!;
-    //     }
-    // }
-
-    public void EditGameFlow()
+    private void PeekFlow()
     {
+        TeamDto Home = gameRunning.HomeTeam.ToDto(_data.PlayerRepo);
+        TeamDto Guest = gameRunning.GuestTeam.ToDto(_data.PlayerRepo);
+        List<TeamDto> LineUp = gameRunning.TeamsLineUp
+            .Select(t => t.ToDto(_data.PlayerRepo))
+            .ToList();
+        _view.ShowTeams(Home, Guest, LineUp);
+    }
 
+    private void AddEventFlow()
+    {
+        Event? _event = _view.GetEventInput(
+            MapperTools.MapPlayersByIds(
+                gameRunning.GetAllUniquePlayerIds(), _data)
+                .Select(p => p.ToDto())
+                .ToList()
+            );
+        if (_event == null) { return; }
+
+        Player? player = _data.PlayerRepo.GetById(_event.PlayerId);
+        
+        if (player == null) { return; }
+
+        player.AddEvent(_event);
+    }
+
+    private void EditGameFlow()
+    {
         GameDto oldGamePackage = new(gameRunning);
         GameDto? newGamePackage = _view.GetGameEdit(oldGamePackage);
 
@@ -139,7 +155,7 @@ public class GameController
         if (confirmation)
         {
             newGamePackage.Id = gameRunning.Id;
-            _data.GamesRepo.UpdateById(gameRunning.Id,new Game(newGamePackage));
+            _data.GamesRepo.UpdateById(gameRunning.Id, new Game(newGamePackage));
             gameRunning = new Game(newGamePackage);
             return;
         }
@@ -149,14 +165,14 @@ public class GameController
         }
     }
 
-    public void DeleteGameFlow()
+    private void DeleteGameFlow()
     {
         int id = _view.GetGameId(RepoToDto());
 
         if (id < 0) { return; }
 
         Game game = _data.GamesRepo.GetById(id) ?? throw new NullReferenceException("Game cannot be null");
-        GameDto toDelete = new GameDto(game);
+        GameDto toDelete = game.ToDto();
 
         bool confirmation = _view.ConfirmGameDelete(toDelete);
 
@@ -170,7 +186,7 @@ public class GameController
         }
     }
 
-    public void ListGamesFlow()
+    private void ListGamesFlow()
     {
         _view.ShowGames(RepoToDto());
     }
@@ -178,11 +194,11 @@ public class GameController
     private List<List<PlayerDto>> ConvertToPlayerDtoLists(List<List<Player>> playerLists)
     {
         return playerLists
-            .Select(innerList => innerList.Select(player => new PlayerDto(player)).ToList())
+            .Select(innerList => innerList.Select(player => player.ToDto()).ToList())
             .ToList();
     }
 
-    public void AddTeamFlow()
+    private void AddTeamFlow()
     {
         int choice = _view.TeamMakingMethod();
 
@@ -211,7 +227,7 @@ public class GameController
         gameRunning.AddTeamsToLineUp(teamsToAdd);
     }
 
-    public void AddPlayersFlow()
+    private void AddPlayersFlow()
     {
         List<int> playersId = _view.GetPlayers(_data.PlayerRepo.ToDtoList());
 
@@ -222,7 +238,7 @@ public class GameController
         gameRunning.AddPlayersToLineUp(players);
     }
 
-    public void WriteToDatabaseFlow()
+    private void WriteToDatabaseFlow()
     {
         if (_saved)
         {
@@ -238,9 +254,9 @@ public class GameController
         }
     }
 
-    public void EndMatchFlow()
+    private void EndMatchFlow()
     {
-        Sides winner = _view.GetWhoWon(new GameDto(gameRunning));
+        Sides winner = _view.GetWhoWon(gameRunning.ToDto());
 
         switch (winner)
         {
