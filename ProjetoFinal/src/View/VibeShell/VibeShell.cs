@@ -910,9 +910,9 @@ public class VibeShell //Temp name?
 )
     {
         // 1) Build MainView: header + real IDs with labels
-        var numbered = new List<string>(headerLines);
-        numbered.AddRange(items.Select(item => $"{item.Label}"));//{item.Id}. {item.Label}"));
-        ChangeMainView(numbered, render: false);
+        var headers = new List<string>(headerLines);
+        headers.AddRange(items.Select(item => $"{item.Label}"));//{item.Id}. {item.Label}"));
+        ChangeMainView(headers, render: false);
 
         // 2) Determine input position in SecView
         var (secX, secY) = GetSecViewPosition();
@@ -921,17 +921,18 @@ public class VibeShell //Temp name?
 
         void RenderSec(List<string> descLines)
         {
-            var sec = new List<string> { prompt.PadRight(SecViewFillSize) };
-            int slotCount = numbered.Count - 1;
+            var sec = new List<string> { prompt, new string(' ',SecViewFillSize)};
+            // int slotCount = headers.Count - 1;
 
-            for (int i = 0; i < slotCount; i++)
-            {
-                sec.Add(i < descLines.Count
-                    ? descLines[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
-                    : new string(' ', SecViewFillSize));
-            }
+            // for (int i = 0; i < descLines.Count; i++)
+            // {
+            //     sec.Add(i < descLines.Count
+            //         ? descLines[i].PadRight(SecViewFillSize).Substring(0, SecViewFillSize)
+            //         : new string(' ', SecViewFillSize));
+            // }
 
-            sec.Add(new string(' ', SecViewFillSize));
+            // sec.Add(new string(' ', SecViewFillSize));
+            sec.AddRange(descLines);
             ChangeSecView(sec, render: false);
             Render();
         }

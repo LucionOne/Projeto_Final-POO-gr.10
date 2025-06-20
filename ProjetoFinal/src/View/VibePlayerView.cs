@@ -122,7 +122,7 @@ public class VibePlayerView : IPlayerView
         description.Add($"Age: {player.Age.ToString().PadRight(3)}");
         description.Add("Events:");
 
-        if (player.Events.Count == 0) description.Add("No Events");
+        if (player.Events.Count == 0) description.Add("- No Events");
 
         foreach (var _event in player.Events)
         {
@@ -257,16 +257,14 @@ public class VibePlayerView : IPlayerView
             _vibe.ChangeMainView(new List<string> { "", " Wow, such Empty ᓚᘏᗢ" }, render: false);
             var pos = _vibe.GetInfBarPosition();
             string line = "Press Any to Continue... ";
-            _vibe.ChangeInfBar(["line"]);
+            _vibe.ChangeInfBar([line]);
             _vibe.Render();
-            Console.SetCursorPosition(pos.X + line.Length, pos.Y);
-            Console.ReadKey();
+            _vibe.WaitForClick();
             return;
         }
 
-        var items = players.Select(PLayerToSelectableItem).ToList();
+        var items = players.Select(x => PLayerToSelectableItem(x)).ToList();
         _vibe.HandleListItems(items, new List<string> { "ID  | Name" });
-        return;
     }
     
 
